@@ -1,0 +1,62 @@
+# TASK-543/544 race-injection rules (Byteman 4.0.27, JDK 21).
+# Due banchi convivono in questo file: lo stand-in publish-then-fill (TASK-543) e il
+# SimpleFieldTracker REALE di Hibernate (TASK-544). Entrambe le regole sono flag-gated
+# (default false: gli altri test del profilo non pagano la guard oltre al dispatch).
+# La chiave del gate e' calcolata nel DO, non nel BIND: il BIND valuta PRIMA dell'IF e
+# una concatenazione su ogni tracker.add() sarebbe lavoro sprecato nel 100% delle
+# chiamate non-race.
+
+# TASK-543: lo stand-in congela lo scrittore dentro la finestra (vedi
+# RaceInjectionHarness per la forma della race documentata).
+
+RULE freeze writer inside the publish-then-fill window
+CLASS com.school.planner.solver.raceinjection.RaceInjectionHarness$StandInDirtyCell
+METHOD beginFill
+AT ENTRY
+IF $0.raceMode == true
+DO debug("BYTEMAN: writer frozen inside window"),
+   $0.writerFrozen = true,
+   waitFor("window-" + System.identityHashCode($0), 5000)
+ENDRULE
+
+# TASK-544: stessa finestra, CLASSE REALE di produzione. Il bytecode di
+# SimpleFieldTracker.add (7.2.4.Final, verificato con javap): offset 34 putfield names
+# (array esteso pubblicato, ultima cella NULL) -> offset 49 aastore (riempimento).
+# AFTER WRITE names congela esattamente tra i due: un lettore concorrente che chiami
+# contains() itera l'array e dereferenzia la cella null (l'NPE del crash 22/08).
+# Congela SOLO se TrackerRaceProbe.raceMode (default false: altri test non pagano).
+
+RULE freeze real SimpleFieldTracker after publishing extended array
+CLASS org.hibernate.bytecode.enhance.internal.tracker.SimpleFieldTracker
+METHOD add(java.lang.String)
+AFTER WRITE names
+IF com.school.planner.solver.raceinjection.TrackerRaceProbe.raceMode == true
+DO debug("BYTEMAN: tracker writer frozen inside window"),
+   com.school.planner.solver.raceinjection.TrackerRaceProbe.writerFrozen = true,
+   waitFor("tracker-window-" + System.identityHashCode($0), 3000)
+ENDRULE
+
+# TASK-639: il protocollo barrier MT-LS (stand-in BarrierProtocolStandIn).
+# Finestra 1: la SECONDA await di un runner congelata 8s (la finestra che il
+# cadence 2.6.0 ha esposto sul protocollo a timing). Gated da raceMode.
+
+RULE delay second await of standin runner 0
+CLASS com.school.planner.solver.raceinjection.BarrierProtocolStandIn
+METHOD secondAwait(int)
+AT ENTRY
+IF $0.raceMode == true AND $1 == 0 AND $0.secondAwaitDelayed == false
+DO debug("BYTEMAN: second await of runner 0 delayed 8s (TASK-639 window)"),
+   $0.secondAwaitDelayed = true,
+   waitFor("second-await-window", 8000)
+ENDRULE
+
+# Finestra 2: la morte a meta' trip. Il runner 0 esce DOPO la prima await:
+# la barrier si spezza e il join del decider deve fallire loud entro il bound.
+
+RULE mark death injection armed
+CLASS com.school.planner.solver.raceinjection.BarrierProtocolStandIn
+METHOD runnerLoop(int)
+AT ENTRY
+IF $0.raceMode == true
+DO $0.deathInjected = true
+ENDRULE

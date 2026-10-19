@@ -1,0 +1,16 @@
+# TASK-542: teacher-weekday steering matrix, FROZEN from the golden (same technique as the
+# H-COPRESENCE depth map and the day-compact menu: golden-derived facts survive the golden
+# as declared input - the workbook question is "qual'e' il tuo giorno fisso").
+# Derived: scripts-side recount of seed/lessons.csv (2026-08-23), teachers with >=50% of
+# their golden hours on ONE weekday (threshold share 0.50, min 10 hours; Fasullo excluded).
+# 7 teachers qualify (the iter-19 narrative said 8: the 8th does not survive the 50%/10h
+# gate on a recount - documented in iterations-542.md iter-25).
+# Columns: teacher,weekday(MON..FRI),goldenShare,goldenHours (provenance, not used by code)
+teacher,weekday,goldenShare,goldenHours
+T01,THU,1.00,231
+T07,WED,1.00,72
+T24,TUE,0.93,190
+T12,TUE,0.78,125
+T19,TUE,0.65,128
+T22,MON,0.59,178
+T10,FRI,0.52,230

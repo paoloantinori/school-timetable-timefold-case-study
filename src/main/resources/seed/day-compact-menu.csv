@@ -1,0 +1,203 @@
+group,weekday,subject,hours
+G01,Mon,Figurino,1
+G01,Mon,Educazione Civica,1
+G01,Mon,Lingua Italiana,1
+G01,Mon,Confezione,3
+G01,Tue,Matematica,2
+G01,Tue,Scienze,1
+G01,Tue,Modello (Moulage),3
+G01,Wed,Lingua Italiana,2
+G01,Wed,Recuperi ed Approfondimenti,1
+G01,Wed,Storia della moda,1
+G01,Wed,Informatica,2
+G01,Thu,Comportamento Sociale,1
+G01,Thu,Tecnologia tessile,1
+G01,Thu,Lingua Inglese,1
+G01,Thu,Modello (Moulage),3
+G01,Fri,Confezione,3
+G01,Fri,Storia,1
+G01,Fri,Lingua Inglese,1
+G02,Mon,Analisi del capello e del cuoio capelluto,1
+G02,Mon,Lingua Inglese,1
+G02,Mon,Lingua italiana,1
+G02,Mon,Scienze,1
+G02,Mon,Cosmetologia,1
+G02,Mon,Relazione con il cliente,1
+G02,Tue,Scienze,2
+G02,Tue,Relazione con il cliente,1
+G02,Tue,Consulenza d'immagine,1
+G02,Tue,Educazione Civica,2
+G02,Wed,Gestione aziendale,1
+G02,Wed,Informatica,1
+G02,Wed,Lingua italiana,1
+G02,Wed,Analisi del capello e del cuoio capelluto,1
+G02,Wed,Lingua Inglese,1
+G02,Wed,Matematica,1
+G02,Thu,Matematica,1
+G02,Thu,Comportamento sociale,1
+G02,Thu,Lingua italiana,1
+G02,Thu,Storia,1
+G02,Thu,Igiene e sicurezza,1
+G02,Thu,Approfondimenti tecnica operativa,1
+G02,Fri,Ra lab aperto,5
+G03,Mon,Gestione aziendale,1
+G03,Mon,Laboratorio Termoidraulico,5
+G03,Tue,Personalizzazione,1
+G03,Tue,Normativa,1
+G03,Tue,Lingua Inglese,1
+G03,Tue,Storia,1
+G03,Tue,Disegno,2
+G03,Wed,Lingua italiana,1
+G03,Wed,Matematica,1
+G03,Wed,Lingua Inglese,1
+G03,Wed,Personalizzazione,1
+G03,Wed,Elettrotecnica,2
+G03,Thu,Progettazione Termoidraulica,2
+G03,Thu,Informatica,2
+G03,Thu,Lingua italiana,1
+G03,Thu,Matematica,1
+G03,Fri,Laboratorio Termoidraulico,5
+G04,Mon,Stage,8
+G04,Tue,Matematica,1
+G04,Tue,Lingua Italiana,1
+G04,Tue,Disegno,2
+G04,Tue,Lingua Inglese,1
+G04,Wed,Stage,8
+G04,Thu,Informatica,1
+G04,Thu,Cad,1
+G04,Thu,Lavorazioni meccaniche,3
+G04,Fri,Orientamento,1
+G04,Fri,Scienze,1
+G04,Fri,Lingua Inglese,1
+G04,Fri,Lingua Italiana,1
+G04,Fri,Educazione civica,1
+G05,Mon,Confezione,3
+G05,Mon,Comportamento Sociale,1
+G05,Mon,Lingua Italiana,1
+G05,Mon,Recuperi ed Approfondimenti,1
+G05,Tue,Modello (Moulage),3
+G05,Tue,Educazione Civica,1
+G05,Tue,Storia della moda,1
+G05,Tue,Lingua Italiana,1
+G05,Wed,Confezione,3
+G05,Wed,Modello (Moulage),3
+G05,Thu,Confezione,3
+G05,Thu,Scienze,1
+G05,Thu,Informatica,2
+G05,Fri,Lingua Italiana,1
+G05,Fri,Lingua Inglese,1
+G05,Fri,Matematica,1
+G05,Fri,Economia e Diritto del lavoro,1
+G05,Fri,Scienze,1
+G06,Mon,Storia,1
+G06,Mon,Lingua italiana,1
+G06,Mon,Igiene e sicurezza,1
+G06,Mon,Matematica,1
+G06,Mon,Educazione Civica,1
+G06,Mon,Scienze,1
+G06,Tue,Barberia,6
+G06,Wed,Scienze,2
+G06,Wed,Servizio stilistico,3
+G06,Wed,Lavaggio,1
+G06,Wed,Approfondimenti tecnica operativa,2
+G06,Thu,Analisi del capello e del cuoio capelluto,1
+G06,Thu,Lingua italiana,1
+G06,Thu,Gestione aziendale,1
+G06,Thu,Relazione con il cliente,1
+G06,Thu,Lingua Inglese,1
+G06,Thu,Educazione Civica,1
+G06,Fri,Igiene e sicurezza,1
+G06,Fri,Cosmetologia,1
+G06,Fri,Comportamento sociale,1
+G06,Fri,Matematica,1
+G07,Mon,Progettazione Termoidraulica,2
+G07,Mon,Matematica,1
+G07,Mon,Personalizzazione,1
+G07,Mon,Informatica,1
+G07,Tue,Normativa,1
+G07,Tue,Lingua Inglese,1
+G07,Tue,Disegno Edile ed Impiantistico,2
+G07,Tue,Lingua italiana,1
+G07,Tue,Personalizzazione,1
+G07,Wed,Stage,8
+G07,Thu,Stage,8
+G07,Fri,Scienze,1
+G07,Fri,Educazione Civica,1
+G07,Fri,Personalizzazione,1
+G07,Fri,Lingua Inglese,1
+G07,Fri,Matematica,1
+G08,Mon,Controllo numerico,1
+G08,Mon,Lavorazioni meccaniche,4
+G08,Tue,Stage,8
+G08,Wed,Matematica,1
+G08,Wed,Taglio Metalli,1
+G08,Wed,Scienze,1
+G08,Wed,Disegno,2
+G08,Thu,Lingua Inglese,1
+G08,Thu,Informatica,1
+G08,Thu,Lingua Italiana,1
+G08,Thu,Matematica,1
+G08,Thu,Tecnologia Meccanica,1
+G08,Fri,Cad,3
+G08,Fri,Competenze di cittadinanza,1
+G08,Fri,Storia,1
+G09,Mon,Confezione,3
+G09,Mon,Lingua Inglese,1
+G09,Mon,Educazione Civica,1
+G09,Tue,Stage,8
+G09,Wed,Stage,8
+G09,Thu,Lingua Italiana,1
+G09,Thu,Scienze,1
+G09,Thu,Comportamento Sociale,1
+G09,Thu,Sviluppo Sostenibile,1
+G09,Thu,Storia,1
+G09,Fri,Stage,8
+G10,Mon,Lingua italiana,1
+G10,Mon,Relazione con il cliente,1
+G10,Mon,Storia,1
+G10,Mon,Analisi del capello e del cuoio capelluto,1
+G10,Mon,Gestione aziendale,1
+G10,Tue,Stage,8
+G10,Wed,Stage,8
+G10,Thu,Stage,8
+G10,Fri,Stage,8
+G11,Mon,Lingua Inglese,1
+G11,Mon,Matematica,1
+G11,Mon,Progettazione Termoidraulica,1
+G11,Mon,Informatica,1
+G11,Mon,Lingua italiana,1
+G11,Tue,Lingua Inglese,1
+G11,Tue,Normativa,1
+G11,Tue,Lingua italiana,1
+G11,Tue,Personalizzazione,1
+G11,Tue,Disegno Edile ed Impiantistico,2
+G11,Wed,Stage,8
+G11,Thu,Laboratorio Termoidraulico,5
+G11,Fri,Stage,8
+G12,Mon,Barberia,5
+G12,Tue,Gestione aziendale,1
+G12,Tue,Relazione con il cliente,1
+G12,Tue,Orientamento,1
+G12,Tue,Informatica,1
+G12,Tue,Analisi del capello e del cuoio capelluto,1
+G12,Wed,Economia e Diritto del lavoro,1
+G12,Wed,Lingua Inglese,1
+G12,Wed,Scienze,2
+G12,Wed,Lingua italiana,1
+G12,Thu,Servizio tecnico e stilistico,8
+G12,Fri,Stage,7
+G13,Mon,Tecnologia,1
+G13,Mon,Competenze Digitali,2
+G13,Mon,Comunicazione,1
+G13,Mon,Personalizzazione,1
+G13,Tue,Sicurezza,1
+G13,Tue,Lavorazioni meccaniche,1
+G13,Tue,Cad,1
+G13,Tue,Tecniche di saldatura,2
+G13,Wed,Stage,8
+G13,Thu,Stage,8
+G13,Fri,Lavorazioni meccaniche,5
+G14,Thu,Servizio stilistico,5
+G14,Fri,Competenze Digitali,1
+G14,Fri,Comportamento Sociale,1
+G14,Fri,Orientamento,1

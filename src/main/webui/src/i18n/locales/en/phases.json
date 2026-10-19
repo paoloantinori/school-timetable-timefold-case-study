@@ -1,0 +1,61 @@
+{
+  "title": "Solver Phases",
+  "navTitle": "Phases",
+  "subtitle": "The 5-phase pipeline that transforms a blank timetable into an optimized schedule",
+  "intro": "The Timefold solver uses a multiphase pipeline: two Construction Heuristic phases that place entities into an initial solution, followed by Local Search phases that progressively refine timeslots, then a deterministic Compaction phase that re-closes any student-day gaps the search reopened. A dedicated Construction Heuristic phase then assigns rooms, followed by a final Local Search phase that refines those room assignments. Each phase has a distinct goal, move palette, and termination strategy mirroring how a human scheduler would approach the problem.",
+  "overview": {
+    "title": "Pipeline Overview",
+    "globalStop": "Global safety net: 8-hour hard stop",
+    "preAssignment": "Historically, this line pinned ~1,100 lab-rotation blocks before the solver started; for 2026/27 that role is filled by the Calendario/golden imports instead (see \"The 2026/27 Process\" in the Constraints Guide)",
+    "pinsNote": "Construction Heuristic phases only place lessons that aren't already pinned. The Calendario and golden imports pin the school's own pre-set structure before the solver even starts, so Phase 1/2 fill in everything around those fixed hours. The legacy CSP rotation pre-assignment step still exists and can be triggered manually, but with no LabRotation rows seeded for 2026/27 it runs as a no-op.",
+    "chLabel": "Construction Heuristic",
+    "lsLabel": "Local Search",
+    "chDescription": "Build an initial solution by placing every entity",
+    "lsDescription": "Iteratively improve the solution using metaheuristics"
+  },
+  "sections": {
+    "construction": "Construction Heuristic Phases",
+    "localSearch": "Local Search Phases",
+    "constructionDesc": "Build an initial (feasible but unoptimized) solution by placing every entity into a timeslot. Rooms are not assigned yet for Lessons (deferred to Phase 4).",
+    "localSearchDesc": "Iteratively improve the solution using different move types and metaheuristic strategies. Phase 2 optimizes timeslots only (rooms are null) using Local Search; a deterministic Repair + Compaction phase (3) then re-closes any student-day gaps Phase 2 reopened. Phase 4 assigns rooms for the first time (Construction Heuristic). Phase 5 refines those room assignments with Local Search. The old Phase 3 Local Search (RuinRecreate) was removed (TASK-420) after measuring it inert across six consecutive runs."
+  },
+  "moves": {
+    "change": "Change",
+    "swap": "Swap",
+    "pillar": "Pillar",
+    "cartesian": "Cartesian"
+  },
+  "labels": {
+    "type": "Type",
+    "goal": "Goal",
+    "moves": "Move Palette",
+    "metaheuristic": "Metaheuristic",
+    "termination": "Termination",
+    "typicalDuration": "Typical Duration",
+    "weight": "weight",
+    "entity": "Entity",
+    "variable": "Variable",
+    "entityTabu": "Entity Tabu",
+    "lateAcceptance": "Late Acceptance",
+    "simulatedAnnealing": "Simulated Annealing",
+    "forager": "Forager",
+    "acceptFirst": "greedy (accept first)",
+    "evaluateN": "evaluate {{count}} candidates",
+    "unimproved": "{{minutes}} min unimproved",
+    "hardCap": "{{hours}}h hard cap",
+    "construction": "Construction",
+    "localSearch": "Local Search",
+    "both": "Both"
+  },
+  "footer": {
+    "configFile": "Configuration: src/main/resources/solverConfig.xml",
+    "learnMore": "View all constraints"
+  },
+  "stagedCycleDoc": {
+    "title": "What the Solve button actually launches: the staged cycle",
+    "stages": "PRE-ASSIGN (guaranteed pre-assignment) → A-CONSTRUCTION (weekly-template construction) → PROMOTION (template cells become pinned) → B-TIMESLOT (timeslot local search with selective demotions) → RELEASE (temporary pins released) → REPAIR (deterministic repairs: holes, anchors, surplus, exact finish) → B-ROOM (room assignment and refinement)",
+    "multiStart": "The whole cycle is wrapped in a multi-start: up to 5 attempts (the first deterministic, the rest with randomized constructions), picking the best on hard/medium and stopping at the first attempt with no hard violations. While solving, the orange banner shows the current stage and the \"Attempt X of Y\" counter.",
+    "caveat": "Note: while the cycle runs, the solver status stays \"Not solving\" by design (the cycle bypasses the standard manager). The meaningful signal is the staged stage in the banner, not the status.",
+    "phasesBelow": "The 5 phases documented below are the content of ONE attempt."
+  }
+}

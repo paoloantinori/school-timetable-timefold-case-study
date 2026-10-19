@@ -1,0 +1,7 @@
+SET
+G03|T04|Lingua Italiana|6|0
+G03|T11|Personalizzazione|6|0
+G05|T13|Educazione Civica|6|0
+G05|T14|Lingua Italiana|6|0
+G02|T02|Storia|6|0
+G02|T02|Storia|6|0

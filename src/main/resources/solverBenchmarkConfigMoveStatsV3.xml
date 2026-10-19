@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plannerBenchmark xmlns="https://timefold.ai/xsd/benchmark">
+  <!--
+    Move Selector Effectiveness Benchmark V3 — CompositeMove Filter
+    Based on V1 analysis: CompositeMove wasted 1.18M evals (8%) with 0 improvements.
+    This config adds CompositeMoveFilter to suppress auto-generated composite moves.
+
+    V1 results (15min, 14.7M evals, 7697 improvements):
+      ChangeMove(timeslot)  7.03M  4296 imp  6.11/10K
+      SwapMove(timeslot)    4.20M  2555 imp  6.08/10K
+      PillarChange(ts)      1.85M   540 imp  2.93/10K
+      CompositeMove(*)      1.18M     0 imp  0.00/10K  ← FILTERED OUT
+      PillarSwapMove(ts)     485K   306 imp  6.31/10K
+
+    V3: Same 4 moves as production, but CompositeMove suppressed via filter.
+    Expected: ~8% more eval budget for productive moves, ~9000 improvements.
+  -->
+
+  <benchmarkDirectory>local/benchmarkMoveStatsV3</benchmarkDirectory>
+
+  <inheritedSolverBenchmark>
+    <solver>
+      <solutionClass>com.school.planner.domain.SchoolSchedule</solutionClass>
+      <entityClass>com.school.planner.domain.Lesson</entityClass>
+      <scoreDirectorFactory>
+        <constraintProviderClass>com.school.planner.solver.SchoolScheduleConstraintProvider</constraintProviderClass>
+        <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+      </scoreDirectorFactory>
+      <termination>
+        <secondsSpentLimit>900</secondsSpentLimit>
+        <unimprovedSecondsSpentLimit>180</unimprovedSecondsSpentLimit>
+      </termination>
+      <constructionHeuristic>
+        <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+      </constructionHeuristic>
+    </solver>
+    <problemBenchmarks>
+      <solutionFileIOClass>com.school.planner.benchmark.SchoolScheduleSolutionFileIO</solutionFileIOClass>
+      <inputSolutionFile>local/data/schedule-production.json</inputSolutionFile>
+      <problemStatisticType>MOVE_COUNT_PER_TYPE</problemStatisticType>
+      <problemStatisticType>MOVE_COUNT_PER_STEP</problemStatisticType>
+      <singleStatisticType>PICKED_MOVE_TYPE_BEST_SCORE_DIFF</singleStatisticType>
+      <singleStatisticType>PICKED_MOVE_TYPE_STEP_SCORE_DIFF</singleStatisticType>
+    </problemBenchmarks>
+  </inheritedSolverBenchmark>
+
+  <!-- V3: All 4 moves + CompositeMoveFilter (suppresses auto-generated composites) -->
+  <solverBenchmark>
+    <name>V3-CompositeMoveFilter-AllMoves</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+      <localSearch>
+        <unionMoveSelector>
+          <!-- Filter out auto-generated CompositeMove(room, timeslot) which wastes ~8% of eval budget
+               with zero improvements (confirmed by V1 benchmark 2026-03-24). -->
+          <filterClass>com.school.planner.solver.CompositeMoveFilter</filterClass>
+
+          <!-- changeMoveSelector: timeslot — primary compactness lever (weight 5.0) -->
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+
+          <!-- swapMoveSelector: timeslot — conflict resolution by exchange (weight 3.0) -->
+          <swapMoveSelector>
+            <fixedProbabilityWeight>3.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+
+          <!-- pillarChangeMoveSelector: timeslot — preserve consecutive patterns (weight 2.0) -->
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+
+          <!-- pillarSwapMoveSelector: timeslot — exchange entire timeslot schedules (weight 1.0) -->
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>7</entityTabuSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+</plannerBenchmark>

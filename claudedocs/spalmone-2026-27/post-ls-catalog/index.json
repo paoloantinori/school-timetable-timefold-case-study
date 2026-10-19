@@ -1,0 +1,133 @@
+{
+  "entries": [
+    {
+      "label": "integrato-1",
+      "seedHash": "ec39735866fbdf30fbe30d3f4bdd46623d4648e42164079eabf59a84d8def048",
+      "seedCommit": "38669df3",
+      "addedAt": "2026-09-20",
+      "codeCommit": "38669df3",
+      "attempt": null,
+      "roomFaithful": false,
+      "payloads": {
+        "lessonsTxt": "claudedocs/spalmone-2026-27/integrato-1/run/lessons.txt"
+      },
+      "payloadSha256": {
+        "lessonsTxt": "5f275764d5bdcd1e7c05e2c6b03105b4eba2dc1d68fad7012baef513f0d59529"
+      },
+      "hardScore": -4,
+      "note": "run-code d6ab4fd5; lessons-only; caso T13; pre-cura 18/09"
+    },
+    {
+      "label": "integrato-5",
+      "seedHash": "df8240cf0a2d289d28e544ca88a2d6ba1dbda8d3a98b8b5863b54a8e60216b78",
+      "seedCommit": "working-tree",
+      "addedAt": "2026-09-20",
+      "codeCommit": "267f9aca",
+      "attempt": null,
+      "roomFaithful": false,
+      "payloads": {
+        "lessonsTxt": "claudedocs/spalmone-2026-27/integrato-5/lessons.txt"
+      },
+      "payloadSha256": {
+        "lessonsTxt": "047fdbfda4ad9db990020d750e089bd065f6a25e2ea23f81e5f0c766caf12eb0"
+      },
+      "hardScore": -1,
+      "note": "lessons-only; post-cura; export room-faithful vive sul laptop"
+    },
+    {
+      "label": "integrato-5-export",
+      "seedHash": "df8240cf0a2d289d28e544ca88a2d6ba1dbda8d3a98b8b5863b54a8e60216b78",
+      "seedCommit": "working-tree",
+      "addedAt": "2026-09-21",
+      "codeCommit": "267f9aca",
+      "attempt": null,
+      "roomFaithful": true,
+      "payloads": {
+        "lessonsTxt": "claudedocs/spalmone-2026-27/integrato-5/lessons.txt",
+        "exportJsonGz": "claudedocs/spalmone-2026-27/integrato-5/export.json.gz"
+      },
+      "payloadSha256": {
+        "lessonsTxt": "047fdbfda4ad9db990020d750e089bd065f6a25e2ea23f81e5f0c766caf12eb0",
+        "exportJsonGz": "e9108e032d06d98b5800fc7d67d20130fa965d84a506e5dcc759273dcaf2e251"
+      },
+      "hardScore": -1,
+      "note": "export room-faithful del ciclo 19/09 (la base del banco delivery-trio); post-cura seed"
+    },
+    {
+      "label": "integrato-6-winner",
+      "seedHash": "df8240cf0a2d289d28e544ca88a2d6ba1dbda8d3a98b8b5863b54a8e60216b78",
+      "seedCommit": "working-tree",
+      "addedAt": "2026-09-21",
+      "codeCommit": "7aefd916",
+      "attempt": null,
+      "roomFaithful": true,
+      "payloads": {
+        "lessonsTxt": "claudedocs/spalmone-2026-27/integrato-6/lessons.txt",
+        "exportJsonGz": "claudedocs/spalmone-2026-27/integrato-6/export.json.gz"
+      },
+      "payloadSha256": {
+        "lessonsTxt": "3414318d32552f66337690f516dbcd4f393917ff4eeb718cf6370538b3f50d96",
+        "exportJsonGz": "653b65fc3f4e670f0cc7b3cb53763d3951216ee1dc2c13876f25387d8da10c79"
+      },
+      "hardScore": -1,
+      "note": "ciclo di chiusura 20/21-09, vincitore attempt-1 deterministico [-1/0], h7swap in misura (census assente), tentativo-2 GRASP completato + 3 scarti predictor; per-attempt in catalog-634.json + catalog/"
+    },
+    {
+      "label": "integrato-7",
+      "seedHash": "df8240cf0a2d289d28e544ca88a2d6ba1dbda8d3a98b8b5863b54a8e60216b78",
+      "seedCommit": "working-tree",
+      "addedAt": "2026-09-23",
+      "codeCommit": "1ec04297",
+      "attempt": null,
+      "roomFaithful": true,
+      "payloads": {
+        "lessonsTxt": "claudedocs/spalmone-2026-27/integrato-7/lessons.txt",
+        "exportJsonGz": "claudedocs/spalmone-2026-27/integrato-7/export.json.gz"
+      },
+      "payloadSha256": {
+        "lessonsTxt": "15152f322478a079695bc6a78b97bae0f1829131ac7045b1e8426da5f18126e3",
+        "exportJsonGz": "4edf359556bc0dacecf38a86617b3a82e84e92d2b7f5b46c88a82650290f526e"
+      },
+      "hardScore": -1,
+      "note": "stack pieno ratificato 636+637+638 DEFAULT ON su rc-1 (1ec04297): [-1/0] H17 1match (G04 20/11), 2 tentativi, 638 [delivery] applied=0 (-1->-1: residuo H17 fuori grammar), ricorrenza 69,2 full-day 94,6, sanity 4 rossi dichiarati"
+    },
+    {
+      "label": "m39-off",
+      "seedHash": "ec39735866fbdf30fbe30d3f4bdd46623d4648e42164079eabf59a84d8def048",
+      "seedCommit": "2f686d18",
+      "addedAt": "2026-09-20",
+      "codeCommit": "2f686d18",
+      "attempt": null,
+      "roomFaithful": true,
+      "payloads": {
+        "lessonsTxt": "claudedocs/spalmone-2026-27/task604-results/m39-off/lessons.txt",
+        "exportJsonGz": "claudedocs/spalmone-2026-27/task604-results/m39-off/export.json.gz"
+      },
+      "payloadSha256": {
+        "lessonsTxt": "5732763c0f01e579b26a625bcdaeeed208fd2354499c87010bbd65a2d783ef33",
+        "exportJsonGz": "5426cdf2197a200ec611d843e73034f0d5e88330dfec7cec6da6b9e2230551c3"
+      },
+      "hardScore": -11,
+      "note": "capture TASK-604 14/09; terna misurata -18->-7 (4 punti H25 = replay-artifact della cura seed 18/09)"
+    },
+    {
+      "label": "m39-on",
+      "seedHash": "ec39735866fbdf30fbe30d3f4bdd46623d4648e42164079eabf59a84d8def048",
+      "seedCommit": "2f686d18",
+      "addedAt": "2026-09-20",
+      "codeCommit": "2f686d18",
+      "attempt": null,
+      "roomFaithful": true,
+      "payloads": {
+        "lessonsTxt": "claudedocs/spalmone-2026-27/task604-results/m39-on/lessons.txt",
+        "exportJsonGz": "claudedocs/spalmone-2026-27/task604-results/m39-on/export.json.gz"
+      },
+      "payloadSha256": {
+        "lessonsTxt": "0afc16ee480c1fc6954bb2ecb36277f37878449313caf55e460e2bb93925e146",
+        "exportJsonGz": "d2f6b01aebe4596bf560980b2a16f618a0bc8d894ea141bb53a7f9d9044b06c5"
+      },
+      "hardScore": -13,
+      "note": "capture TASK-604 14/09; terna -22->-11; overcap T21 chiuso da h7cap v4"
+    }
+  ]
+}

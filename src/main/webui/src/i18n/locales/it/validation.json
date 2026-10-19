@@ -1,0 +1,18 @@
+{
+  "badgeLabel": "Controllo legalità della soluzione",
+  "badgeTooltipRed": "{{count}} nuova/e violazione/i hard dall'ultimo controllo",
+  "badgeTooltipAmber": "{{count}} violazione/i hard nell'orario corrente",
+  "newViolations": "{{count}} nuove",
+  "hardViolations": "{{count}} hard",
+  "panelTitle": "Controllo Legalità della Soluzione",
+  "lastChecked": "Ultimo controllo",
+  "trigger": "Causa",
+  "constraintId": "Vincolo",
+  "matches": "Occorrenze",
+  "newlyViolated": "Nuovo",
+  "noViolations": "Nessuna violazione trovata nell'orario corrente.",
+  "runNow": "Controlla ora",
+  "baselineNote": "riferimento iniziale (nessuno snapshot precedente da confrontare)",
+  "confirmMovePinned": "Questa lezione è bloccata (verità di base). Spostarla cambierà questo stato. Continuare?",
+  "moveIntroducedViolations": "Questo posizionamento introduce nuove violazioni: {{details}}"
+}

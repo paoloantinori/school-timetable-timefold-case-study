@@ -1,0 +1,141 @@
+/* === VIOLATION HIGHLIGHTING === */
+/* Industrial/Utilitarian aesthetic: urgent but not panic-inducing */
+
+/* Theme-aware CSS variables - add to existing theme system */
+:root {
+  --violation-border: #dc2626;
+  --violation-glow-inner: rgba(220, 38, 38, 0.3);
+  --violation-glow-outer: rgba(220, 38, 38, 0.15);
+  --violation-stripe-a: #dc2626;
+  --violation-stripe-b: #fef2f2;
+  --violation-badge-bg: #dc2626;
+  --violation-text: #991b1b;
+}
+
+[data-theme="dark"] {
+  --violation-border: #f87171;
+  --violation-glow-inner: rgba(248, 113, 113, 0.4);
+  --violation-glow-outer: rgba(248, 113, 113, 0.2);
+  --violation-stripe-a: #f87171;
+  --violation-stripe-b: #450a0a;
+  --violation-badge-bg: #ef4444;
+  --violation-text: #fecaca;
+}
+
+[data-theme="school"] {
+  --violation-border: #c2410c;
+  --violation-glow-inner: rgba(194, 65, 12, 0.35);
+  --violation-glow-outer: rgba(194, 65, 12, 0.15);
+  --violation-stripe-a: #c2410c;
+  --violation-stripe-b: #fff7ed;
+  --violation-badge-bg: #ea580c;
+  --violation-text: #7c2d12;
+}
+
+/* Base violation cell - wrapper gets the treatment */
+.violation-cell {
+  position: relative;
+  z-index: 0; /* Create stacking context so badge doesn't overflow above sticky columns (z-[5]) */
+  border: 2px solid var(--violation-border);
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 1px var(--violation-glow-inner),
+    0 0 8px 2px var(--violation-glow-outer);
+  animation: violation-pulse 3s ease-in-out infinite;
+}
+
+/* Diagonal stripe pattern on left border (accessibility) */
+.violation-cell::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--violation-stripe-a),
+    var(--violation-stripe-a) 2px,
+    var(--violation-stripe-b) 2px,
+    var(--violation-stripe-b) 4px
+  );
+  border-radius: 2px 0 0 2px;
+  pointer-events: none;
+}
+
+/* Corner badge with count */
+.violation-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  background: var(--violation-badge-bg);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+  border-radius: 9px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  pointer-events: none;
+}
+
+/* Warning icon prefix */
+.violation-badge::before {
+  content: '⚠';
+  font-size: 9px;
+}
+
+/* Single violation: show warning icon only */
+.violation-badge[data-count="1"]::after {
+  display: none;
+}
+
+/* Multiple violations: show count after icon */
+.violation-badge[data-count]:not([data-count="1"])::after {
+  content: attr(data-count);
+}
+
+/* Subtle pulse animation (GPU-accelerated) */
+@keyframes violation-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px var(--violation-glow-inner),
+      0 0 8px 2px var(--violation-glow-outer);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px var(--violation-glow-inner),
+      0 0 12px 4px var(--violation-glow-outer);
+  }
+}
+
+/* Reduced motion support (accessibility) */
+@media (prefers-reduced-motion: reduce) {
+  .violation-cell {
+    animation: none;
+  }
+  .violation-cell::before {
+    background: var(--violation-border);
+  }
+}
+
+/* High contrast mode support */
+@media (forced-colors: active) {
+  .violation-cell {
+    border: 3px solid CanvasText;
+    outline: 2px dashed Highlight;
+  }
+  .violation-badge {
+    background: CanvasText;
+    color: Canvas;
+    border: 1px solid Canvas;
+  }
+}

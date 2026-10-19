@@ -1,0 +1,101 @@
+# Build output
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+*.swp
+*.swo
+*~
+
+# Node
+src/main/webui/node_modules/
+src/main/webui/dist/
+
+# TypeScript
+*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tool configs
+.serena/
+.playwright-mcp/
+.mcp.json
+
+# Screenshots (dev artifacts)
+*.png
+
+# Playwright test artifacts
+src/main/webui/test-results/
+
+# Trace files
+*.json.gz
+# ...but NOT the campaign checkpoint exports: they are the artifact that makes a solve
+# reconstructible without re-solving (TASK-401), and this ignore rule kept swallowing them
+# silently, so every capture had to remember `git add -f`. Some made it in, some did not.
+!claudedocs/**/export.json.gz
+!claudedocs/**/fixtures/*.json.gz
+
+# Python cache
+__pycache__/
+
+# TASK-445 workbook tooling: offline Python venv (openpyxl) + generated artifacts
+scripts/workbook/.venv/
+scripts/workbook/output/
+
+# Timefold decompiled classes (dev artifact)
+ai/
+
+# Logs
+*.log
+
+# Shell configs (should never be in repo)
+.bash_profile
+.bashrc
+.zprofile
+.zshrc
+.profile
+.ripgreprc
+.gitconfig
+.gitmodules
+
+# Git internals (if accidentally copied)
+/HEAD
+/config
+/hooks
+/objects
+/refs
+/local/benchmarkReport/
+planner-prod.sh
+local/
+
+# Local-only Claude instructions (laptop piloting notes) — never commit
+CLAUDE.local.md
+
+# Claude Code scheduler runtime state (session/pid lock + durable cron jobs), machine-local
+.claude/scheduled_tasks.lock
+.claude/scheduled_tasks.json
+
+# Quinoa build output (copied from webui/dist at package time; not source)
+src/main/resources/META-INF/resources/assets/
+src/main/resources/META-INF/resources/index.html
+src/main/resources/META-INF/resources/webui/
+staged-checkpoints/
+staged-checkpoints-*/
+graphify-out/
+
+# TASK-682 (publish prep): robaccia locale mai committare
+clanner/
+lifecycle.jsonl
+# catalog payloads are 100MB+ (GH001 hard reject): the pointer lives in post-ls-catalog/index.json
+claudedocs/spalmone-2026-27/task604-results/*/export.json.gz

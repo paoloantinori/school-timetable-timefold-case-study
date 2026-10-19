@@ -1,0 +1,1312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plannerBenchmark xmlns="https://timefold.ai/xsd/benchmark">
+  <!--
+    Metaheuristics Benchmark — Full 5-Phase Production Solver
+
+    Compares 6 metaheuristic configurations using the complete 5-phase production
+    architecture with updated move selectors from TASK-289/290 (swapMoveSelectors
+    in Phase 3 and Phase 5).
+
+    Configs:
+    1. Tabu-Entity-Size5     — Production baseline (entityTabuSize=5, acceptedCountLimit=1000)
+    2. VND-HillClimbing      — No acceptor, only improving moves, acceptedCountLimit=1000 (baseline)
+    3. Tabu-Entity-Size7     — Larger tabu list (entityTabuSize=7, recommended for ~10K entities)
+    4. Late-Acceptance       — lateAcceptanceSize=400, acceptedCountLimit=1 (single-parameter, deterministic)
+    5. SA-Tabu-Hybrid        — SA exploration + Tabu memory (entityTabuSize=3, low forager)
+    6. LA-Phase3-Tabu-Phase5  — Multi-algorithm: LA for compactness, Tabu for rooms
+    7. VND-FirstImprovement   — Proper VND: acceptedCountLimit=1 (first improvement, not best)
+    8. VND-DiminishedReturns  — VND + diminishedReturnsSpentLimit termination
+    9. VND-CartesianProduct   — VND + cartesianProduct move (joint timeslot+room change)
+
+    Sources:
+    - Timefold docs: entityTabuSize=7 recommended, LA with acceptedCountLimit=1
+    - Burke & Bykov (2008): LAHC outperformed ITC2011 winner
+    - Vianna et al. (2020): VNS-TS1 best performer (TS as local search)
+    - Hansen & Mladenovic (2001): "first improvement strategy is generally preferred" for VND
+    - Timefold 1.31+: diminishedReturnsSpentLimit termination (Priority 1 quick win)
+    - Timefold docs: cartesianProductMoveSelector for score trap escape
+
+    VND Research Notes:
+    - Config #2 (VND-HillClimbing) uses acceptedCountLimit=1000 which is BEST improvement,
+      NOT proper VND. Config #7 fixes this with acceptedCountLimit=1 (FIRST improvement).
+    - Config #8 adds diminished returns termination — stops when improvement RATE drops,
+      not just when no improvement occurs (Timefold 1.31+ feature).
+    - Config #9 adds cartesianProduct move for joint timeslot+room changes, addressing the
+      score trap where both variables must change simultaneously to improve.
+
+    Shared: identical CH phases (1-2, 4), move selectors, termination.
+    Diff: acceptor, forager, and move selectors in Phase 3 and Phase 5 only.
+  -->
+
+  <benchmarkDirectory>local/benchmarkReport</benchmarkDirectory>
+  <!-- Run solverBenchmarks in parallel via a thread pool of 6 instead of sequentially.
+       Sequential took ~108 min (12 min/config x 9); a pool of 6 finishes in ~2 waves
+       (~18-24 min wall). 6 is bounded for memory: each single-threaded solver peaks
+       near 2g, and the surefire JVM is -Xmx16g, so 6 x 2g = 12g stays safely under it
+       (AUTO would run all 9 at once and risk OutOfMemoryError). -->
+  <parallelBenchmarkCount>6</parallelBenchmarkCount>
+
+  <!-- ========================================================================
+       INHERITED CONFIGURATION
+       Common settings shared across all solver benchmarks
+       ======================================================================== -->
+  <inheritedSolverBenchmark>
+    <solver>
+      <solutionClass>com.school.planner.domain.SchoolSchedule</solutionClass>
+      <entityClass>com.school.planner.domain.Lesson</entityClass>
+      <scoreDirectorFactory>
+        <constraintProviderClass>com.school.planner.solver.SchoolScheduleConstraintProvider</constraintProviderClass>
+        <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+      </scoreDirectorFactory>
+      <!-- Global safety net -->
+      <termination>
+        <secondsSpentLimit>28800</secondsSpentLimit>
+      </termination>
+    </solver>
+    <problemBenchmarks>
+      <solutionFileIOClass>com.school.planner.benchmark.SchoolScheduleSolutionFileIO</solutionFileIOClass>
+      <inputSolutionFile>local/data/schedule-production.json</inputSolutionFile>
+    </problemBenchmarks>
+  </inheritedSolverBenchmark>
+
+  <!-- ========================================================================
+       CONFIG 1: Tabu Search (Entity Tabu Size 5) — Production Baseline
+       ======================================================================== -->
+  <solverBenchmark>
+    <name>Tabu-Entity-Size5</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+
+      <customPhase>
+        <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+      </customPhase>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>600</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>120</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>3.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>5</entityTabuSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+      </localSearch>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>120</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>room</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>5</entityTabuSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+  <!-- ========================================================================
+       CONFIG 2: VND (Variable Neighborhood Descent)
+       Hill Climbing acceptor (no <acceptor> element) — only improving moves.
+       ======================================================================== -->
+  <solverBenchmark>
+    <name>VND-HillClimbing</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+
+      <customPhase>
+        <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+      </customPhase>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>600</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>120</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>3.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+        </unionMoveSelector>
+        <forager>
+          <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+      </localSearch>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>120</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>room</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+        </unionMoveSelector>
+        <forager>
+          <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+  <!-- ========================================================================
+       CONFIG 3: Tabu Search (Entity Tabu Size 7)
+       Research recommends entityTabuSize=7 as starting point for ~10K entities.
+       Larger tabu list = less cycling, more diverse exploration.
+       Source: Timefold docs, Hertz et al. tutorial on tabu tenure.
+       ======================================================================== -->
+  <solverBenchmark>
+    <name>Tabu-Entity-Size7</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+
+      <customPhase>
+        <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+      </customPhase>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>600</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>120</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>3.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>7</entityTabuSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+      </localSearch>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>120</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>room</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>7</entityTabuSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+  <!-- ========================================================================
+       CONFIG 4: Late Acceptance Hill Climbing (LAHC)
+       Single-parameter algorithm: lateAcceptanceSize=400.
+       Accepts moves better than the score from 400 steps ago.
+       Deterministic acceptance — no random component.
+       Source: Burke & Bykov (2008), Fonseca et al. (2016) — outperformed ITC2011 winner.
+       ======================================================================== -->
+  <solverBenchmark>
+    <name>Late-Acceptance</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+
+      <customPhase>
+        <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+      </customPhase>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>600</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>120</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>3.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <lateAcceptanceSize>400</lateAcceptanceSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>120</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>room</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <lateAcceptanceSize>400</lateAcceptanceSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+  <!-- ========================================================================
+       CONFIG 5: SA + Tabu Hybrid
+       Combines SA exploration (probabilistic acceptance of worsening moves)
+       with Tabu memory (prevents cycling). Uses lower entityTabuSize=3 than
+       pure Tabu to not over-restrict SA's exploration.
+       Source: Timefold docs — "SA can be combined with tabu acceptor at the same time.
+       That gives SA salted with a bit of Tabu."
+       ======================================================================== -->
+  <solverBenchmark>
+    <name>SA-Tabu-Hybrid</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+
+      <customPhase>
+        <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+      </customPhase>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>600</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>120</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>3.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>3</entityTabuSize>
+          <simulatedAnnealingStartingTemperature>[0/0]hard/[200/0]soft</simulatedAnnealingStartingTemperature>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>120</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>room</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>3</entityTabuSize>
+          <simulatedAnnealingStartingTemperature>[0/0]hard/[200/0]soft</simulatedAnnealingStartingTemperature>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+  <!-- ========================================================================
+       CONFIG 6: Multi-Algorithm — LA Phase 3 + Tabu Phase 5
+       Late Acceptance for compactness (longer exploration), then Tabu for
+       room refinement (fine-tuning). This is the pattern recommended by
+       Timefold docs: "Late Acceptance (relatively long time) then
+       Tabu Search (relatively short time)."
+       ======================================================================== -->
+  <solverBenchmark>
+    <name>LA-Phase3-Tabu-Phase5</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+
+      <customPhase>
+        <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+      </customPhase>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <!-- Phase 3: LA for compactness — broader exploration -->
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>600</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>120</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>3.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <lateAcceptanceSize>400</lateAcceptanceSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <!-- Phase 5: Tabu for room refinement — fine-tuning -->
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>120</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>room</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>5</entityTabuSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+  <!-- ========================================================================
+       CONFIG 7: VND — First Improvement (proper VND)
+       Our current VND-HillClimbing (config #2) uses acceptedCountLimit=1000 which
+       is BEST improvement, not proper VND. True VND uses FIRST improvement:
+       accept the first move that improves the score, then move to the next
+       neighborhood. This is much faster per step (more steps per second).
+       Source: Hansen & Mladenovic (2001) — "first improvement strategy is
+       generally preferred" for Variable Neighborhood Descent.
+       ======================================================================== -->
+  <solverBenchmark>
+    <name>VND-FirstImprovement</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+
+      <customPhase>
+        <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+      </customPhase>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>600</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>120</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>3.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+        </unionMoveSelector>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>120</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>room</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+        </unionMoveSelector>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+  <!-- ========================================================================
+       CONFIG 8: VND + Diminished Returns Termination
+       Same as VND-FirstImprovement but adds diminishedReturnsSpentLimit to
+       Phase 3. This auto-terminates when the improvement RATE drops below a
+       threshold — more sophisticated than unimprovedSecondsSpentLimit which
+       only checks if ANY improvement occurred.
+       Source: Timefold 1.31+ feature, Priority 1 quick win in research doc.
+       ======================================================================== -->
+  <solverBenchmark>
+    <name>VND-DiminishedReturns</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+
+      <customPhase>
+        <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+      </customPhase>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <diminishedReturns>
+            <slidingWindowSeconds>300</slidingWindowSeconds>
+          </diminishedReturns>
+          <secondsSpentLimit>600</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>120</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>3.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+        </unionMoveSelector>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>120</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>room</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+        </unionMoveSelector>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+  <!-- ========================================================================
+       CONFIG 9: VND + Cartesian Product Move (joint timeslot+room)
+       Adds a cartesianProductMoveSelector to Phase 3 that changes BOTH
+       timeslot AND room in a single move. This addresses the score trap
+       where an improvement requires changing both variables simultaneously
+       (e.g., moving timeslot fixes H1 but creates H2 room conflict).
+       Phase 4 CH still handles any remaining unassigned rooms.
+       Source: Timefold docs — cartesianProductMoveSelector recommendation;
+       both research docs identify score traps as a key issue.
+       ======================================================================== -->
+  <solverBenchmark>
+    <name>VND-CartesianProduct</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+
+      <customPhase>
+        <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+      </customPhase>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>600</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>120</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>3.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+          <!-- Joint timeslot+room change — addresses score traps -->
+          <cartesianProductMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <changeMoveSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+              <valueSelector variableName="timeslot"/>
+            </changeMoveSelector>
+            <changeMoveSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+              <valueSelector variableName="room"/>
+            </changeMoveSelector>
+          </cartesianProductMoveSelector>
+        </unionMoveSelector>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>120</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+          <swapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <secondaryEntitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </secondaryEntitySelector>
+            <variableNameIncludes>
+              <variableNameInclude>room</variableNameInclude>
+            </variableNameIncludes>
+          </swapMoveSelector>
+        </unionMoveSelector>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+</plannerBenchmark>

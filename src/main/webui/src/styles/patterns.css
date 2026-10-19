@@ -1,0 +1,241 @@
+/**
+ * Visual Pattern Overlays for Lesson Cards
+ *
+ * Design Philosophy: Subtle, refined patterns that add visual distinction
+ * without overwhelming the color underneath. Patterns use transparency overlays
+ * to work with any background color while maintaining readability.
+ *
+ * Pattern Semantics:
+ * - striped: Reserved for future use
+ * - dotted: Lab courses - hands-on practical work
+ * - hatched: Pinned lessons - locked by scheduler
+ * - gradient: Stage periods - transitional internship time
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE PATTERN MIXINS (theme-aware)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --pattern-opacity-light: 0.20;
+  --pattern-opacity-dark: 0.20;
+  --pattern-line-width: 2px;
+  --pattern-spacing: 5px;
+}
+
+[data-theme="dark"] {
+  --pattern-opacity-light: 0.20;
+  --pattern-opacity-dark: 0.22;
+}
+
+[data-theme="school"] {
+  --pattern-opacity-light: 0.18;
+  --pattern-opacity-dark: 0.20;
+  --pattern-line-width: 2.5px;
+  --pattern-spacing: 6px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STRIPED PATTERN (Doppio / Co-teaching)
+   Diagonal stripes suggest two elements woven together
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.pattern-striped {
+  position: relative;
+}
+
+.pattern-striped::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent var(--pattern-spacing),
+    rgba(255, 255, 255, var(--pattern-opacity-dark)) var(--pattern-spacing),
+    rgba(255, 255, 255, var(--pattern-opacity-dark)) calc(var(--pattern-spacing) + var(--pattern-line-width))
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Hover state - slightly more visible */
+.pattern-striped:hover::before {
+  background: repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent var(--pattern-spacing),
+    rgba(255, 255, 255, calc(var(--pattern-opacity-dark) + 0.05)) var(--pattern-spacing),
+    rgba(255, 255, 255, calc(var(--pattern-opacity-dark) + 0.05)) calc(var(--pattern-spacing) + var(--pattern-line-width))
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DOTTED PATTERN (Lab Courses)
+   Small dots suggest hands-on, practical work
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.pattern-dotted {
+  position: relative;
+}
+
+.pattern-dotted::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, var(--pattern-opacity-light)) 1px,
+    transparent 1px
+  );
+  background-size: 5px 5px;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.pattern-dotted:hover::before {
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, calc(var(--pattern-opacity-light) + 0.04)) 1.5px,
+    transparent 1.5px
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HATCHED PATTERN (Pinned Lessons)
+   Cross-hatch suggests "locked" or "fixed" in place
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.pattern-hatched {
+  position: relative;
+}
+
+.pattern-hatched::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 4px,
+      rgba(255, 255, 255, var(--pattern-opacity-light)) 4px,
+      rgba(255, 255, 255, var(--pattern-opacity-light)) calc(4px + var(--pattern-line-width))
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 4px,
+      rgba(255, 255, 255, var(--pattern-opacity-light)) 4px,
+      rgba(255, 255, 255, var(--pattern-opacity-light)) calc(4px + var(--pattern-line-width))
+    );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.pattern-hatched:hover::before {
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 4px,
+      rgba(255, 255, 255, calc(var(--pattern-opacity-light) + 0.03)) 4px,
+      rgba(255, 255, 255, calc(var(--pattern-opacity-light) + 0.03)) calc(4px + var(--pattern-line-width))
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 4px,
+      rgba(255, 255, 255, calc(var(--pattern-opacity-light) + 0.03)) 4px,
+      rgba(255, 255, 255, calc(var(--pattern-opacity-light) + 0.03)) calc(4px + var(--pattern-line-width))
+    );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GRADIENT PATTERN (Stage Periods)
+   Subtle vertical gradient suggests transition/progression
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.pattern-gradient {
+  position: relative;
+}
+
+.pattern-gradient::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 40%,
+    transparent 60%,
+    rgba(0, 0, 0, 0.06) 100%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY: Reduced Motion
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .pattern-striped::before,
+  .pattern-dotted::before,
+  .pattern-hatched::before,
+  .pattern-gradient::before {
+    opacity: 0.5;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILITY: Combined pattern indicator for legends/tooltips
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.pattern-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+}
+
+/* Small visual preview of the pattern */
+.pattern-indicator-striped::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: repeating-linear-gradient(
+    135deg,
+    currentColor,
+    currentColor 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  opacity: 0.5;
+}
+
+.pattern-indicator-dotted::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(
+    circle at center,
+    currentColor 1px,
+    transparent 1px
+  );
+  background-size: 4px 4px;
+  opacity: 0.5;
+}
+
+.pattern-indicator-hatched::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background:
+    repeating-linear-gradient(45deg, currentColor, currentColor 1px, transparent 1px, transparent 3px),
+    repeating-linear-gradient(-45deg, currentColor, currentColor 1px, transparent 1px, transparent 3px);
+  opacity: 0.5;
+}

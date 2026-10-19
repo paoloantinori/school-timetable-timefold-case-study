@@ -1,0 +1,18 @@
+{
+  "badgeLabel": "Solution legality watchdog",
+  "badgeTooltipRed": "{{count}} newly-illegal hard violation(s) since the last check",
+  "badgeTooltipAmber": "{{count}} hard constraint violation(s) in the current schedule",
+  "newViolations": "{{count}} new",
+  "hardViolations": "{{count}} hard",
+  "panelTitle": "Solution Legality Watchdog",
+  "lastChecked": "Last checked",
+  "trigger": "Trigger",
+  "constraintId": "Constraint",
+  "matches": "Matches",
+  "newlyViolated": "New",
+  "noViolations": "No violations found in the current schedule.",
+  "runNow": "Re-check now",
+  "baselineNote": "baseline (no prior snapshot to compare against)",
+  "confirmMovePinned": "This lesson is pinned (locked ground truth). Moving it will change that. Continue?",
+  "moveIntroducedViolations": "This placement introduces new violations: {{details}}"
+}

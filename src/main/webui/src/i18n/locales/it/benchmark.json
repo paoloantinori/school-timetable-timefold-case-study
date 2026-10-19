@@ -1,0 +1,75 @@
+{
+  "title": "Risultati Benchmark",
+  "subtitle": "Traccia le prestazioni delle configurazioni del solver nel tempo",
+  "navTitle": "Benchmark",
+  "noResults": "Nessun risultato benchmark trovato. Esegui un benchmark per vedere i risultati.",
+  "summary": {
+    "title": "Riepilogo",
+    "totalConfigs": "Configurazioni Totali",
+    "bestScore": "Miglior Punteggio",
+    "averageTime": "Tempo Medio",
+    "lastRun": "Ultima Esecuzione"
+  },
+  "table": {
+    "configNumber": "#",
+    "family": "Famiglia",
+    "configName": "Configurazione",
+    "score": "Punteggio",
+    "time": "Tempo",
+    "date": "Data",
+    "directory": "Directory",
+    "notes": "Note",
+    "noNotes": "Nessuna nota. Clicca per aggiungere.",
+    "notesPlaceholder": "Aggiungi note di analisi, osservazioni o intuizioni...",
+    "saveNotes": "Salva",
+    "cancelNotes": "Annulla"
+  },
+  "score": {
+    "hard": "H",
+    "medium": "M",
+    "soft": "S"
+  },
+  "search": {
+    "placeholder": "Cerca configurazioni...",
+    "noResults": "Nessuna configurazione corrisponde alla tua ricerca."
+  },
+  "intro": {
+    "text": "Traccia le prestazioni delle diverse configurazioni del solver nel tempo. I risultati vengono importati automaticamente dalle esecuzioni dei benchmark in local/benchmarkReport/."
+  },
+  "results": {
+    "title": "Risultati"
+  },
+  "howToRun": {
+    "title": "Come Eseguire i Benchmark",
+    "description": "Esegui i benchmark utilizzando gli script forniti. I risultati appariranno automaticamente in questa pagina.",
+    "quick": "Veloce (3 config)",
+    "full": "Completo (23 config)"
+  },
+  "family": {
+    "tabu": "Tabu Search",
+    "sa": "Simulated Annealing",
+    "late_acceptance": "Late Acceptance",
+    "great_deluge": "Great Deluge",
+    "step_counting_hc": "Step Counting HC",
+    "vnd": "Variable Neighborhood Descent"
+  },
+  "analysis": {
+    "title": "Analisi e Raccomandazioni",
+    "familyComparison": "Confronto Famiglie di Algoritmi",
+    "findingsTitle": "Risultati Chiave",
+    "recommendationsTitle": "Raccomandazioni",
+    "findings": [
+      "SA-Temp-50000ms ottiene il miglior punteggio con -10 hard / -30k medium / 365k soft. Supera significativamente tutte le altre configurazioni.",
+      "Le varianti Tabu Search sono affidabili con -15 a -17 violazioni hard, con Tabu-Entity-Size5 e Tabu-Entity-Size10 in testa al gruppo.",
+      "La velocità di valutazione delle mosse correla fortemente con la qualità della soluzione. I migliori solver raggiungono ~14.000 valutazioni/sec mentre VND arranca a ~1.900/sec.",
+      "Tutte le varianti VND performano male (-79 a -96 hard) a causa della velocità di valutazione 7x più lenta, rimanendo bloccate in ottimi locali.",
+      "L'accettazione basata sulla temperatura di Simulated Annealing permette una migliore esplorazione dello spazio di ricerca rispetto all'approccio basato sulla memoria di Tabu."
+    ],
+    "recommendations": [
+      "Usa SA-Temp-50000ms (Simulated Annealing con temperatura 50000ms) come solver di produzione. Ottiene il minor numero di violazioni hard con ampio margine.",
+      "Tabu Search con entity tabu size 5-10 è un'alternativa affidabile se SA fallisce. Prestazione consistente di -15 a -17 hard attraverso le esecuzioni.",
+      "Evita VND (Variable Neighborhood Descent) per questo tipo di problema. La sua lenta velocità di valutazione (1.900/sec) causa una scarsa convergenza.",
+      "Monitora la velocità di valutazione delle mosse durante le esecuzioni del solver. Qualsiasi valore sotto 10.000/sec indica problemi di prestazioni che influenzeranno la qualità della soluzione."
+    ]
+  }
+}

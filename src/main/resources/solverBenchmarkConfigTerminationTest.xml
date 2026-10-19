@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plannerBenchmark xmlns="https://timefold.ai/xsd/benchmark">
+  <!--
+    Termination Test: 1 solver, 5-minute hard limit, 1-minute unimproved limit.
+    Purpose: Verify that Timefold respects termination settings with the current
+    constraint set (including M22 calendar compactness).
+  -->
+
+  <benchmarkDirectory>local/benchmarkReport</benchmarkDirectory>
+
+  <inheritedSolverBenchmark>
+    <solver>
+      <solutionClass>com.school.planner.domain.SchoolSchedule</solutionClass>
+      <entityClass>com.school.planner.domain.Lesson</entityClass>
+      <scoreDirectorFactory>
+        <constraintProviderClass>com.school.planner.solver.SchoolScheduleConstraintProvider</constraintProviderClass>
+        <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+      </scoreDirectorFactory>
+      <termination>
+        <secondsSpentLimit>300</secondsSpentLimit>
+        <unimprovedSecondsSpentLimit>60</unimprovedSecondsSpentLimit>
+      </termination>
+      <constructionHeuristic>
+        <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+      </constructionHeuristic>
+    </solver>
+    <problemBenchmarks>
+      <solutionFileIOClass>com.school.planner.benchmark.SchoolScheduleSolutionFileIO</solutionFileIOClass>
+      <inputSolutionFile>local/data/schedule-production.json</inputSolutionFile>
+    </problemBenchmarks>
+  </inheritedSolverBenchmark>
+
+  <!-- Single solver: Tabu Search -->
+  <solverBenchmark>
+    <name>Tabu-Entity-Size7-TerminationTest</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+      <localSearch>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>0.5</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="room"/>
+          </pillarChangeMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>7</entityTabuSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+</plannerBenchmark>

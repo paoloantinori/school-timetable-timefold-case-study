@@ -1,0 +1,489 @@
+{
+  "title": "Guida ai Vincoli di Programmazione",
+  "subtitle": "Come il programma automatico crea l'orario scolastico",
+  "intro": "Questo documento spiega le regole che guidano il programma di scheduling automatico. Il sistema utilizza tre livelli di priorita: i vincoli Hard non devono mai essere violati, i vincoli Medium sono fortemente evitati, e i vincoli Soft rappresentano preferenze che migliorano la qualita dell'orario quando possibile.",
+  "exampleLabel": "Esempio",
+  "originLabel": "Origine",
+  "hardLabel": "Hard",
+  "mediumLabel": "Medium",
+  "softLabel": "Soft",
+  "hardDesc": "Non devono mai accadere. Sono requisiti assoluti",
+  "mediumDesc": "Fortemente evitati. Violati solo se necessario",
+  "softDesc": "Preferibili. Ottimizzati quando possibile",
+  "hardBadge": "Non Deve Accadere",
+  "mediumBadge": "Fortemente Evitato",
+  "softBadge": "Preferibile",
+  "hardConstraints": "Vincoli Hard",
+  "mediumConstraints": "Vincoli Medium",
+  "softConstraints": "Vincoli Soft",
+  "complexityLink": "Perche la pianificazione e difficile?",
+  "complexityLinkDesc": "Scopri la matematica dietro la complessita degli orari",
+  "constraintCount": "{{count}} vincoli",
+  "process": {
+    "title": "Il Processo 2026/27",
+    "intro": "Come il processo di programmazione della scuola per il 2026/27 si rispecchia nell'app, dai calendari cartacei del coordinatore fino all'orario finale risolto dal solver.",
+    "schoolTitle": "Come la scuola costruisce l'orario",
+    "schoolDescription": "Il coordinatore abbozza per primo un calendario parziale per ogni classe nel Calendario scolastico: quali giorni sono d'aula, quali di laboratorio e quali di stage, e all'incirca quante ore ciascuno. I docenti di laboratorio riempiono poi le proprie preferenze settimanali ricorrenti sopra a questa impalcatura. Solo dopo entrambi i passaggi la scuola produce lo spalmone, l'orario finale corretto a mano (Orario in righe), che riconcilia ogni ora assegnata con quanto effettivamente programmato.",
+    "mirrorTitle": "Come l'app lo rispecchia",
+    "mirrorStep1": {
+      "title": "I dati di partenza vengono dai file della scuola",
+      "description": "Insegnanti, gruppi, aule, corsi, chiusure e assegnazioni orarie (incarichi) vengono caricati direttamente dai fogli della scuola, non ridigitati a mano."
+    },
+    "mirrorStep2": {
+      "title": "L'import Calendario fissa le ore intoccabili",
+      "description": "L'import Calendario legge la struttura di laboratori/stage pre-impostata dal coordinatore e fissa quelle esatte ore come lezioni intoccabili (pinnate), prima ancora che il solver parta."
+    },
+    "mirrorStep3": {
+      "title": "I calendari per gruppo segnano le celle non compilabili",
+      "description": "Il pattern settimanale aperto/chiuso di ogni gruppo studenti (Calendario Gruppi) segna quali slot il solver puo anche solo considerare, rispecchiando le celle vuote che il coordinatore lascia deliberatamente in bianco."
+    },
+    "mirrorStep4": {
+      "title": "Il solver riempie il resto",
+      "description": "Il solver a cinque fasi colloca ogni lezione rimanente e non fissata attorno alla struttura pinnata e al calendario aperto/chiuso, rispettando i vincoli hard, medium e soft descritti sotto (e l'intero ciclo è avvolto in un multi-start che riprova la costruzione finché non consegna un orario senza violazioni hard)."
+    },
+    "mirrorStep5": {
+      "title": "Il controllo di validazione ricontrolla ogni modifica",
+      "description": "Ogni modifica a un insegnante, un corso, una vacanza, una regola di disponibilita o un calendario innesca una nuova validazione dopo un paio di secondi, segnalando cio che e appena diventato illegale. Cosi una correzione manuale non rompe mai silenziosamente una regola altrove."
+    },
+    "mirrorStep6": {
+      "title": "Il cruscotto di riconciliazione rispecchia il foglio della scuola",
+      "description": "La pagina Riconciliazione riproduce il foglio Classi della scuola: ore assegnate (Ore Inc.) contro ore programmate (Ore Prg.) per ogni docente/materia/classe, separando i disallineamenti reali da quelli attesi, come le ore di Stage o Esame lasciate deliberatamente non programmate."
+    },
+    "manualTitle": "Collocazione manuale e pin",
+    "manualDescription": "Ogni ora collocata a mano - tramite l'import Calendario, l'import golden, o un pin manuale nella timeline - diventa intoccabile. Il solver non la spostera mai. Gli slot pomeridiani (14:30-16:30) sono preferibilmente riservati allo stage (M28, preferenza medium): una lezione pomeridiana pinnata resta, e il solver puo collocarne di nuove solo come ultima risorsa penalizzata, come fa la scuola stessa.",
+    "exemptTitle": "Perche alcune regole esentano ore pinnate o con docente fittizio",
+    "exemptDescription": "Diversi vincoli qui sotto (M15, H17, M28, M29, M20, M22) si applicano per intero a tutto cio che colloca il solver, ma esentano le ore gia pinnate, cosi lo storico reale della scuola non viene mai segnalato retroattivamente come una violazione di una regola che gli e successiva. Un altro gruppo (H7, M21, M24, M25, S12, S13) esenta invece le lezioni con un docente fittizio (\"pseudo-teacher\", come i corsi contabili Stage o Esame), perche quelle ore sono contabilita, non il carico di lavoro reale di una persona o di un gruppo."
+  },
+  "pipeline": {
+    "title": "Pipeline di Pre-Assegnazione",
+    "legacyNote": "Per il 2026/27, gli import Calendario e golden (vedi \"Il Processo 2026/27\" sopra) forniscono quasi tutta la struttura fissa di laboratori/stage prima dell'avvio del solver. I passi di rotazione CSP qui sotto esistono ancora e possono essere avviati manualmente, ma quest'anno, non essendo seminate righe LabRotation, sono di fatto un no-op.",
+    "step1": {
+      "title": "Imposta Calendario Stage",
+      "description": "Definisce quali giorni ogni gruppo studenti e fuori per stage/alternanza. Questo blocca quei giorni per le materie fondamentali, mentre le materie professionalizzanti possono comunque svolgersi."
+    },
+    "step2": {
+      "title": "Fissa Rotazione Lab Acconciatura",
+      "description": "I tre insegnanti esterni di acconciatura hanno giorni settimanali fissi. I gruppi studenti ruotano attraverso i loro laboratori in periodi trimestrali. Queste assegnazioni sono bloccate e non vengono mai spostate."
+    },
+    "step3": {
+      "title": "Posiziona Altri Blocchi Laboratorio",
+      "description": "I blocchi laboratorio per altre materie (meccanica, moda, informatica) vengono posizionati seguendo schemi settimanali fissi. Ogni insegnante ha sessioni di laboratorio dedicate con i propri gruppi studenti."
+    },
+    "step4": {
+      "title": "Posiziona Materie Professionalizzanti nei Giorni di Stage",
+      "description": "Nei giorni in cui alcuni studenti sono a stage, le materie professionalizzanti (come i laboratori) possono svolgersi perche gli studenti a stage acquisiscono crediti equivalenti. Le materie fondamentali non possono svolgersi in questi giorni."
+    },
+    "step5": {
+      "title": "Riempi Ore Rimanenti",
+      "description": "Il solver automatico riempie tutte le ore rimanenti, ottimizzando secondo i vincoli sottostanti."
+    }
+  },
+  "h0": {
+    "name": "Lezione Non Assegnata",
+    "description": "Ogni lezione deve avere uno slot orario assegnato. Un'ora di lezione non collocata e il fallimento piu elementare, e il solver la tratta come la violazione piu grave.",
+    "example": "Se un'ora di Matematica per G07 non ha data ne slot assegnati, viene penalizzata finche il solver non la colloca da qualche parte.",
+    "origin": "Vincolo strutturale, nessun documento scuola; una lezione non collocata è la violazione più elementare (fondamentale per il modello)."
+  },
+  "h1": {
+    "name": "Conflitto Insegnante",
+    "description": "Un insegnante non puo tenere due lezioni contemporaneamente. Ogni insegnante puo trovarsi solo in un luogo alla volta.",
+    "example": "Se il Prof. Rossi insegna Matematica alla G03 alle 9:00, non puo anche insegnare alla G07 alle 9:00.",
+    "origin": "Vincolo strutturale, nessun documento scuola; un docente non può essere in due aule contemporaneamente (fisico, fondamentale)."
+  },
+  "h2": {
+    "name": "Conflitto Aula",
+    "description": "Ogni aula puo ospitare una sola classe alla volta. Due gruppi diversi non possono usare la stessa aula simultaneamente.",
+    "example": "L'aula A1 non puo avere sia la G01 che la G05 programmate alle 10:00.",
+    "origin": "Vincolo strutturale, nessun documento scuola; un'aula ospita una sola classe alla volta (fisico, fondamentale)."
+  },
+  "h3": {
+    "name": "Conflitto Gruppo Studenti",
+    "description": "Un gruppo studenti non puo trovarsi in due luoghi contemporaneamente. Non possono avere lezioni sovrapposte.",
+    "example": "La G03 non puo avere sia Informatica che Matematica programmate alle 11:00.",
+    "origin": "Vincolo strutturale, nessun documento scuola; una classe non può essere in due luoghi contemporaneamente (fisico, fondamentale)."
+  },
+  "h4": {
+    "name": "Blocco Stage",
+    "description": "Le materie fondamentali non possono essere programmate nei giorni in cui gli studenti sono a stage. Le materie professionalizzanti sono esentate perche gli studenti a stage acquisiscono crediti equivalenti. Un gruppo puo anche avere un unico giorno feriale designato riservato alle materie professionalizzanti durante lo stage, se configurato (attualmente inutilizzato per il 2026/27, dato che questa struttura arriva dagli import calendario/golden).",
+    "example": "Se la G05 ha stage di mercoledi, la Matematica non puo essere programmata, ma Confezione (materia professionalizzante) puo.",
+    "origin": "Proprieta' strutturale dello stage (studenti fuori sede): le materie fondamentali non possono svolgersi nei giorni di stage. I giorni di stage vengono dal calendario per-gruppo (seed/calendario_*.csv); introdotto TASK-381 (stage on the grid)."
+  },
+  "h5": {
+    "name": "Indisponibilita Insegnante",
+    "description": "Gli insegnanti non possono essere programmati durante i loro orari segnati come non disponibili (ferie, malattia, o altri impegni).",
+    "example": "Se il Prof. Bianchi ha ferie di lunedi, nessuna lezione puo essere assegnata a lui di lunedi.",
+    "origin": "Vincolo strutturale (un docente non è schedulabile nei suoi slot non disponibili); i dati di disponibilita' vengono dal workbook vincoli Spalmone, tab \"Vincoli Docenti\" (es. riga 72: \"T10 | Libero il Govedì  mattina per LES e G14  9,00-17,00\"), seed come TeacherAvailability VACATION."
+  },
+  "h6": {
+    "name": "Vacanze Scolastiche",
+    "description": "Nessuna lezione puo essere programmata durante le vacanze scolastiche o i giorni non didattici.",
+    "example": "Le lezioni non possono essere programmate durante le vacanze di Natale, Pasqua, o feste nazionali.",
+    "origin": "Vincolo strutturale (nessuna lezione nei giorni di chiusura); le date vengono dal calendario scolastico (DataGenerator.CLOSURES_2026_27: Natale, Pasqua, Carnevale, festivita' nazionali), seed come SchoolHoliday."
+  },
+  "h7": {
+    "name": "Max Ore Giornaliere Insegnante",
+    "description": "Un docente non può superare il proprio tetto di ore giornaliere, che è per-docente (default 6 ore; eccezioni dichiarate come 8). Il tetto è per persona, non per gruppo. Vale sulla somma delle ore del giorno su tutti i gruppi.",
+    "example": "Se il massimo di un insegnante e 6 ore al giorno, non possono essere assegnate 7 lezioni in un singolo giorno.",
+    "origin": "\"Non più di 6 ore di lezione al giorno per ogni docente\" (workbook vincoli Spalmone, tab \"Vincoli DA ANALIZZARE\", riga 108)."
+  },
+  "h11": {
+    "name": "Max Ore Giornaliere Gruppo Studenti",
+    "description": "I gruppi studenti non possono superare le loro ore di lezione massime giornaliere. Questo garantisce che gli studenti non siano sovraccarichi.",
+    "example": "Se il massimo di un gruppo e 6 ore, non possono avere 7 ore di lezione in nessun giorno.",
+    "origin": "Vincolo strutturale, nessun documento scuola; una classe non supera il suo monte-ore giornaliero (campo group.maxHoursPerDay, derivato dal curriculum), introdotto fin dalle origini."
+  },
+  "h17": {
+    "name": "Compattezza Verticale (Nessun Buco)",
+    "description": "I gruppi studenti devono avere lezioni contigue senza buchi nel loro orario giornaliero, anche attraverso la pausa pranzo. Slot vuoti tra le lezioni non sono ammessi, tranne un buco storico dove entrambe le lezioni confinanti sono fissate (pinned).",
+    "example": "Se la G01 ha lezioni alle 9:00 e 11:00, dovrebbe esserci anche una lezione alle 10:00, non un buco vuoto.",
+    "origin": "Vincolo strutturale, nessun documento scuola; un orario non presenta buchi interni (compattezza verticale). L'esenzione break-level (gap scusato solo tra due lezioni pinnate) è calibrata sul golden; introdotto TASK-227 (promosso da M13)."
+  },
+  "h14": {
+    "name": "Data Inizio Gruppo Studenti",
+    "description": "Le lezioni non possono essere programmate prima della data di inizio ufficiale del gruppo studenti. Alcuni gruppi possono iniziare piu tardi nell'anno.",
+    "example": "Se la G12 inizia a febbraio, nessuna lezione puo essere programmata per loro a gennaio.",
+    "origin": "Vincolo strutturale, nessun documento scuola; niente lezioni prima della data di inizio del gruppo (gruppi che partono dopo), introdotto fin dalle origini."
+  },
+  "h15": {
+    "name": "Stessa Materia Consecutiva Nello Stesso Giorno",
+    "description": "Quando un gruppo studenti ha piu ore della stessa materia in un giorno, quelle ore dovrebbero essere consecutive (una dopo l'altra), non sparse. Declassato da hard a medium (era H15): la stessa soluzione golden 2026/27 spezza una coppia stessa materia/stesso giorno 98 volte, quindi la regola e una forte preferenza, non un vincolo di fattibilita. Uno spezzettamento e esentato solo quando entrambe le lezioni ai lati del buco sono pinnate (import storici/golden). Lo storico della scuola contiene rari spezzettamenti, ma il solver non puo mai crearne uno nuovo.",
+    "example": "Se la G07 ha 2 ore di Informatica di martedi, dovrebbero essere alle 9:00-10:00 e 10:00-11:00, non alle 9:00 e 14:00. Uno spezzettamento storico pinnato alle 9:00 e 14:00 non e penalizzato; uno collocato dal solver si.",
+    "origin": "Pratica del golden, nessun documento scuola: il golden stesso spezza 98 volte una coppia stesso-giorno stessa-materia, quindi la regola è una preferenza forte non una feasibility. Demoted da hard (H15) TASK-392; esenzione break-level calibrata sul golden."
+  },
+  "h16": {
+    "name": "Stessa materia consecutiva, stesso docente, stessa aula",
+    "description": "Quando la stessa materia è insegnata in ore consecutive dallo stesso docente, entrambe le ore devono restare nella stessa aula (H16b). Mantenere lo stesso docente su ore consecutive della stessa materia è la preferenza soft separata S16.",
+    "example": "Se Inglese è alle 9:00 e alle 10:00 per lo stesso gruppo con il Prof. Verdi, entrambe le ore devono essere nell'Aula B2.",
+    "origin": "Pratica del golden, nessun documento scuola: il golden non registra le aule, quindi la regola non difende il tier hard, ma \"ogni classe ha un'aula\" (H29) è fisicamente irrinunciabile. Demoted da hard (H16b) TASK-446/447; il peso non è la leva (sweep piatto a ~106 cambi d'aula forzati dalla disponibilita')."
+  },
+  "h20": {
+    "name": "Slot Chiuso da Calendario Gruppo",
+    "description": "Una lezione non puo essere collocata in uno slot che il calendario del gruppo studenti segna come chiuso per quel giorno della settimana. E una rete di sicurezza: il solver evita gia gli slot chiusi per costruzione, quindi questo vincolo intercetta solo una lezione pinnata o storica sfuggita al controllo.",
+    "example": "Se il calendario della G01 segna chiuso il venerdi pomeriggio, nessuna lezione per G01 puo finire li, pinnata o meno.",
+    "origin": "Calendario per-gruppo della scuola (GroupCalendarRule: slot aperti/chiusi per weekday); \"Copy of Calendario scolastico 2026_2027.xlsx\", tab del gruppo, seed calendar. Rete di sicurezza (il solver evita già gli slot chiusi per costruzione); introdotto TASK-342."
+  },
+  "h23": {
+    "name": "Lezione Lab a Quota Vincolata in Giorno a Quota Lab Zero",
+    "description": "Per G04/G08/G13, una materia di laboratorio a quota vincolata (es. Lavorazioni meccaniche) non puo essere collocata in un giorno per cui il foglio calendario della scuola assegna zero ore lab a quel gruppo. Rete di sicurezza: il solver evita gia questi giorni per costruzione, quindi questo vincolo intercetta solo una lezione pinnata o storica sfuggita al controllo.",
+    "example": "Se il foglio della G08 assegna 0 ore lab per un mercoledi, nessuna lezione di Lavorazioni meccaniche puo finire li, a meno che non sia una lezione storica pinnata.",
+    "origin": "Calendario per-gruppo della scuola (DailyActivityQuota.labHours per G04/G08/G13); \"Copy of Calendario scolastico 2026_2027.xlsx\", tab del gruppo. Rete di sicurezza; introdotto TASK-381 (L1-bis)."
+  },
+  "h24": {
+    "name": "Lezione in Aula in Giorno a Quota Aula Zero",
+    "description": "Per G04/G08/G13, una lezione ordinaria (non a quota lab) non puo essere collocata in un giorno per cui il foglio calendario della scuola assegna zero ore aula a quel gruppo. Stesso ruolo di rete di sicurezza di H23, per l'altra meta della quota giornaliera.",
+    "example": "Se il foglio della G13 assegna 0 ore aula per un giovedi, nessuna lezione di Matematica puo finire li, a meno che non sia una lezione storica pinnata.",
+    "origin": "Calendario per-gruppo della scuola (DailyActivityQuota.aulaHours per G04/G08/G13); \"Copy of Calendario scolastico 2026_2027.xlsx\", tab del gruppo. Rete di sicurezza; introdotto TASK-381 (L1-bis)."
+  },
+  "h25": {
+    "name": "Lezione di Stage Fuori dai Giorni di Stage",
+    "description": "Una lezione di Stage non pinnata per un gruppo con un calendario di stage noto non puo essere collocata in una data che non e uno dei giorni di stage effettivi di quel gruppo. Rete di sicurezza: il solver evita gia queste date per costruzione, quindi questo vincolo intercetta solo una lezione pinnata o storica sfuggita al controllo.",
+    "example": "Se lo stage della G07 si svolge solo in date specifiche in primavera, nessuna lezione di Stage non pinnata per la G07 puo finire in un giorno di scuola ordinario, a meno che non sia una lezione storica pinnata.",
+    "origin": "Calendario per-gruppo della scuola (DailyActivityQuota.stageHours: le date con stage); \"Copy of Calendario scolastico 2026_2027.xlsx\", tab del gruppo. Confinamento dello stage; introdotto TASK-384."
+  },
+  "h26": {
+    "name": "Lezione in Giorno Senza Sessione",
+    "description": "Per un gruppo coperto dal foglio calendario giornaliero della scuola, una data scolastica senza alcuna voce significa che il gruppo semplicemente non e in sessione quel giorno (quasi sempre una giornata intera di stage o fuori sede). Nessuna lezione ordinaria puo esservi collocata. Rete di sicurezza: il solver evita gia queste date per costruzione, quindi questo vincolo intercetta solo una lezione pinnata o storica sfuggita al controllo.",
+    "example": "Se il foglio della G12 non ha alcuna voce per un giovedi durante la sua finestra di stage, nessuna lezione professionalizzante puo finire in quel giovedi, a meno che non sia una lezione storica pinnata.",
+    "origin": "Calendario per-gruppo della scuola (una data scolastica senza riga DailyActivityQuota = gruppo non in sessione); \"Copy of Calendario scolastico 2026_2027.xlsx\", tab del gruppo. Rete di sicurezza; introdotto TASK-408."
+  },
+  "mla": {
+    "name": "Disponibilita Assistente di Laboratorio",
+    "description": "Gli assistenti di laboratorio dovrebbero essere liberi quando le sessioni di laboratorio si svolgono nella loro aula assegnata. Il solver preferisce programmare le lezioni dell'assistente in orari diversi dalle sessioni di laboratorio nella loro aula.",
+    "example": "Se T14 e l'assistente di laboratorio per la R16 (moda), il solver cerca di lasciarla libera quando si svolgono le sessioni di laboratorio di moda.",
+    "origin": "Doppio/assistente: \"T14 | Libera per doppio in 2°(100 ore)  e 3° moda (100 ore) in R16\" e \"T20 | Libero per doppio in 2° (100 ore)  e 3° moda  (85 ore) in R16\" (workbook vincoli Spalmone, tab \"Vincoli DA ANALIZZARE\", righe 96-97). L'assistente non entra in conflitto con un lab nella sua stanza; vive in M-LA a tier medium."
+  },
+  "h21": {
+    "name": "Pomeriggi Riservati Allo Stage",
+    "description": "Gli slot pomeridiani (14:30-16:30) sono preferibilmente riservati allo stage. Declassato da hard a preferenza medium forte (era H21): l'orario 2026/27 della scuola usa 575 ore pomeridiane vere come valvola di capacità, quindi il solver può usare i pomeriggi come ultima risorsa.",
+    "example": "Una lezione normale alle 14:30 costa una penalità medium; è permessa quando la capacità mattutina si esaurisce, come fa la scuola stessa.",
+    "origin": "Convenzione strutturale (il pomeriggio è riservato allo stage), nessun documento scuola. Demoted da hard (H21) TASK-379: il golden usa 575 lezioni pomeridiane come sfogo di capacità."
+  },
+  "h22": {
+    "name": "Professionalizzanti ai Margini della Giornata",
+    "description": "Nei giorni ristretti (G12 mer/gio), le lezioni professionalizzanti dovrebbero formare una sequenza breve a bordo giornata. Declassato da hard a medium (era H22): l'orario della scuola stessa non segue questa forma in modo rigido.",
+    "example": "La prima o l'ultima ora (o le prime/ultime due ore) di mercoledi per G12 possono essere professionalizzanti. Un'ora professionalizzante isolata a meta giornata, o un blocco di 3 ore, viene penalizzata.",
+    "origin": "\"Professionalizzanti solo il giovedì e il venerdì\" (G12; workbook vincoli Spalmone, tab \"Vincoli Classi\", riga 14). La forma \"al bordo della giornata, blocco fino a 2h\" è modellata sulla pratica; demoted da hard (H22) TASK-379 perché il golden non la segue strettamente."
+  },
+  "hm2": {
+    "name": "Idoneita Aula",
+    "description": "I corsi di laboratorio devono essere assegnati ad aule con attrezzatura/tag corrispondenti. Una lezione di informatica necessita di un laboratorio informatico, non di un'aula regolare.",
+    "example": "Informatica deve essere in un'aula con tag 'informatica'. Non puo essere programmata in un'aula regolare o laboratorio di moda.",
+    "origin": "Vincolo strutturale, nessun documento scuola; un corso di laboratorio va in un'aula col tag corrispondente (fisico). Assunzione ancora da confermare con la scuola: Disegno meccanico (meccanica) e Disegno edile (informatica) trattati come lab. Introdotto fin dalle origini."
+  },
+  "m3": {
+    "name": "Capacita Aula",
+    "description": "Le aule dovrebbero accogliere la dimensione del gruppo studenti. Una classe di 25 studenti non dovrebbe essere in un'aula con capacita 20.",
+    "example": "Se la G01 ha 22 studenti, non dovrebbero essere assegnati all'Aula C1 che ne contiene solo 18.",
+    "origin": "Vincolo strutturale, nessun documento scuola; l'aula deve contenere la classe (capacità vs numerosita'), introdotto fin dalle origini."
+  },
+  "m5": {
+    "name": "Informatica Dopo lo Stage",
+    "description": "Per i gruppi MODA e FA, le lezioni di Informatica sono preferite dopo la fine del loro periodo di stage. Questo supporta il lavoro di tesi (tesina).",
+    "example": "Se lo stage della G05 finisce ad aprile, le loro ore rimanenti di Informatica dovrebbero idealmente essere programmate a maggio-giugno.",
+    "origin": "Pratica della scuola per le tesine (MODA/FA), nessun documento scuola citato: le ore di Informatica preferibilmente dopo lo stage. Preferenza non requisito; introdotto TASK-015."
+  },
+  "m12": {
+    "name": "Overflow Oltre la Data Fine Target",
+    "description": "Le lezioni non dovrebbero essere programmate dopo la data fine target del gruppo studenti. Questo incoraggia una programmazione efficiente entro l'anno scolastico.",
+    "example": "Se la data fine target della G03 e il 15 giugno, le lezioni non dovrebbero andare oltre in giugno o luglio.",
+    "origin": "Calendario per-gruppo della scuola: la data fine attesa cumula le ore attese per-data (DailyActivityQuota expected-hours) al totale del corso; \"Copy of Calendario scolastico 2026_2027.xlsx\", tab del gruppo. Fact-based dal TASK-394; introdotto TASK-385."
+  },
+  "m18": {
+    "name": "La Giornata Inizia dal Primo Slot Aperto",
+    "description": "La prima lezione di ogni giornata di un gruppo dovrebbe stare al primo slot aperto del calendario del gruppo (esteso dalle sole giornate corte a tutte le giornate, TASK-405: l'orario golden ancora il 99,3% delle sue giornate al primo slot). La penalita cresce con l'offset: iniziare due slot in ritardo pesa piu di uno.",
+    "example": "Se il calendario del martedi della G10 apre allo slot 0, la prima lezione del martedi dovrebbe iniziare allo slot 0; iniziare alle 10:00 (slot 2) costa il doppio delle 9:00.",
+    "origin": "Pratica del golden, nessun documento scuola: il golden ancora il 99,3% dei giorni-gruppo al primo slot aperto (misure task405-results). Allargato a ogni giorno col gradiente per-offset TASK-405; era gated ai giorni corti (task-247/350)."
+  },
+  "m20": {
+    "name": "Riempimento Giornaliero Rispetto al Piano",
+    "description": "Ogni giorno di lezione dovrebbe ricevere le ore che il calendario della scuola prevede per quella data. La penalita' addebita le ore mancanti rispetto al piano atteso. Il bersaglio è ridotto dalle ore già fissate da input autoritativi e non supera mai il monte-ore assegnato del gruppo.",
+    "example": "Se il piano prevede 5 ore per la G07 il 14 settembre e l'orario ne colloca 4, quel giorno lascia un deficit di 1 ora. Per i gruppi con più capacità in calendario che monte-ore assegnato (es. G04: 835 disponibili, 750 assegnate), il bersaglio si ferma al monte-ore.",
+    "origin": "Calendario per-gruppo della scuola (DailyActivityQuota: ore attese aula+lab per (gruppo, data)); \"Copy of Calendario scolastico 2026_2027.xlsx\", tab del gruppo. Target netto dei pin autoritativi dal TASK-424; tetto al monte-ore assegnato dal TASK-497; introdotto TASK-385."
+  },
+  "m22": {
+    "name": "Compattezza del Calendario",
+    "description": "Il calendario utilizzato da un gruppo studenti, dalla prima all'ultima lezione, non dovrebbe contenere giorni scolastici vuoti. Il numero minimo di giorni è calcolato sulla media delle quote dichiarate aula+lab del gruppo (forma quota-aware ratificata: quando le ore collocate coincidono col monte del foglio, il minimo è esattamente il numero di giorni che la scuola ha dichiarato).",
+    "example": "Se la prima lezione di G06 e il 15 settembre e l'ultima il 5 giugno, ogni giorno scolastico in mezzo dovrebbe avere almeno una lezione di G06; nessun martedi vuoto inspiegato nel mezzo.",
+    "origin": "Pratica del golden, nessun documento scuola: la scuola costruisce un blocco compatto di giorni di lezione (dal primo all'ultimo, senza giorni vuoti in mezzo). Introdotto task-273."
+  },
+  "m23": {
+    "name": "Coesione Coppia Lezioni a Blocco",
+    "description": "Quando una materia di piu ore e divisa in piu ore-lezione dello stesso corso e della stessa sessione (un blocco modellato come righe separate anziche una singola entita), tutte quelle ore devono cadere sulla stessa data.",
+    "example": "Un blocco di Disegno edile di 2 ore diviso in due righe-lezione dovrebbe stare nello stesso giorno, non una il lunedi e l'altra il giovedi.",
+    "origin": "Vincolo strutturale, nessun documento scuola; un blocco pluri-orario modellato come righe separate deve stare nello stesso giorno (integrita' del blocco, es. Disegno edile 2h). Introdotto TASK-183."
+  },
+  "s1": {
+    "name": "Minimizza Buchi Insegnante",
+    "description": "Gli insegnanti dovrebbero avere blocchi di insegnamento contigui con minimo tempo inattivo tra le lezioni.",
+    "example": "Se il Prof. Rossi insegna alle 9:00 e 11:00, idealmente insegerebbe anche alle 10:00 piuttosto che avere un buco.",
+    "origin": "Vincolo strutturale, nessun documento scuola; minimizza i buchi di attesa del docente tra lezioni (qualità), introdotto fin dalle origini."
+  },
+  "s3": {
+    "name": "Preferenza Insegnante",
+    "description": "Gli insegnanti possono indicare fasce orarie preferite. Il programma cerca di onorare queste preferenze quando possibile.",
+    "example": "Se il Prof. Bianchi preferisce le lezioni mattutine, dovrebbero idealmente essere programmate prima delle 13:00.",
+    "origin": "Vincolo strutturale, nessun documento scuola; onora gli slot preferiti dichiarati dal docente (input), introdotto fin dalle origini."
+  },
+  "m21": {
+    "name": "Massimo 2h Per Materia Al Giorno",
+    "description": "Gli studenti dovrebbero avere varieta. Non piu di 2 ore della stessa materia al giorno, esclusi laboratori, Informatica, Competenze Digitali e Disegno, che possono essere svolti in blocchi piu lunghi (task-365; soglia alzata da 1h a 2h nel task-381, in linea con la pratica reale della scuola che usa regolarmente blocchi da 2h). Sono esenti anche le lezioni con docente fittizio (es. Stage).",
+    "example": "Un orario con Matematica alle 8:00, 9:00 non e penalizzato (2h di Matematica, consentite). Matematica alle 8:00, 9:00, 10:00 e penalizzato (3h di Matematica, 1 ora in eccesso). Disegno alle 8:00, 9:00, 10:00 non e penalizzato (materia esente).",
+    "origin": "Pratica del golden, nessun documento scuola: la scuola costruisce blocchi da 2h, quindi la soglia è a 2h (alzata da 1h, TASK-381). Materie lab/Informatica/Competenze Digitali/Disegno esenti; pseudo-docente esente."
+  },
+  "m24": {
+    "name": "Al Massimo Un Giorno di Inizio Anticipato a Settimana",
+    "description": "Per gli insegnanti con un limite settimanale personale sugli inizi alle 08:00 (attualmente T11, che puo iniziare alle 08:00 al massimo un giorno a settimana), ogni inizio alle 08:00 oltre il limite viene penalizzato.",
+    "example": "Se T11 inizia alle 08:00 sia lunedi che mercoledi nella stessa settimana, uno dei due inizi anticipati viene penalizzato.",
+    "origin": "\"T11 | 9-14 sempre e un giorno alle 8.00\" (workbook vincoli Spalmone, tab \"Vincoli Docenti\", riga 49). Per-docente maxEarlyStartDaysPerWeek (T11=1); raggruppato per (docente, settimana ISO); introdotto TASK-368."
+  },
+  "m25": {
+    "name": "Giorno Libero Richiesto a Settimana",
+    "description": "Per gli insegnanti con un requisito settimanale personale di giorni liberi (attualmente T05, che ne necessita 2 completamente liberi), una settimana che non lascia abbastanza giorni feriali senza lezioni viene penalizzata.",
+    "example": "Se T05 ha lezioni in 4 dei 5 giorni feriali di una data settimana (solo 1 giorno libero, non i 2 richiesti), quella settimana viene penalizzata.",
+    "origin": "T05: \"VENERDI' | Libero  a casa\" e \"No lezione in uno di questi giorni AL MASSIMO UN'ORA\" (workbook vincoli Spalmone, tab \"Vincoli Docenti\", righe 45-46). Per-docente requiredFreeDaysPerWeek (T05=2); introdotto TASK-368."
+  },
+  "s7": {
+    "name": "Premia Lezioni Studenti Consecutive",
+    "description": "Gli orari studenti con lezioni consecutive (buchi minimi) sono preferiti. Questo migliora l'efficienza temporale per gli studenti.",
+    "example": "Un orario con lezioni alle 8:00, 9:00, 10:00 e migliore di lezioni alle 8:00, 10:00, 13:00.",
+    "origin": "Vincolo strutturale, nessun documento scuola; premia lezioni studente consecutive (qualità), introdotto fin dalle origini."
+  },
+  "s8": {
+    "name": "Penalizza Lezioni Isolate",
+    "description": "Le lezioni studenti che sono isolate (senza lezioni adiacenti nello stesso giorno) dovrebbero essere evitate quando possibile.",
+    "example": "Una singola lezione alle 8:00 senza altre lezioni quel giorno e meno ideale di piu lezioni contigue.",
+    "origin": "Vincolo strutturale, nessun documento scuola; penalizza lezioni studente isolate (qualità), introdotto fin dalle origini."
+  },
+  "s9": {
+    "name": "Diluisci Ore Durante l'Anno (attualmente disabilitato)",
+    "description": "Le ore delle materie dovrebbero essere spalmate durante l'anno scolastico piuttosto che concentrate. Questo garantisce una progressione di apprendimento coerente. Disabilitato dal task-273 (in conflitto con la compattezza del calendario); vedi S12 per il vincolo di continuita settimanale correlato ma distinto, attualmente attivo.",
+    "example": "Avere 3 lezioni di Inglese in una settimana e nessuna la successiva e meno ideale di 1-2 lezioni costantemente ogni settimana.",
+    "origin": "Vincolo strutturale, nessun documento scuola; diluire le ore sull'anno (qualità). DISABILITATO dal task-273 (si oppone alla compattezza del calendario); vedi S12 per la continuità settimanale distinta e attiva."
+  },
+  "s10": {
+    "name": "Riserva Aule Lab per i Laboratori",
+    "description": "Le materie regolari (non laboratorio) dovrebbero preferibilmente non usare aule di laboratorio specializzate. I laboratori dovrebbero essere disponibili per le materie che li necessitano.",
+    "example": "Insegnare Italiano nel laboratorio informatico e scoraggiato se sono disponibili aule regolari.",
+    "origin": "Vincolo strutturale, nessun documento scuola; sconsiglia le materie ordinarie nelle aule-lab (qualità), introdotto task-007."
+  },
+  "s11": {
+    "name": "Affinita Aula per Gruppo Studenti",
+    "description": "I gruppi studenti dovrebbero preferibilmente rimanere nella stessa aula durante il giorno per le lezioni non di laboratorio. Questo minimizza spostamenti non necessari tra le aule.",
+    "example": "Se G01 ha 4 lezioni non di laboratorio lunedi, tenerle tutte nell'Aula A e meglio che suddividerle tra Aula A e Aula B.",
+    "origin": "Vincolo strutturale, nessun documento scuola; una classe preferibilmente resta nella stessa aula per le lezioni non-lab (qualità), introdotto task-008."
+  },
+  "m27": {
+    "name": "Preferenza Periodo di Inizio Materia",
+    "description": "Alcune materie dovrebbero iniziare presto nell'anno, altre piu tardi. Merceologia e Arredi Tessili dovrebbero avere la prima lezione entro le prime settimane; Tecnologia Tessile e Storia della moda non dovrebbero iniziare troppo presto. Le altre materie (Figurino, Consulenza d'immagine, Sviluppo Sostenibile) non hanno vincoli.",
+    "example": "Se la prima lezione di Merceologia per G01 e alla settimana 8, viene penalizzato (dovrebbe iniziare entro la settimana 3). Se la prima lezione di Storia della moda e alla settimana 1, viene penalizzato anche questo (non dovrebbe iniziare prima della settimana 4).",
+    "origin": "\"Subito merceologia in 1° e 2°\" e \"3° fa tecnologia e merceologia ultime\" (workbook vincoli Spalmone, tab \"Vincoli DA ANALIZZARE\", righe 98 e 101). Finestra sulla settimana della prima lezione per materie T20; introdotto TASK-369."
+  },
+  "m30": {
+    "name": "Riempimento Quota Lab Giornaliera",
+    "description": "Per G04/G08/G13, ogni giorno per cui il foglio calendario della scuola assegna ore lab dovrebbe avere altrettante lezioni lab a quota vincolata collocate, contando anche le lezioni pinnate (verifica l'accuratezza storica della scuola stessa, non solo i futuri collocamenti del solver).",
+    "example": "Se il foglio assegna 4 ore lab per G04 in un giorno e ne sono collocate solo 2 (o 0), lo scarto viene penalizzato per ogni ora mancante.",
+    "origin": "Calendario per-gruppo della scuola (DailyActivityQuota.labHours per G04/G08/G13); \"Copy of Calendario scolastico 2026_2027.xlsx\", tab del gruppo. Conta anche i pin (verifica la pratiche storiche della scuola); introdotto TASK-381 (L1-bis)."
+  },
+  "m31": {
+    "name": "Blocco Unico Continuo Giorno Lab",
+    "description": "Per G04/G08/G13, le lezioni lab a quota vincolata di un giorno dovrebbero formare un blocco unico senza interruzioni, non spezzato in sequenze separate. Un giorno in cui ogni lezione coinvolta e pinnata (dato storico) e esente.",
+    "example": "Se G08 ha 3 ore di Lavorazioni meccaniche in un giorno agli slot 0-1 e poi allo slot 4, e una separazione (penalizzata); gli slot 0-2 insieme sono un blocco unico (non penalizzato).",
+    "origin": "Calendario per-gruppo della scuola + pratica del blocco lab compatto; \"Copy of Calendario scolastico 2026_2027.xlsx\", tab del gruppo. Day-level pinned-exempt; introdotto TASK-381 (L1-bis)."
+  },
+  "m32": {
+    "name": "Deviazione dal Template",
+    "description": "Prima di risolvere viene costruito un template settimanale che assegna a ogni corso le sue celle ricorrenti (giorno, slot). Spostare una lezione fuori dalla cella del suo corso viene penalizzato, con un peso graduato per scarsita: un corso con poche collocazioni legali e quasi immobile, uno con molte e economico da spostare. Contano solo giorno e slot, quindi spostare una lezione in un'altra settimana allo stesso giorno/slot non e una deviazione. Le lezioni pinnate e di Stage sono esenti.",
+    "example": "Se il template di un corso lo colloca al lunedi slot 0, mettere quella lezione al martedi slot 3 e una deviazione (penalizzata); metterla in un altro lunedi allo slot 0 no.",
+    "origin": "Pratica del golden, nessun documento scuola: il template settimanale per corso (cella weekday/slot ricorrente) è derivato dal golden/stamp e pubblicato pre-solve (WeeklyTemplatePlanner.buildReference). Peso graduato per scarsezza; introdotto TASK-413."
+  },
+  "m33": {
+    "name": "Ore in Eccesso Rispetto all'Atteso del Giorno",
+    "description": "L'immagine speculare di M20: dove M20 addebita le ore che mancano a un giorno della classe, M33 addebita le ore parcheggiate sopra quanto il piano della scuola prevede per quella coppia (classe, data). Penalita leggera, non un divieto: la scuola stessa va sopra il piano in circa 70 giorni l'anno, quindi il sorpasso resta ammesso quando serve a qualcosa. Lezioni pinnate e G14 sono esenti, e i giorni da cui il piano non si aspetta nulla (non in sessione, chiusi, solo stage) sono fuori ambito.",
+    "example": "Se il foglio prevede 6 ore per la G03 di lunedi e ne vengono collocate 8, le 2 ore in eccesso sono penalizzate; 6 ore (o 5) no.",
+    "origin": "Calendario per-gruppo della scuola (DailyActivityQuota expected-hours, target netto dei pin TASK-424); \"Copy of Calendario scolastico 2026_2027.xlsx\", tab del gruppo. Il golden stesso sfora ~70 giorni/anno, quindi è penalty leggera non ban; introdotto TASK-423."
+  },
+  "s12": {
+    "name": "Presenza Settimanale della Materia",
+    "description": "Per la continuita didattica, una materia dovrebbe idealmente avere almeno una lezione a settimana finche viene insegnata attivamente (esclusi i periodi di stage). Premia ogni settimana in cui la materia e presente, incoraggiando la distribuzione rispetto alla concentrazione.",
+    "example": "Una materia insegnata 1 ora a settimana per 10 settimane e premiata piu delle stesse 10 ore concentrate in 2 settimane.",
+    "origin": "Vincolo strutturale, nessun documento scuola; continuità settimanale (almeno una lezione/settimana mentre la materia è attiva, lower bound, NON ripristino di S9); introdotto TASK-369."
+  },
+  "s13": {
+    "name": "Stabilita Settimanale",
+    "description": "Una lezione non fissata viene premiata quando la sua cella (gruppo studenti, giorno, ora) corrisponde alla stessa cella di una settimana prima per insegnante e materia. Spinge il solver verso una regolarita settimanale simile a quella umana senza imporre un modello fisso; una settimana precedente chiusa o assente e neutra, mai penalizzata.",
+    "example": "Se G03 ha Matematica con l'Insegnante A nell'ora 2 di lunedi questa settimana, e aveva la stessa Matematica/Insegnante A nell'ora 2 di lunedi la settimana scorsa, il solver viene premiato per aver mantenuto quel pattern.",
+    "origin": "Pratica del golden, nessun documento scuola: è una MISURA della ricorrenza settimanale (cella gruppo/weekday/slot uguale alla settimana precedente su docente e materia). La protezione del template è M32; introdotto task-375."
+  },
+  "s16": {
+    "name": "Stessa materia consecutiva, stesso docente",
+    "description": "Due ore consecutive della stessa materia preferibilmente mantengono lo stesso docente. Preferenza soft (era la hard H16a): l'orario 2026/27 della scuola passa deliberatamente le ore di RA/Recuperi da un docente all'altro in sequenza, quindi il passaggio è permesso, solo lievemente scoraggiato.",
+    "example": "Recuperi alle 10:00 con la Prof.ssa T16 seguito da Recuperi alle 11:00 con la Prof.ssa T02 è permesso, ma la continuità di docente ha un punteggio leggermente migliore.",
+    "origin": "Pratica del golden, nessun documento scuola: il golden passa deliberatamente le ore RA/Recuperi tra docenti back-to-back (15 handoff), quindi il cambio è ammesso, solo scoraggiato. Demoted da hard (H16a) TASK-377."
+  },
+  "s17": {
+    "name": "Premia Coppia di Blocco Stessa Materia",
+    "description": "Le coppie di lezioni adiacenti, stesso giorno e stessa materia, per un gruppo studenti vengono premiate, incoraggiando il solver a collocare le ore ripetute di una materia come blocco invece di disperderle (task-381). Le lezioni con docente fittizio (es. Stage) sono esenti, cosi una giornata lunga di contabilita non genera premi spuri. Non richiede lo stesso docente (vedi S16 per quella preferenza).",
+    "example": "Matematica alle 9:00 e alle 10:00 per lo stesso gruppo viene premiata una volta per quella coppia adiacente; Matematica alle 9:00 e alle 13:00 (non adiacenti) non viene premiata.",
+    "origin": "Pratica del golden, nessun documento scuola: la scuola costruisce blocchi same-day same-subject (premia la coppia adiacente, lab inclusi a differenza di M21/S16); introdotto TASK-381 (L3)."
+  },
+  "h28": {
+    "name": "Nessun rientro del docente nella giornata",
+    "description": "Dentro la stessa giornata, per la stessa materia e lo stesso gruppo, un docente che cede il blocco a un collega non rientra più dopo di lui. Sequenze come A-B-A sono vietate. I passaggi di consegne nell'orario della scuola sono sempre A poi B.",
+    "example": "Se Italiano di G01 passa da T04 a T17 a meta' mattina, T04 non può riprendere nelle ore successive dello stesso giorno.",
+    "origin": "Pratica del golden, nessun documento scuola: il golden non presenta mai sequenze A..B..A nello stesso (gruppo, materia, giorno). Cristallizza l'invariante a delta zero (il run è già a 0); introdotto TASK-448."
+  },
+  "h29": {
+    "name": "La lezione assegnata deve avere un'aula",
+    "description": "Ogni lezione collocata in un orario deve avere anche un'aula. Senza questo vincolo il solver preferisce lasciare l'aula vuota, perché i vincoli sulle aule sono silenti quando l'aula manca e assegnarla può solo costare.",
+    "example": "Una lezione di Confezione fissata al martedì alle 10:00 senza R16 assegnata. L'orario non è applicabile finché non ha un'aula.",
+    "origin": "Vincolo strutturale, nessun documento scuola; ogni lezione collocata deve avere un'aula (un orario senza aula non è usabile). Promosso a hard (era M36) col TASK-447 per chiudere l'arbitraggio empty-the-schedule."
+  },
+  "hcopresence": {
+    "name": "Tetto Co-presenza Ospite",
+    "description": "Un docente ospite può condividere l'aula di un titolare solo fino alla profondità che il golden stesso pratica per quella cella (tag co-presenza, weekday, slot). Rete di sicurezza hard a conteggio, abbinata all'esenzione di conflitto aula che lascia condividere l'aula a una coppia ospite praticata dal golden.",
+    "example": "Se il golden colloca al massimo 2 lezioni ospite in R16 al giovedì slot 0, una terza lezione ospite li' è penalizzata.",
+    "origin": "Pratica del golden, nessun documento scuola: il tetto di co-presenza di un ospite in un'aula è la profondità che il golden stesso pratica per quella cella (loadGoldenCoPresenceDepth). Lettura del golden su percorso di produzione, censita in TASK-452 #7; introdotto TASK-464."
+  },
+  "m34": {
+    "name": "Ore settimanali materia sopra la cadenza golden",
+    "description": "Le ore di una materia in una settimana non dovrebbero superare il massimo settimanale che il golden colloca per quel (gruppo, materia). Cap self-gating: le coppie assenti dal golden sono inerti. Penalizza la concentrazione a burst oltre cio' che fa la scuola.",
+    "example": "Se il golden colloca al massimo 4 ore di Matematica in una settimana per G03, una settimana da 6 ore di Matematica è penalizzata per le 2 ore in eccesso.",
+    "origin": "Pratica del golden, nessun documento scuola: il cap settimanale per (gruppo, materia) è il massimo settimanale del golden (claudedocs/spalmone-2026-27/data/golden-cadence-reference.json). Self-gating; introdotto TASK-425."
+  },
+  "m35": {
+    "name": "Diffusione settimanale materia sotto la cadenza golden",
+    "description": "Una materia dovrebbe essere presente in almeno tante settimane attive quante il golden la distribuisce, per ogni (gruppo, materia). Penalizza le settimane attive mancanti rispetto alla diffusione del golden. Self-gating: le coppie assenti dal golden sono inerti.",
+    "example": "Se il golden distribuisce Lingua Italiana per G06 su 28 settimane attive, un run che la concentra in 22 settimane è penalizzato per le 6 settimane mancanti.",
+    "origin": "Pratica del golden, nessun documento scuola: penalizza le settimane attive mancanti rispetto ad active_weeks del golden per (gruppo, materia) (golden-cadence-reference.json). Self-gating; introdotto TASK-425."
+  },
+  "mlf": {
+    "name": "Lezione non-lab in aula con tag",
+    "description": "Una lezione non-lab preferibilmente non sta in un'aula di laboratorio specializzata (con tag): il lab resta l'ultima risorsa per le lezioni ordinarie. Abbinata alla regola che un'aula con capienza zero o meno (oggi R18) non è mai assegnabile.",
+    "example": "Una lezione di Matematica nel laboratorio di R16 costa una penalty medium quando c'è un'aula normale disponibile; non viene mai mandata in R18.",
+    "origin": "Vincolo strutturale di fallback delle stanze, nessun documento scuola; un'aula capienza<=0 non è assegnabile (oggi R18 cap 0). Domanda 21 (referente, 29/07); introdotto TASK-456, ratificato maintainer 2026-07-29."
+  },
+  "mtc": {
+    "name": "Capienza tag lab (prototipo, off di default)",
+    "description": "Penalizza la domanda di un tag lab oltre la capacità aggregata delle stanze disponibili per quella cella (tag, start-date-time). Scarsita'-aware, tier medium (il golden stesso accetta ~44 violazioni). Prototipo, off di default (flag planner.tag-capacity.enabled).",
+    "example": "Se 5 lezioni di acconciatura richiedono R16 al giovedì slot 0 ma le stanze R16 assegnabili ne tengono 3, i 2 in eccesso sono penalizzati.",
+    "origin": "Vincolo strutturale di scarsita' dei tag, nessun documento scuola; la domanda di lezioni di un tag oltre la capacità aggregata delle stanze assignable per cella (tag, startDateTime). Prototipo flag planner.tag-capacity.enabled DEFAULT OFF; introdotto TASK-455."
+  },
+  "mtr": {
+    "name": "Materia teorica ripetuta nello stesso giorno (prototipo, off di default)",
+    "description": "Due ore vicine della stessa materia teorica non dovrebbero stare attaccate; i laboratori (compreso Disegno e Informatica) possono avere più ore vicine. Soglia-1 teorica, distinta dal cap soglia-2 di M21. Prototipo, off di default (flag planner.constraints.theory-adjacent.enabled).",
+    "example": "Lingua Italiana alle 9:00 e alle 10:00 per lo stesso gruppo è penalizzata; Disegno alle 9:00 e alle 10:00 no.",
+    "origin": "\"Non ci devono essere 2 ore vicine della stessa materia teorica\" e \"I laboratori (compreso disegno o informatica) possono avere più ore vicine\" (workbook vincoli Spalmone, tab \"Vincoli DA ANALIZZARE\", righe 104-105). Soglia-1 teorica (M21-style a soglia 2); prototipo flag planner.constraints.theory-adjacent.enabled DEFAULT OFF; introdotto TASK-468."
+  },
+  "mcps": {
+    "name": "Curriculum post-stage 6h (ratificato, on di default)",
+    "description": "Dopo la fine dello stage di una coorte finale, le sue materie curriculum (G10 Comportamento Sociale, G08 Competenze di cittadinanza + Educazione Civica, G11 Personalizzazione, docente T11) dovrebbero riempire circa 6 ore al giorno. Asimmetrico: il deficit costa peso pieno, l'eccesso solo un peso simbolico. Ratificato, on di default dal 2026-08-01 (opt-out con flag planner.constraints.curriculum-poststage.enabled=false).",
+    "example": "Se lo stage di G10 finisce il 2027-04-23 e in un giorno successivo sono collocate solo 3 ore curriculum, il deficit di 3h rispetto al target 6h è penalizzato a peso pieno.",
+    "origin": "\"CON II FC E III OIT E III FA 6 ore dopo stage per curriculum (ANCHE 2 CONSECUTIVVE)\" (workbook vincoli Spalmone, tab \"Vincoli Docenti\", riga 50). Target 6h asimmetrico sulle coorti finali (G10 / G08 / G11, T11); ratificato flag planner.constraints.curriculum-poststage.enabled DEFAULT ON dal 2026-08-01; introdotto TASK-469."
+  },
+  "m38": {
+    "name": "Deviazione dalla cella di coppia (ratificato, peso 1)",
+    "description": "Una lezione di una coppia (docente, gruppo) che ha una forma settimanale riconoscibile preferisce stare nella cella (giorno, ora) che quella coppia pratica, invece che altrove. Ratificato a peso 1 (una tassa leggera che non compra match): il vincolo è attivo ma resta inerte finché il costruttore di celle di coppia non vince il suo gate, e il banner dichiara lo stato del builder.",
+    "example": "Se la coppia T10/G04 pratica il giovedì 8:00-9:00, una sua lezione collocata al martedì 14:00 paga la deviazione.",
+    "origin": "Pratica del golden (TASK-576 F7-C): circa il 73% delle lezioni di coppie con forma sta nella cella della coppia; ratificato a peso 1 il 2/09 dopo lo sweep che mostro' che il match non dipende dal peso."
+  },
+  "mbf": {
+    "name": "Compattita' del giorno per docente lab (ratificato, peso 20)",
+    "description": "In un giorno in cui un gruppo ha ore di laboratorio con due o più docenti reali diversi, le ore di ciascun docente dovrebbero stare in un blocco contiguo, non alternate (il laboratorio è del docente, non della materia). Esclude i giorni a docente unico (pratica della scuola: le giornate monografiche G13 di T10). Fuori dal perimetro lab il vincolo non si applica: il golden stesso sparge Figurino in ore da 1.",
+    "example": "Se in un giorno G13 ha 3 ore di T10 e 3 di T16, T10 8-11 e T16 11-14 è la forma voluta; T10, T16, T10, T16 paga i buchi.",
+    "origin": "Passo 3 del pianificatore umano (il lab è per docente non per materia) + misura del golden; ratificato 18/09 (TASK blockform-623) col banco che mostro' la ricerca locale CREARE frammentazione e il vincolo ridurla da 71 a 11 giorni."
+  },
+  "h30": {
+    "name": "Sicurezza Prima dello Stage",
+    "description": "Tutte le ore di Sicurezza di un gruppo devono essere svolte prima dell'inizio dello stage del gruppo. I gruppi senza periodo di stage non sono interessati.",
+    "example": "Se lo stage di G07 inizia il 23 marzo, tutte le lezioni di Sicurezza devono avere data precedente, non durante o dopo lo stage.",
+    "origin": "\"SICUREZZA | Ore con le 3° (+ 2° OIT) prima di Stage | 2 gg di sicurezza  4 ore con le 1°\" (workbook vincoli Spalmone, tab \"Vincoli Docenti\", riga 42). Le Sicurezze precedono lo stage del gruppo; introdotto TASK-369."
+  },
+  "h31": {
+    "name": "Inizio Giornata dal Primo Slot Aperto",
+    "description": "La prima ora di una giornata di un gruppo deve stare al primo slot che il calendario del gruppo lascia aperto quel giorno. La scuola non fa aspettare una classe un'ora prima di iniziare. Esente i giorni che contengono ore già pinnate autoritative. Promosso a hard dalla sua forma medium (M18) col protocollo near-miss: il golden ancora il 99,9% dei suoi giorni alle 8:00 e le poche eccezioni sono tutte il primo giorno di scuola.",
+    "example": "Se il calendario della G01 apre il mercoledì dalle 8:00, la prima lezione del mercoledì della G01 deve essere l'ora delle 8:00, non delle 9:00.",
+    "origin": "Pratica del golden, nessun documento scuola: 1943 giorni su 1960 iniziano all'ora di apertura (le 13 eccezioni sono tutte il primo giorno di scuola). Promosso da M18 col TASK-529 dopo l'ispezione di maintainer che scopri' giorni in ritardo nascosti dalla media aggregata."
+  },
+  "h32": {
+    "name": "Riempimento del Giorno alla Quota Dichiarata",
+    "description": "Le ore ordinarie (non stage) collocate in un giorno devono raggiungere la quota aula+lab che il foglio calendario della scuola dichiara per quella data. Tolleranza zero, perché il golden converge esattamente alla quota. Ambito: solo le date con slot di griglia; G04 e G08 seguono invece il tetto del loro monte-ore (forma pool-cap), G14 è esclusa, G09 ha tolleranza 1 ora. Un pass deterministico di riparazione (QuotaFillRepair) lavora in coppia con questo vincolo.",
+    "example": "Il foglio dichiara 6 ore per la G12 di venerdì: il run deve collocare esattamente 6 ore ordinarie quel venerdì, non 4.",
+    "origin": "Origine calendario per-gruppo (DailyActivityQuota, TASK-385 e TASK-532): il piano per-data della scuola è il target, e il golden stesso lo rispetta senza scostamenti."
+  },
+  "h33": {
+    "name": "Pavimento Giornaliero per Gruppo",
+    "description": "Nessuna giornata ordinaria di un gruppo può scendere sotto un pavimento di ore derivato matematicamente dal monte-ore del gruppo e dai giorni di sessione, con il golden che entra solo come tetto di esistenza (dove perfino il golden soccombe, il pavimento si abbassa): 4 ore per 12 gruppi, 2 dove il golden stesso pratica giornate corte (G08, G09), 3 per G14.",
+    "example": "Una giornata da 2 ore per la G03 viola il pavimento di 4 ore; la stessa giornata per la G08 è legale perché il golden stesso tiene giornate da 2.",
+    "origin": "Vincolo strutturale derivato matematicamente (DayFloorDeriver, TASK-536), dall'ispezione di maintainer: le giornate da 2-3 ore di G04 erano inaccettabili e invisibili al metro aggregato."
+  },
+  "h34": {
+    "name": "Giorno Dichiarato Vuoto",
+    "description": "Un giorno che il foglio calendario dichiara con ore aula+lab non può restare completamente vuoto: il giorno vuoto paga un costo fisso, e appena una sola lezione atterra la profondità del difetto passa al vincolo di riempimento (H32). E' il companion hard di H32: senza di esso un giorno interamente vuoto sarebbe invisibile al conteggio delle ore (che vede solo i giorni con lezioni) e la ricerca locale lo userebbe come moneta di scambio.",
+    "example": "Il 9 giugno 2027 ha una riga di quota da 4 ore per la G06: lasciarlo a zero lezioni costa, indipendentemente da quante ore manchino.",
+    "origin": "Origine calendario per-gruppo (companion di H32, TASK-557): il buco di conteggio fu trovato analizzando perché un giorno dichiarato vuoto pagava solo a tier medio."
+  },
+  "h4_3": {
+    "name": "Professionalizzanti a giorno singolo in stage",
+    "description": "Sibling di H4 nella famiglia stage: le materie professionalizzanti di un gruppo con quota stage devono stare tutte in un unico giorno durante il periodo di stage, invece del blocco distribuito. Vincolo latente sul seed 2026/27 (zero match): la regola esiste nel codice ma la pratica del calendario non la esercita.",
+    "example": "Durante lo stage, le ore professionalizzanti del gruppo si concentrano in un solo giorno della settimana invece che su piu giorni.",
+    "origin": "Proprieta' strutturale dichiarata col modello stage (TASK-381, sibling H4); latente sul seed 2026/27 (0 match misurati)."
+  },
+  "m20_2": {
+    "name": "Giorno atteso vuoto",
+    "description": "La coda della famiglia day-fill: un giorno che il piano della scuola prevede (riga di quota con ore aula+lab) ma su cui non è collocata nessuna lezione paga il deficit alla profondita piena. Condivide con M20 la stessa curva di costo e lo stesso target netto dei pin autoritativi (TASK-424).",
+    "example": "Il piano prevede 6 ore per la G04 di mercoledi e il run ne colloca 0: M20.2 carica il deficit dell'intero giorno.",
+    "origin": "Origine calendario per-gruppo (DailyActivityQuota, TASK-385): il piano della scuola è il target; sibling di M20 sul lato giorno-vuoto."
+  },
+  "m30_1": {
+    "name": "Riempimento del giorno lab",
+    "description": "Per i gruppi con split aula/lab (righe calendario FC), il giorno lab deve riempire la quota di ore lab prevista. Conta anche le lezioni pinnate: la quota lab è un piano della scuola, non un suggerimento.",
+    "example": "La G04 ha 2 ore lab previste il martedi: il run deve collocarle, oltre alle ore aula del giorno.",
+    "origin": "Origine calendario FC (calendario_fc.csv, TASK-381 L1-bis): la quota lab per data è un fatto del piano."
+  },
+  "m30_2": {
+    "name": "Copertura della finestra lab",
+    "description": "Complemento di M30.1 sul totale: la somma delle ore lab collocate del gruppo deve raggiungere il monte lab del piano. Garantisce che il riempimento per-giorno (M30.1) non svuoti altre date.",
+    "example": "Il monte lab annuo della G08 dal calendario è 106 ore: il run deve collocarle tutte entro l'orizzonte.",
+    "origin": "Origine calendario FC (calendario_fc.csv, TASK-381 L1-bis): il totale lab è la somma del piano per data."
+  }
+}

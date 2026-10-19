@@ -1,0 +1,20 @@
+project_name: "school_planner"
+default_status: "To Do"
+statuses: ["To Do", "In Progress", "Done"]
+labels: []
+definition_of_done:
+  - "Skill /simplify eseguita sul diff e finding applicati"
+  - "Skill /code-review high eseguita: candidati verificati (Opus) e tutti i confermati corretti"
+  - "Verifica finale con EXIT CODE dall'orchestratore (test.sh / ui-typecheck / ui-build dove applicabile), non solo dall'agente implementatore"
+date_format: yyyy-mm-dd
+max_column_width: 20
+default_editor: "vi"
+auto_open_browser: false
+default_port: 6420
+remote_operations: true
+auto_commit: false
+zero_padded_ids: 3
+bypass_git_hooks: false
+check_active_branches: true
+active_branch_days: 30
+task_prefix: "task"

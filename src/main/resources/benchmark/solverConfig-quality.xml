@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver xmlns="https://timefold.ai/xsd/solver">
+  <!--
+    Quality Benchmark Configuration
+    ===============================
+    Purpose: Thorough optimization testing (2min runs)
+    Strategy: Full 5-phase pipeline (CH + LS)
+    Use Case: Performance analysis, A/B testing
+  -->
+
+  <solutionClass>com.school.planner.domain.SchoolSchedule</solutionClass>
+
+  <scoreDirectorFactory>
+    <constraintProviderClass>com.school.planner.solver.SchoolScheduleConstraintProvider</constraintProviderClass>
+    <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+  </scoreDirectorFactory>
+
+  <termination>
+    <!-- 2-minute limit for quality benchmarks -->
+    <secondsSpentLimit>120</secondsSpentLimit>
+  </termination>
+
+  <!-- Phase 1: Day-Clustered Lesson Placement (custom CH) -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+  </customPhase>
+
+  <!-- Event-based phase transition marker: Phase 1 → Phase 2 -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="2"/>
+      <property name="phaseName" value="2. CH - Fallback Placement"/>
+    </customProperties>
+  </customPhase>
+
+  <!-- Phase 2: FALLBACK CONSTRUCTION HEURISTIC -->
+  <constructionHeuristic>
+    <queuedEntityPlacer>
+      <entitySelector>
+        <entityClass>com.school.planner.domain.Lesson</entityClass>
+        <cacheType>PHASE</cacheType>
+        <sorterManner>DESCENDING</sorterManner>
+      </entitySelector>
+      <changeMoveSelector>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <valueSelector variableName="timeslot"/>
+      </changeMoveSelector>
+    </queuedEntityPlacer>
+  </constructionHeuristic>
+
+  <!-- Event-based phase transition marker: Phase 2 → Phase 3 -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="3"/>
+      <property name="phaseName" value="3. LS - Compactness"/>
+    </customProperties>
+  </customPhase>
+
+  <!-- Phase 3: COMPACTNESS FOCUS (shortened termination for benchmarks) -->
+  <localSearch>
+    <termination>
+      <secondsSpentLimit>45</secondsSpentLimit>
+      <unimprovedSecondsSpentLimit>15</unimprovedSecondsSpentLimit>
+    </termination>
+    <unionMoveSelector>
+      <changeMoveSelector>
+        <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+          <filterClass>com.school.planner.solver.UnpinnedLessonFilter</filterClass>
+        </entitySelector>
+        <valueSelector variableName="timeslot"/>
+      </changeMoveSelector>
+    </unionMoveSelector>
+    <acceptor>
+      <entityTabuSize>5</entityTabuSize>
+      <lateAcceptanceSize>200</lateAcceptanceSize>
+    </acceptor>
+    <forager>
+      <acceptedCountLimit>1</acceptedCountLimit>
+    </forager>
+  </localSearch>
+
+  <!-- Event-based phase transition marker: Phase 3 → Phase 4 -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="4"/>
+      <property name="phaseName" value="4. LS - Conflict Resolution"/>
+    </customProperties>
+  </customPhase>
+
+  <!-- Phase 4: CONFLICT RESOLUTION (shortened termination for benchmarks) -->
+  <localSearch>
+    <termination>
+      <secondsSpentLimit>45</secondsSpentLimit>
+      <unimprovedSecondsSpentLimit>15</unimprovedSecondsSpentLimit>
+    </termination>
+    <unionMoveSelector>
+      <changeMoveSelector>
+        <fixedProbabilityWeight>3.0</fixedProbabilityWeight>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+          <filterClass>com.school.planner.solver.UnpinnedLessonFilter</filterClass>
+        </entitySelector>
+        <valueSelector variableName="timeslot"/>
+      </changeMoveSelector>
+      <changeMoveSelector>
+        <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+          <filterClass>com.school.planner.solver.UnpinnedLessonFilter</filterClass>
+        </entitySelector>
+        <valueSelector variableName="room"/>
+      </changeMoveSelector>
+    </unionMoveSelector>
+    <acceptor>
+      <entityTabuSize>7</entityTabuSize>
+      <lateAcceptanceSize>300</lateAcceptanceSize>
+    </acceptor>
+    <forager>
+      <acceptedCountLimit>4</acceptedCountLimit>
+    </forager>
+  </localSearch>
+
+  <!-- Event-based phase transition marker: Phase 4 → Phase 5 -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="5"/>
+      <property name="phaseName" value="5. LS - Room Refinement"/>
+    </customProperties>
+  </customPhase>
+
+  <!-- Phase 5: ROOM REFINEMENT (shortened termination for benchmarks) -->
+  <localSearch>
+    <termination>
+      <secondsSpentLimit>30</secondsSpentLimit>
+      <unimprovedSecondsSpentLimit>10</unimprovedSecondsSpentLimit>
+    </termination>
+    <unionMoveSelector>
+      <changeMoveSelector>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+          <filterClass>com.school.planner.solver.UnpinnedLessonFilter</filterClass>
+        </entitySelector>
+        <valueSelector variableName="room"/>
+      </changeMoveSelector>
+      <swapMoveSelector>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+          <filterClass>com.school.planner.solver.UnpinnedLessonFilter</filterClass>
+        </entitySelector>
+        <variableNameInclude>room</variableNameInclude>
+      </swapMoveSelector>
+    </unionMoveSelector>
+    <acceptor>
+      <entityTabuSize>10</entityTabuSize>
+      <lateAcceptanceSize>400</lateAcceptanceSize>
+    </acceptor>
+    <forager>
+      <acceptedCountLimit>1</acceptedCountLimit>
+    </forager>
+  </localSearch>
+
+</solver>

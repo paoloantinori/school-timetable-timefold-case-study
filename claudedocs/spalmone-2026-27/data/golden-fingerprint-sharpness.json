@@ -1,0 +1,3602 @@
+{
+  "input": "claudedocs/spalmone-2026-27/data/lessons.csv",
+  "hi_threshold": 0.9,
+  "lo_threshold": 0.1,
+  "overall": {
+    "groups": 14,
+    "used_cells": 376,
+    "decided_cells": 351,
+    "pooled_sharpness_pct": 93.4,
+    "macro_sharpness_pct": 93.8
+  },
+  "by_group": {
+    "G01": {
+      "active_weeks": 38,
+      "used_cells": 29,
+      "decided_cells": 29,
+      "sharpness_pct": 100.0,
+      "cells": [
+        {
+          "group": "G01",
+          "weekday": 0,
+          "slot": 0,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 0,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 0,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 0,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 0,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 0,
+          "slot": 5,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 1,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 1,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 1,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 1,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 1,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 1,
+          "slot": 5,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 2,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 2,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 2,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 2,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 2,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 2,
+          "slot": 5,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 3,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 3,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 3,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 3,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 3,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 3,
+          "slot": 5,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 4,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 4,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 4,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 4,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G01",
+          "weekday": 4,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        }
+      ]
+    },
+    "G02": {
+      "active_weeks": 38,
+      "used_cells": 29,
+      "decided_cells": 29,
+      "sharpness_pct": 100.0,
+      "cells": [
+        {
+          "group": "G02",
+          "weekday": 0,
+          "slot": 0,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 0,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 0,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 0,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 0,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 0,
+          "slot": 5,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 1,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 1,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 1,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 1,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 1,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 1,
+          "slot": 5,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 2,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 2,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 2,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 2,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 2,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 2,
+          "slot": 5,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 3,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 3,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 3,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 3,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 3,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 3,
+          "slot": 5,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 4,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 4,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 4,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 4,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G02",
+          "weekday": 4,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        }
+      ]
+    },
+    "G03": {
+      "active_weeks": 38,
+      "used_cells": 29,
+      "decided_cells": 29,
+      "sharpness_pct": 100.0,
+      "cells": [
+        {
+          "group": "G03",
+          "weekday": 0,
+          "slot": 0,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 0,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 0,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 0,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 0,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 0,
+          "slot": 5,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 1,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 1,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 1,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 1,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 1,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 1,
+          "slot": 5,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 2,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 2,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 2,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 2,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 2,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 2,
+          "slot": 5,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 3,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 3,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 3,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 3,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 3,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 3,
+          "slot": 5,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 4,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 4,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 4,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 4,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G03",
+          "weekday": 4,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        }
+      ]
+    },
+    "G04": {
+      "active_weeks": 37,
+      "used_cells": 26,
+      "decided_cells": 25,
+      "sharpness_pct": 96.2,
+      "cells": [
+        {
+          "group": "G04",
+          "weekday": 0,
+          "slot": 0,
+          "occupancy": 0.963,
+          "weeks_used": 26,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 0,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 0,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 0,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 0,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 1,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 28,
+          "active_weekday_weeks": 28,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 1,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 28,
+          "active_weekday_weeks": 28,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 1,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 28,
+          "active_weekday_weeks": 28,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 1,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 28,
+          "active_weekday_weeks": 28,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 1,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 28,
+          "active_weekday_weeks": 28,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 2,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 2,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 2,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 2,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 2,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 2,
+          "slot": 5,
+          "occupancy": 0.724,
+          "weeks_used": 21,
+          "active_weekday_weeks": 29,
+          "decided": false
+        },
+        {
+          "group": "G04",
+          "weekday": 3,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 3,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 3,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 3,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 3,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 4,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 4,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 4,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 4,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G04",
+          "weekday": 4,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        }
+      ]
+    },
+    "G05": {
+      "active_weeks": 38,
+      "used_cells": 29,
+      "decided_cells": 29,
+      "sharpness_pct": 100.0,
+      "cells": [
+        {
+          "group": "G05",
+          "weekday": 0,
+          "slot": 0,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 0,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 0,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 0,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 0,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 0,
+          "slot": 5,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 1,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 1,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 1,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 1,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 1,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 1,
+          "slot": 5,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 2,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 2,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 2,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 2,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 2,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 2,
+          "slot": 5,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 3,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 3,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 3,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 3,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 3,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 3,
+          "slot": 5,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 4,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 4,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 4,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 4,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G05",
+          "weekday": 4,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        }
+      ]
+    },
+    "G06": {
+      "active_weeks": 38,
+      "used_cells": 31,
+      "decided_cells": 27,
+      "sharpness_pct": 87.1,
+      "cells": [
+        {
+          "group": "G06",
+          "weekday": 0,
+          "slot": 0,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 0,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 0,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 0,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 0,
+          "slot": 4,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 0,
+          "slot": 5,
+          "occupancy": 0.939,
+          "weeks_used": 31,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 1,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 1,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 1,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 1,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 1,
+          "slot": 4,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 1,
+          "slot": 5,
+          "occupancy": 0.939,
+          "weeks_used": 31,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 2,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 2,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 2,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 2,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 2,
+          "slot": 4,
+          "occupancy": 0.971,
+          "weeks_used": 34,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 2,
+          "slot": 5,
+          "occupancy": 0.971,
+          "weeks_used": 34,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 2,
+          "slot": 6,
+          "occupancy": 0.457,
+          "weeks_used": 16,
+          "active_weekday_weeks": 35,
+          "decided": false
+        },
+        {
+          "group": "G06",
+          "weekday": 2,
+          "slot": 7,
+          "occupancy": 0.457,
+          "weeks_used": 16,
+          "active_weekday_weeks": 35,
+          "decided": false
+        },
+        {
+          "group": "G06",
+          "weekday": 3,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 3,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 3,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 3,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 36,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 3,
+          "slot": 4,
+          "occupancy": 0.944,
+          "weeks_used": 34,
+          "active_weekday_weeks": 36,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 3,
+          "slot": 5,
+          "occupancy": 0.889,
+          "weeks_used": 32,
+          "active_weekday_weeks": 36,
+          "decided": false
+        },
+        {
+          "group": "G06",
+          "weekday": 4,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 4,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 4,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 4,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 34,
+          "active_weekday_weeks": 34,
+          "decided": true
+        },
+        {
+          "group": "G06",
+          "weekday": 4,
+          "slot": 4,
+          "occupancy": 0.441,
+          "weeks_used": 15,
+          "active_weekday_weeks": 34,
+          "decided": false
+        }
+      ]
+    },
+    "G07": {
+      "active_weeks": 37,
+      "used_cells": 28,
+      "decided_cells": 27,
+      "sharpness_pct": 96.4,
+      "cells": [
+        {
+          "group": "G07",
+          "weekday": 0,
+          "slot": 0,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 0,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 0,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 0,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 0,
+          "slot": 4,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 0,
+          "slot": 5,
+          "occupancy": 0.273,
+          "weeks_used": 9,
+          "active_weekday_weeks": 33,
+          "decided": false
+        },
+        {
+          "group": "G07",
+          "weekday": 1,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 1,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 1,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 1,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 1,
+          "slot": 4,
+          "occupancy": 0.958,
+          "weeks_used": 23,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 1,
+          "slot": 5,
+          "occupancy": 0.958,
+          "weeks_used": 23,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 2,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 2,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 2,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 2,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 2,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 2,
+          "slot": 5,
+          "occupancy": 0.04,
+          "weeks_used": 1,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 3,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 3,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 3,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 3,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 3,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 4,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 4,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 4,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 4,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G07",
+          "weekday": 4,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        }
+      ]
+    },
+    "G08": {
+      "active_weeks": 33,
+      "used_cells": 27,
+      "decided_cells": 25,
+      "sharpness_pct": 92.6,
+      "cells": [
+        {
+          "group": "G08",
+          "weekday": 0,
+          "slot": 0,
+          "occupancy": 0.963,
+          "weeks_used": 26,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 0,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 0,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 0,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 0,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 1,
+          "slot": 0,
+          "occupancy": 0.962,
+          "weeks_used": 25,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 1,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 1,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 1,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 1,
+          "slot": 4,
+          "occupancy": 0.885,
+          "weeks_used": 23,
+          "active_weekday_weeks": 26,
+          "decided": false
+        },
+        {
+          "group": "G08",
+          "weekday": 2,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 2,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 2,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 2,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 2,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 3,
+          "slot": 0,
+          "occupancy": 0.931,
+          "weeks_used": 27,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 3,
+          "slot": 1,
+          "occupancy": 0.966,
+          "weeks_used": 28,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 3,
+          "slot": 2,
+          "occupancy": 0.966,
+          "weeks_used": 28,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 3,
+          "slot": 3,
+          "occupancy": 0.966,
+          "weeks_used": 28,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 3,
+          "slot": 4,
+          "occupancy": 0.966,
+          "weeks_used": 28,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 3,
+          "slot": 6,
+          "occupancy": 0.034,
+          "weeks_used": 1,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 3,
+          "slot": 7,
+          "occupancy": 0.034,
+          "weeks_used": 1,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 4,
+          "slot": 0,
+          "occupancy": 0.964,
+          "weeks_used": 27,
+          "active_weekday_weeks": 28,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 4,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 28,
+          "active_weekday_weeks": 28,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 4,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 28,
+          "active_weekday_weeks": 28,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 4,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 28,
+          "active_weekday_weeks": 28,
+          "decided": true
+        },
+        {
+          "group": "G08",
+          "weekday": 4,
+          "slot": 4,
+          "occupancy": 0.893,
+          "weeks_used": 25,
+          "active_weekday_weeks": 28,
+          "decided": false
+        }
+      ]
+    },
+    "G09": {
+      "active_weeks": 31,
+      "used_cells": 27,
+      "decided_cells": 26,
+      "sharpness_pct": 96.3,
+      "cells": [
+        {
+          "group": "G09",
+          "weekday": 0,
+          "slot": 0,
+          "occupancy": 0.96,
+          "weeks_used": 24,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 0,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 0,
+          "slot": 2,
+          "occupancy": 0.96,
+          "weeks_used": 24,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 0,
+          "slot": 3,
+          "occupancy": 0.96,
+          "weeks_used": 24,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 0,
+          "slot": 4,
+          "occupancy": 0.96,
+          "weeks_used": 24,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 1,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 1,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 1,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 1,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 1,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 1,
+          "slot": 5,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 2,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 2,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 2,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 2,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 2,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 3,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 3,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 3,
+          "slot": 2,
+          "occupancy": 0.966,
+          "weeks_used": 28,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 3,
+          "slot": 3,
+          "occupancy": 0.966,
+          "weeks_used": 28,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 3,
+          "slot": 4,
+          "occupancy": 0.966,
+          "weeks_used": 28,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 3,
+          "slot": 5,
+          "occupancy": 0.138,
+          "weeks_used": 4,
+          "active_weekday_weeks": 29,
+          "decided": false
+        },
+        {
+          "group": "G09",
+          "weekday": 4,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 4,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 4,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 4,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G09",
+          "weekday": 4,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        }
+      ]
+    },
+    "G10": {
+      "active_weeks": 31,
+      "used_cells": 31,
+      "decided_cells": 23,
+      "sharpness_pct": 74.2,
+      "cells": [
+        {
+          "group": "G10",
+          "weekday": 0,
+          "slot": 0,
+          "occupancy": 0.958,
+          "weeks_used": 23,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 0,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 0,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 0,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 0,
+          "slot": 4,
+          "occupancy": 0.917,
+          "weeks_used": 22,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 1,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 1,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 1,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 1,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 1,
+          "slot": 4,
+          "occupancy": 0.962,
+          "weeks_used": 25,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 2,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 2,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 2,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 2,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 2,
+          "slot": 4,
+          "occupancy": 0.889,
+          "weeks_used": 24,
+          "active_weekday_weeks": 27,
+          "decided": false
+        },
+        {
+          "group": "G10",
+          "weekday": 2,
+          "slot": 5,
+          "occupancy": 0.556,
+          "weeks_used": 15,
+          "active_weekday_weeks": 27,
+          "decided": false
+        },
+        {
+          "group": "G10",
+          "weekday": 2,
+          "slot": 6,
+          "occupancy": 0.556,
+          "weeks_used": 15,
+          "active_weekday_weeks": 27,
+          "decided": false
+        },
+        {
+          "group": "G10",
+          "weekday": 2,
+          "slot": 7,
+          "occupancy": 0.556,
+          "weeks_used": 15,
+          "active_weekday_weeks": 27,
+          "decided": false
+        },
+        {
+          "group": "G10",
+          "weekday": 3,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 3,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 3,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 3,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 29,
+          "active_weekday_weeks": 29,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 3,
+          "slot": 4,
+          "occupancy": 0.31,
+          "weeks_used": 9,
+          "active_weekday_weeks": 29,
+          "decided": false
+        },
+        {
+          "group": "G10",
+          "weekday": 3,
+          "slot": 5,
+          "occupancy": 0.207,
+          "weeks_used": 6,
+          "active_weekday_weeks": 29,
+          "decided": false
+        },
+        {
+          "group": "G10",
+          "weekday": 3,
+          "slot": 6,
+          "occupancy": 0.241,
+          "weeks_used": 7,
+          "active_weekday_weeks": 29,
+          "decided": false
+        },
+        {
+          "group": "G10",
+          "weekday": 3,
+          "slot": 7,
+          "occupancy": 0.241,
+          "weeks_used": 7,
+          "active_weekday_weeks": 29,
+          "decided": false
+        },
+        {
+          "group": "G10",
+          "weekday": 4,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 4,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 4,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 4,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G10",
+          "weekday": 4,
+          "slot": 4,
+          "occupancy": 0.08,
+          "weeks_used": 2,
+          "active_weekday_weeks": 25,
+          "decided": true
+        }
+      ]
+    },
+    "G11": {
+      "active_weeks": 37,
+      "used_cells": 27,
+      "decided_cells": 24,
+      "sharpness_pct": 88.9,
+      "cells": [
+        {
+          "group": "G11",
+          "weekday": 0,
+          "slot": 0,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 0,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 0,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 0,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 0,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 0,
+          "slot": 5,
+          "occupancy": 0.424,
+          "weeks_used": 14,
+          "active_weekday_weeks": 33,
+          "decided": false
+        },
+        {
+          "group": "G11",
+          "weekday": 1,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 1,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 1,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 1,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 1,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 1,
+          "slot": 5,
+          "occupancy": 0.96,
+          "weeks_used": 24,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 2,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 2,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 2,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 2,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 2,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 3,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 3,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 3,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 3,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 25,
+          "active_weekday_weeks": 25,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 3,
+          "slot": 4,
+          "occupancy": 0.52,
+          "weeks_used": 13,
+          "active_weekday_weeks": 25,
+          "decided": false
+        },
+        {
+          "group": "G11",
+          "weekday": 4,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 4,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 4,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 4,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G11",
+          "weekday": 4,
+          "slot": 4,
+          "occupancy": 0.269,
+          "weeks_used": 7,
+          "active_weekday_weeks": 26,
+          "decided": false
+        }
+      ]
+    },
+    "G12": {
+      "active_weeks": 38,
+      "used_cells": 28,
+      "decided_cells": 24,
+      "sharpness_pct": 85.7,
+      "cells": [
+        {
+          "group": "G12",
+          "weekday": 0,
+          "slot": 0,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 0,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 0,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 0,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 0,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 1,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 1,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 1,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 1,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 1,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 2,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 2,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 2,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 2,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 35,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 2,
+          "slot": 4,
+          "occupancy": 0.971,
+          "weeks_used": 34,
+          "active_weekday_weeks": 35,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 3,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 21,
+          "active_weekday_weeks": 21,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 3,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 21,
+          "active_weekday_weeks": 21,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 3,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 21,
+          "active_weekday_weeks": 21,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 3,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 21,
+          "active_weekday_weeks": 21,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 3,
+          "slot": 4,
+          "occupancy": 0.952,
+          "weeks_used": 20,
+          "active_weekday_weeks": 21,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 3,
+          "slot": 5,
+          "occupancy": 0.286,
+          "weeks_used": 6,
+          "active_weekday_weeks": 21,
+          "decided": false
+        },
+        {
+          "group": "G12",
+          "weekday": 3,
+          "slot": 6,
+          "occupancy": 0.238,
+          "weeks_used": 5,
+          "active_weekday_weeks": 21,
+          "decided": false
+        },
+        {
+          "group": "G12",
+          "weekday": 3,
+          "slot": 7,
+          "occupancy": 0.238,
+          "weeks_used": 5,
+          "active_weekday_weeks": 21,
+          "decided": false
+        },
+        {
+          "group": "G12",
+          "weekday": 4,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 12,
+          "active_weekday_weeks": 12,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 4,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 12,
+          "active_weekday_weeks": 12,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 4,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 12,
+          "active_weekday_weeks": 12,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 4,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 12,
+          "active_weekday_weeks": 12,
+          "decided": true
+        },
+        {
+          "group": "G12",
+          "weekday": 4,
+          "slot": 4,
+          "occupancy": 0.333,
+          "weeks_used": 4,
+          "active_weekday_weeks": 12,
+          "decided": false
+        }
+      ]
+    },
+    "G13": {
+      "active_weeks": 37,
+      "used_cells": 27,
+      "decided_cells": 26,
+      "sharpness_pct": 96.3,
+      "cells": [
+        {
+          "group": "G13",
+          "weekday": 0,
+          "slot": 0,
+          "occupancy": 0.97,
+          "weeks_used": 32,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 0,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 0,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 0,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 0,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 33,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 0,
+          "slot": 5,
+          "occupancy": 0.03,
+          "weeks_used": 1,
+          "active_weekday_weeks": 33,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 1,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 1,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 1,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 1,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 1,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 2,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 2,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 2,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 2,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 27,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 2,
+          "slot": 4,
+          "occupancy": 0.963,
+          "weeks_used": 26,
+          "active_weekday_weeks": 27,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 3,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 3,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 3,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 3,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 26,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 3,
+          "slot": 4,
+          "occupancy": 0.962,
+          "weeks_used": 25,
+          "active_weekday_weeks": 26,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 3,
+          "slot": 5,
+          "occupancy": 0.577,
+          "weeks_used": 15,
+          "active_weekday_weeks": 26,
+          "decided": false
+        },
+        {
+          "group": "G13",
+          "weekday": 4,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 4,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 4,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 4,
+          "slot": 3,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        },
+        {
+          "group": "G13",
+          "weekday": 4,
+          "slot": 4,
+          "occupancy": 1.0,
+          "weeks_used": 24,
+          "active_weekday_weeks": 24,
+          "decided": true
+        }
+      ]
+    },
+    "G14": {
+      "active_weeks": 15,
+      "used_cells": 8,
+      "decided_cells": 8,
+      "sharpness_pct": 100.0,
+      "cells": [
+        {
+          "group": "G14",
+          "weekday": 3,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 15,
+          "active_weekday_weeks": 15,
+          "decided": true
+        },
+        {
+          "group": "G14",
+          "weekday": 3,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 15,
+          "active_weekday_weeks": 15,
+          "decided": true
+        },
+        {
+          "group": "G14",
+          "weekday": 3,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 15,
+          "active_weekday_weeks": 15,
+          "decided": true
+        },
+        {
+          "group": "G14",
+          "weekday": 3,
+          "slot": 3,
+          "occupancy": 0.933,
+          "weeks_used": 14,
+          "active_weekday_weeks": 15,
+          "decided": true
+        },
+        {
+          "group": "G14",
+          "weekday": 3,
+          "slot": 4,
+          "occupancy": 0.933,
+          "weeks_used": 14,
+          "active_weekday_weeks": 15,
+          "decided": true
+        },
+        {
+          "group": "G14",
+          "weekday": 4,
+          "slot": 0,
+          "occupancy": 1.0,
+          "weeks_used": 14,
+          "active_weekday_weeks": 14,
+          "decided": true
+        },
+        {
+          "group": "G14",
+          "weekday": 4,
+          "slot": 1,
+          "occupancy": 1.0,
+          "weeks_used": 14,
+          "active_weekday_weeks": 14,
+          "decided": true
+        },
+        {
+          "group": "G14",
+          "weekday": 4,
+          "slot": 2,
+          "occupancy": 1.0,
+          "weeks_used": 14,
+          "active_weekday_weeks": 14,
+          "decided": true
+        }
+      ]
+    }
+  },
+  "least_decided_cells": [
+    {
+      "group": "G11",
+      "weekday": 3,
+      "slot": 4,
+      "occupancy": 0.52,
+      "weeks_used": 13,
+      "active_weekday_weeks": 25,
+      "decided": false
+    },
+    {
+      "group": "G06",
+      "weekday": 2,
+      "slot": 6,
+      "occupancy": 0.457,
+      "weeks_used": 16,
+      "active_weekday_weeks": 35,
+      "decided": false
+    },
+    {
+      "group": "G06",
+      "weekday": 2,
+      "slot": 7,
+      "occupancy": 0.457,
+      "weeks_used": 16,
+      "active_weekday_weeks": 35,
+      "decided": false
+    },
+    {
+      "group": "G10",
+      "weekday": 2,
+      "slot": 5,
+      "occupancy": 0.556,
+      "weeks_used": 15,
+      "active_weekday_weeks": 27,
+      "decided": false
+    },
+    {
+      "group": "G10",
+      "weekday": 2,
+      "slot": 6,
+      "occupancy": 0.556,
+      "weeks_used": 15,
+      "active_weekday_weeks": 27,
+      "decided": false
+    },
+    {
+      "group": "G10",
+      "weekday": 2,
+      "slot": 7,
+      "occupancy": 0.556,
+      "weeks_used": 15,
+      "active_weekday_weeks": 27,
+      "decided": false
+    },
+    {
+      "group": "G06",
+      "weekday": 4,
+      "slot": 4,
+      "occupancy": 0.441,
+      "weeks_used": 15,
+      "active_weekday_weeks": 34,
+      "decided": false
+    },
+    {
+      "group": "G11",
+      "weekday": 0,
+      "slot": 5,
+      "occupancy": 0.424,
+      "weeks_used": 14,
+      "active_weekday_weeks": 33,
+      "decided": false
+    },
+    {
+      "group": "G13",
+      "weekday": 3,
+      "slot": 5,
+      "occupancy": 0.577,
+      "weeks_used": 15,
+      "active_weekday_weeks": 26,
+      "decided": false
+    },
+    {
+      "group": "G12",
+      "weekday": 4,
+      "slot": 4,
+      "occupancy": 0.333,
+      "weeks_used": 4,
+      "active_weekday_weeks": 12,
+      "decided": false
+    }
+  ]
+}

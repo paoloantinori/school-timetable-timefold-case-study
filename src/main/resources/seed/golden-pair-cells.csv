@@ -1,0 +1,173 @@
+teacher,group,hours,weekday_conc,subjects,switches,cells,sequence
+T01,G02,60,100%,1,0,G1;G2;G3;G4;G5;G6,Servizio tecnico e stilistico(60)
+T01,G06,60,100%,1,0,G1;G2;G3;G4;G5;G6,Servizio tecnico e stilistico(60)
+T01,G10,65,100%,1,0,G1;G2;G3;G4;G5;G6;G7;G8,Servizio tecnico e stilistico(65)
+T01,G12,46,100%,1,0,G1;G2;G3;G4;G5;G6;G7;G8,Servizio tecnico e stilistico(46)
+T02,G01,65,45%,3,35,L2;M1;M2;T1;T2;T3;T4;T5;G5;V4,Storia(1) -> Orientamento(1) -> Storia(1) -> Orientamento(1) -> Storia(1) -> Orientamento(1) -> Storia(1) -> Orientament
+T02,G02,60,45%,2,20,M2;T1;T2;G2;G4;V1;V2,Storia(7) -> Orientamento(1) -> Storia(2) -> Orientamento(1) -> Storia(2) -> Orientamento(1) -> Storia(1) -> Orientament
+T02,G03,50,58%,2,25,L2;L3;L4;M4;T5;V3;V5,Orientamento(1) -> Storia(1) -> Orientamento(2) -> Storia(1) -> Orientamento(2) -> Storia(1) -> Orientamento(2) -> Stori
+T02,G05,65,29%,3,37,L6;M2;M5;T2;T3;G2;V3;V4;V5,Orientamento(1) -> Storia(1) -> Orientamento(1) -> Storia(1) -> Orientamento(1) -> Storia(1) -> Orientamento(1) -> Stori
+T02,G06,60,57%,2,11,L1;L2;L5;M3;M4;M6;V4;V5,Orientamento(1) -> Storia(2) -> Orientamento(2) -> Storia(1) -> Orientamento(2) -> Storia(2) -> Orientamento(1) -> Stori
+T02,G07,30,63%,1,0,M1;T1;T3;G2;V2,Storia(30)
+T02,G09,40,60%,3,25,M5;M6;T2;T3;T5;G1;G3;G4;G5,Orientamento(7) -> Recuperi ed Approfondimenti(1) -> Orientamento(1) -> Recuperi ed Approfondimenti(1) -> Orientamento(1
+T02,G10,40,42%,2,9,L2;L3;M1;M3;M5;T1;G1;G3;V2;V3,Orientamento(5) -> Storia(2) -> Orientamento(1) -> Storia(1) -> Orientamento(1) -> Storia(1) -> Orientamento(2) -> Stori
+T02,G11,20,100%,1,0,V3,Storia(20)
+T02,G12,30,47%,1,0,L3;L5;M1;M5;T4;V1;V2,Storia(30)
+T02,G13,70,39%,1,0,L4;T1;T2;T4;T5;G1;G3,Comunicazione(70)
+T03,G03,143,94%,2,13,L5;T5;V1;V2;V3;V4;V5,Sicurezza(1) -> Laboratorio Termoidraulico(1) -> Sicurezza(2) -> Laboratorio Termoidraulico(1) -> Sicurezza(1) -> Labora
+T03,G04,28,68%,2,16,L1;L3;L4;M4;M5;T1;G2;V1;V4;V5,Taglio Metalli(1) -> Sicurezza(1) -> Taglio Metalli(3) -> Sicurezza(1) -> Taglio Metalli(3) -> Sicurezza(1) -> Taglio Me
+T03,G07,32,88%,2,15,M2;M6;T1;T3;T4;T5;G5,Sicurezza(1) -> Orientamento(1) -> Sicurezza(1) -> Orientamento(1) -> Sicurezza(1) -> Orientamento(1) -> Sicurezza(5) ->
+T03,G08,53,62%,3,25,M2;M3;M4;M5;T2;T3;T5,Sicurezza(1) -> Taglio Metalli(1) -> Sicurezza(1) -> Taglio Metalli(2) -> Sicurezza(1) -> Taglio Metalli(3) -> Sicurezza
+T03,G09,12,100%,1,0,T1;T2;T4;T5,Sicurezza(12)
+T03,G10,12,42%,1,0,L2;L3;M3;M5;G1;V3,Sicurezza(12)
+T03,G11,20,65%,1,0,M2;M4;T1;G2;G4;V2,Orientamento(20)
+T03,G13,58,41%,2,21,L1;L4;L6;M1;T1;T3;T5;G1;G2;G3,Sicurezza(2) -> Tecnologia(1) -> Sicurezza(1) -> Tecnologia(2) -> Sicurezza(1) -> Tecnologia(1) -> Sicurezza(4) -> Tecno
+T04,G02,80,39%,1,0,L3;L4;T3;G3,Lingua italiana(80)
+T04,G03,80,56%,1,0,L5;T1;G4;G5,Lingua italiana(80)
+T04,G06,80,36%,1,0,L2;M3;M4;G2,Lingua italiana(80)
+T04,G07,80,30%,1,0,L4;M5;T2;G1,Lingua italiana(80)
+T04,G10,50,54%,1,0,L1;M1;M2,Lingua italiana(50)
+T04,G11,60,43%,1,0,L5;M3;T4,Lingua italiana(60)
+T04,G12,55,44%,1,0,L2;L3;M4;M5;T4;T5;G1;G3;G5,Lingua italiana(55)
+T05,G03,129,56%,2,42,T5;T6;G1;G2,Progettazione Termoidraulica(39) -> Elettrotecnica(1) -> Progettazione Termoidraulica(5) -> Elettrotecnica(1) -> Progett
+T05,G04,70,51%,1,0,L1;L4;L5;M1;M5;T2,Matematica(70)
+T05,G07,81,79%,3,24,L1;L2;L4;L5;T4,Progettazione Termoidraulica(1) -> Preparazione all'alternanza(2) -> Progettazione Termoidraulica(1) -> Preparazione all
+T05,G08,53,51%,2,6,M2;M4;T1;T2;T4;G4;G5,Matematica(35) -> RA(1) -> Matematica(7) -> RA(1) -> Matematica(2) -> RA(1) -> Matematica(6)
+T05,G11,116,50%,3,32,L3;L4;T1;T2;T3;T4;G3;G4,Progettazione Termoidraulica(1) -> Elettrotecnica(1) -> Preparazione all'alternanza(1) -> Progettazione Termoidraulica(4
+T05,G13,50,50%,1,0,M2;T1;T3;T5;G3;G5,Metrologia e Tecnologia dei materiali(50)
+T06,G01,50,94%,1,0,T1;T2;T3;T5;T6;G1;G6;V4,Informatica(50)
+T06,G02,40,92%,1,0,M2;T1;T2;T3;G1;V2,Informatica(40)
+T06,G03,80,49%,2,60,L1;L3;M1;M2;G3;G4;V1;V2;V3;V5,Informatica(4) -> Gestione aziendale(1) -> Informatica(1) -> Gestione aziendale(1) -> Informatica(1) -> Gestione azienda
+T06,G04,40,62%,1,0,T1;T3;T5;G1;V1;V2;V3;V5,Informatica(40)
+T06,G05,50,98%,1,0,M6;G4;G5;G6,Informatica(50)
+T06,G06,40,55%,1,0,M2;M5;M6;T3;T4;T5;G6,Informatica(40)
+T06,G07,60,65%,2,36,L1;L5;L6;T1;G5,Informatica(2) -> Gestione aziendale(1) -> Informatica(1) -> Gestione aziendale(1) -> Informatica(1) -> Gestione azienda
+T06,G08,22,86%,2,2,M2;T3;T4;G2,Informatica(1) -> RA(2) -> Informatica(19)
+T06,G09,30,90%,1,0,L5;M4;M6;V1;V2;V3;V5,Informatica(30)
+T06,G10,20,40%,1,0,L2;L3;L4;M3;M5;T1;T2;V2;V3;V4,Informatica(20)
+T06,G11,56,52%,2,41,L4;M1;M3;V4,Informatica(2) -> Gestione aziendale(1) -> Informatica(1) -> Gestione aziendale(1) -> Informatica(1) -> Gestione azienda
+T06,G12,40,80%,1,0,M2;M4;M5;T4;T5,Informatica(40)
+T06,G13,55,96%,1,0,L2;L3;G2;G3,Competenze Digitali(55)
+T06,G14,20,75%,1,0,G1;G2;G3;V1;V2,Competenze Digitali(20)
+T07,G01,24,100%,1,0,T1;T2;T3,Tecnologia e creatività(24)
+T07,G05,24,100%,1,0,T1;T2;T3,Tecnologia e creatività(24)
+T07,G09,24,100%,1,0,T1;T2;T3,Tecnologia e creatività(24)
+T08,G01,80,59%,1,0,L1;L3;L5;M1;M2;M3;T1;T3;T4;T5;G2;G3;G4;G5;V2,Matematica(80)
+T08,G02,70,50%,1,0,M2;T6;G1;G3;V4,Matematica(70)
+T08,G03,80,55%,1,0,T2;T3;G3;G6;V5,Matematica(80)
+T08,G05,80,36%,1,0,L1;M1;M3;M5;M6;T1;T3;G1;V3;V4,Matematica(80)
+T08,G06,70,47%,1,0,L4;M1;M5;M6;V4;V5,Matematica(70)
+T08,G07,80,38%,1,0,L3;G3;G4;G5;V3;V4;V5,Matematica(80)
+T08,G09,50,48%,1,0,M4;M5;M6;T1;T3;T4;T5;G1;G3;V2,Matematica(50)
+T08,G10,40,55%,1,0,M4;G4,Matematica(40)
+T08,G11,60,57%,1,0,L1;L2;V1,Matematica(60)
+T08,G12,30,43%,1,0,L3;L5;M1;M3;T3;T4;T5;G5;V2;V3,Matematica(30)
+T09,G01,50,64%,1,0,M1;M3;T1;T5;G3;G6,Scienze(50)
+T09,G02,130,38%,3,117,L1;L5;T2;T4;G5;V3;V5,Cosmetologia(1) -> Analisi del capello e del cuoio capelluto(1) -> Igiene e sicurezza(1) -> Cosmetologia(3) -> Analisi d
+T09,G05,50,52%,1,0,G2;G4;V1;V3;V5,Scienze(50)
+T09,G06,130,34%,3,106,L3;M1;M5;T2;G1;G3;V1;V2;V3;V4,Analisi del capello e del cuoio capelluto(1) -> Cosmetologia(1) -> Analisi del capello e del cuoio capelluto(1) -> Cosme
+T09,G09,35,83%,1,0,L2;G2;G3,Scienze(35)
+T09,G10,65,38%,3,40,L4;M2;M3;M5;V2;V4;V5,Analisi del capello e del cuoio capelluto(1) -> Igiene e sicurezza(1) -> Analisi del capello e del cuoio capelluto(2) ->
+T09,G12,95,46%,3,80,L2;M5;T1;T3;G4,Igiene e sicurezza(2) -> Analisi del capello e del cuoio capelluto(1) -> Igiene e sicurezza(1) -> Scienze(1) -> Igiene e
+T10,G04,20,75%,1,0,L2;L5;M2;T1;T2;V3;V4,Tecnologia Meccanica(20)
+T10,G08,95,53%,3,55,L3;M2;M3;M4;M5;T1;T2;T4;T5;G5;V2;V4;V5,RA(1) -> Tecnologia Meccanica(1) -> RA(1) -> Disegno(2) -> Tecnologia Meccanica(1) -> Disegno(2) -> Tecnologia Meccanica
+T10,G13,115,100%,2,2,V1;V2;V3;V4;V5,Lavorazioni meccaniche(35) -> Preparazione all'alternanza(5) -> Lavorazioni meccaniche(75)
+T11,G02,30,73%,1,0,L2;L3;G2,Comportamento sociale(30)
+T11,G03,60,55%,1,0,M1;M6;T4;G4;V1;V2,Personalizzazione(60)
+T11,G04,50,66%,2,31,L4;T1;G3;V1;V2;V4;V5,Educazione civica(13) -> Competenze di cittadinanza(2) -> Educazione civica(1) -> Competenze di cittadinanza(1) -> Educa
+T11,G06,30,50%,1,0,L6;T3;T6;V3,Comportamento sociale(30)
+T11,G07,60,42%,1,0,L2;L4;M6;V2;V3;V4,Personalizzazione(60)
+T11,G08,31,84%,3,2,L2;L4;G4;V2;V3;V4,RA(1) -> Educazione civica(20) -> Competenze di cittadinanza(10)
+T11,G10,20,100%,1,0,G2;G3,Comportamento sociale(20)
+T11,G11,60,40%,1,0,M4;T5;G1,Personalizzazione(60)
+T11,G12,25,92%,1,0,M3;T3,Orientamento(25)
+T11,G13,60,53%,1,0,L3;L5;M3;T1;T2;T3;G6;V2,Personalizzazione(60)
+T12,G07,60,80%,1,0,L3;L4;M3;M4,Disegno Edile ed Impiantistico(60)
+T12,G11,65,75%,1,0,L5;L6;M5;M6;V2;V3,Disegno Edile ed Impiantistico(65)
+T13,G01,50,68%,2,1,L2;T4;G1;G3;V1;V5,Comportamento Sociale(20) -> Educazione Civica(30)
+T13,G02,55,45%,1,0,L6;M3;G2;G6;V1;V4,Relazione con il cliente(55)
+T13,G05,60,53%,2,45,L3;L4;M1;M2;M3;M4;M5;M6;V4,Comportamento Sociale(7) -> Educazione Civica(1) -> Comportamento Sociale(1) -> Educazione Civica(1) -> Comportamento So
+T13,G06,55,44%,1,0,L2;T1;G3;G4;V2;V3,Relazione con il cliente(55)
+T13,G09,50,50%,2,35,L5;M4;M5;G1;G3;G4,Comportamento Sociale(1) -> Educazione Civica(1) -> Comportamento Sociale(1) -> Educazione Civica(1) -> Comportamento So
+T13,G10,40,57%,1,0,L2;M5;V1;V2;V3;V4,Relazione con il cliente(40)
+T13,G12,90,37%,2,61,L1;M1;M2;M4;T1;T2;G2;V4;V5,Relazione con il cliente(1) -> Comportamento Sociale(2) -> Relazione con il cliente(1) -> Comportamento Sociale(2) -> Re
+T13,G13,20,100%,1,0,T2;T3;T5,Orientamento(20)
+T13,G14,20,70%,1,0,G2;G3;G4;G5;V2;V3,Comportamento Sociale(20)
+T14,G01,90,47%,1,0,L2;L3;L4;L5;L6;M1;M2;M3;T1;T2;T3;T4;T5;G1;G4;G6;V5,Lingua Italiana(90)
+T14,G04,90,44%,1,0,L1;L4;M2;T2;G5;V1;V2;V3;V4;V5,Lingua Italiana(90)
+T14,G05,80,41%,1,0,L2;L5;L6;M2;M3;M5;M6;V1;V4;V5,Lingua Italiana(80)
+T14,G08,62,55%,2,4,M1;M3;G3;G4;G5;V2;V3;V4,Lingua Italiana(6) -> RA(1) -> Lingua Italiana(2) -> RA(1) -> Lingua Italiana(52)
+T14,G09,65,38%,2,16,M4;M5;M6;T3;T4;T5;G1;G2;G4;V1;V3,Lingua Italiana(5) -> Recuperi ed Approfondimenti(1) -> Lingua Italiana(1) -> Recuperi ed Approfondimenti(1) -> Lingua I
+T14,G14,15,87%,1,0,G1;V2;V3,Orientamento(15)
+T15,G04,222,50%,3,40,T1;T2;T3;T4;T5;T6;G2;G3;G4;G5,Cad(1) -> Lavorazioni meccaniche(7) -> Cad(1) -> Lavorazioni meccaniche(7) -> Cad(1) -> Lavorazioni meccaniche(7) -> Cad
+T15,G08,210,60%,4,65,L1;L2;L3;L4;L5;M2;M3;M4;T3;T5;G1;G2;G3;G4;G5;G7;G8;V1;V2;V3;V4;V5,RA(1) -> Controllo numerico(5) -> Lavorazioni meccaniche(4) -> Controllo numerico(4) -> Lavorazioni meccaniche(4) -> Con
+T15,G13,100,91%,3,70,L3;M2;M3;M4;M5;T1;T2;T3;T4;G1;G2;G3;G4,Lavorazioni meccaniche(2) -> Cad(1) -> Tecniche di saldatura(2) -> Lavorazioni meccaniche(1) -> Cad(1) -> Tecniche di sa
+T16,G01,179,55%,2,1,L4;L5;L6;V1;V2;V3,Confezione(169) -> Recuperi ed Approfondimenti(10)
+T16,G05,181,45%,2,7,L1;L2;L3;L4;L5;L6;M4;T1;T2;T3;T4;T5;G1;G2;G3;V4,Recuperi ed Approfondimenti(3) -> Confezione(9) -> Recuperi ed Approfondimenti(1) -> Confezione(140) -> Recuperi ed Appr
+T16,G09,105,51%,1,0,L1;L2;L3;V4;V5,Confezione(105)
+T16,G14,30,100%,1,0,G1;G2;G3;G4;G5,Confezione(30)
+T17,G01,143,69%,2,12,M4;M5;M6;G4;G5;G6,Modello (Moulage)(86) -> Recuperi ed Approfondimenti(1) -> Modello (Moulage)(3) -> Recuperi ed Approfondimenti(3) -> Mod
+T17,G05,160,64%,2,8,M1;M2;M3;T4;T5;T6;G4;G5;G6,Modello (Moulage)(47) -> Recuperi ed Approfondimenti(1) -> Modello (Moulage)(3) -> Recuperi ed Approfondimenti(3) -> Mod
+T17,G09,90,80%,2,11,M1;M2;M3;T2;G4;G5;G6;V1;V3,Modello (Moulage)(3) -> Recuperi ed Approfondimenti(1) -> Modello (Moulage)(24) -> Recuperi ed Approfondimenti(1) -> Mod
+T18,G02,116,27%,3,49,M1;M2;M3;M4;M5;M6;T1;G5;G6;V1;V2;V3;V4;V5,Gestione aziendale(1) -> Approfondimenti tecnica operativa(1) -> Lavaggio(6) -> Gestione aziendale(1) -> Approfondimenti
+T18,G06,120,53%,3,57,T1;T2;T3;T4;T5;T6;T7;T8;G3;V1;V2;V3;V4;V5,Gestione aziendale(7) -> Lavaggio(5) -> Gestione aziendale(1) -> Lavaggio(5) -> Gestione aziendale(2) -> Lavaggio(5) -> 
+T18,G10,90,66%,2,29,L2;L4;L5;M1;M2;M3;M4;M5;T1;T2;T3;T4;T5;T6;T7;T8;G1;V4,Gestione aziendale(4) -> Lavaggio(3) -> Gestione aziendale(1) -> Lavaggio(3) -> Gestione aziendale(1) -> Lavaggio(3) -> 
+T18,G12,59,42%,2,2,L4;M1;M2;T2;V1;V2;V3;V4;V5,Gestione aziendale(13) -> Preparazione all'alternanza(5) -> Gestione aziendale(41)
+T19,G02,36,100%,1,0,M1;M2;M3;M4;M5;M6,Barberia(36)
+T19,G06,47,100%,1,0,M1;M2;M3;M4;M5;M6,Barberia(47)
+T19,G12,45,100%,1,0,L1;L2;L3;L4;L5,Barberia(45)
+T20,G01,151,34%,6,128,L1;L2;L4;L5;L6;M1;T1;T2;T3;T4;T5;T6;G1;G2;G4;G5;G6;V4,Merceologia(1) -> Sviluppo Sostenibile(1) -> Merceologia(1) -> Arredi Tessili(1) -> Figurino(1) -> Sviluppo Sostenibile(
+T20,G02,35,71%,1,0,L1;L5;M1;M2;M4;M5;M6;G1;V1;V3,Consulenza d'immagine(35)
+T20,G05,150,31%,6,115,L2;L3;L4;L5;L6;M1;M2;M3;M4;M5;M6;T1;T2;T3;G2;G3;G6;V1;V2;V3;V4;V5,Merceologia(1) -> Arredi Tessili(1) -> Sviluppo Sostenibile(1) -> Merceologia(1) -> Sviluppo Sostenibile(1) -> Arredi Te
+T20,G06,30,47%,1,0,L5;L6;M2;M6;T3;T4;T5;G4;G5;V2;V4;V5,Consulenza d'immagine(30)
+T20,G09,105,28%,6,77,L1;L2;L3;M4;M5;M6;T2;T3;T4;T5;G1;G3;G4;G5;V1;V2;V3,Merceologia(1) -> Figurino(2) -> Merceologia(1) -> Figurino(1) -> Merceologia(1) -> Figurino(1) -> Arredi Tessili(1) -> 
+T20,G10,23,57%,1,0,L3;L5;T1;G1;G2;V2;V3,Consulenza d'immagine(23)
+T20,G12,30,60%,1,0,T1;T2;T4;T5;G1;G3,Consulenza d'immagine(30)
+T21,G01,70,49%,1,0,T1;T2;G2;G3;V3;V4;V5,Lingua Inglese(70)
+T21,G02,70,50%,1,0,L2;L3;T5;G1,Lingua Inglese(70)
+T21,G03,60,55%,1,0,L3;M3;M5;T2;T3,Lingua Inglese(60)
+T21,G04,60,48%,1,0,L5;M5;T1;V2;V3,Lingua Inglese(60)
+T21,G05,60,57%,1,0,L2;L3;L5;M4;M5;G6;V1;V2;V3,Lingua Inglese(60)
+T21,G06,60,40%,1,0,M1;M2;T6;G4;G5,Lingua Inglese(60)
+T21,G07,60,35%,1,0,M2;G4;V4;V5,Lingua Inglese(60)
+T21,G08,42,81%,2,4,M4;T2;T3;G1;G2,Lingua Inglese(13) -> RA(1) -> Lingua Inglese(1) -> RA(1) -> Lingua Inglese(26)
+T21,G09,40,60%,1,0,L4;M4;M6;T1,Lingua Inglese(40)
+T21,G10,40,57%,1,0,M4;M5;T1;G2;V1;V2,Lingua Inglese(40)
+T21,G11,40,72%,1,0,L1;M1,Lingua Inglese(40)
+T21,G12,40,75%,1,0,T1;T2;T4;G3;G4;V1,Lingua Inglese(40)
+T21,G13,20,95%,1,0,T4;V3,Lingua Inglese(20)
+T22,G03,100,100%,1,0,L2;L3;L4;L5;L6,Laboratorio Termoidraulico(100)
+T22,G07,24,100%,1,0,G1;G2;G3;G4,Laboratorio Termoidraulico(24)
+T22,G11,54,83%,1,0,L1;L2;L3;L4;L5;M1;M2;M3;M4;G1;G2;G3;G4;G5,Laboratorio Termoidraulico(54)
+T23,G01,30,57%,1,0,L1;L2;L4;L6;M3;T1;T2;T3;G4;G5,Economia e Diritto del lavoro(30)
+T23,G02,40,85%,1,0,L4;M1;M2;M4;M5;M6;G2;G6;V3,Educazione Civica(40)
+T23,G03,50,38%,2,25,L2;L3;L4;L5;L6;M2;M3;T5;G4;G5;V1;V2;V3;V4,Economia e Diritto del lavoro(1) -> Educazione Civica(2) -> Economia e Diritto del lavoro(1) -> Educazione Civica(2) -> 
+T23,G04,50,54%,3,27,L2;L3;M2;T1;T2;T3;T4;T6;G1;G4;V1;V3;V4;V5,Economia e Diritto del lavoro(1) -> Storia(1) -> Economia e Diritto del lavoro(1) -> Storia(2) -> Economia e Diritto del
+T23,G05,30,43%,1,0,L2;L6;M5;M6;T1;T2;T3;G2;G3;V4;V5,Economia e Diritto del lavoro(30)
+T23,G06,40,48%,1,0,L2;L5;L6;M2;T2;T3;G3;G6,Educazione Civica(40)
+T23,G07,50,42%,2,3,L4;L6;M2;T1;T3;T4;T5;G3;G5;V2,Economia e Diritto del lavoro(19) -> Educazione Civica(8) -> Economia e Diritto del lavoro(1) -> Educazione Civica(22)
+T23,G08,59,41%,4,19,L1;L2;L3;L4;L5;M1;M2;M3;M4;M5;T3;V1;V3;V5,Economia e Diritto del lavoro(10) -> Orientamento(10) -> Storia(2) -> RA(1) -> Storia(1) -> RA(1) -> Storia(3) -> RA(1) 
+T23,G09,20,50%,1,0,L1;L3;M4;M6;T2;T3;T5;V1,Economia e Diritto del lavoro(20)
+T23,G10,30,27%,1,0,L2;L3;M3;T1;T2;T4;G1;G2;G4;V3,Educazione Civica(30)
+T23,G11,50,50%,2,7,M2;M3;M4;T1;T3;G2;G4;G5;V2;V3;V4;V5,Economia e Diritto del lavoro(2) -> Educazione Civica(1) -> Economia e Diritto del lavoro(6) -> Educazione Civica(1) -> 
+T23,G12,30,57%,1,0,M1;T1;T2;T4;V1;V2;V3,Economia e Diritto del lavoro(30)
+T23,G13,60,60%,1,0,L1;L2;L3;L4;M1;T2;T3;T4;G2;G3;G4;G5;G6;V1,Economia e Diritto del lavoro(60)
+T24,G03,100,87%,2,48,L1;L2;M1;M2;M5;M6,Normativa(1) -> Disegno(2) -> Normativa(2) -> Disegno(2) -> Normativa(2) -> Disegno(2) -> Normativa(2) -> Disegno(2) -> 
+T24,G04,50,100%,1,0,M3;M4,Disegno(50)
+T24,G07,20,100%,1,0,M1,Normativa(20)
+T24,G11,20,100%,1,0,M2,Normativa(20)
+T25,G02,70,61%,2,9,L4;M1;M2;M4;M5;M6;T2;G1;V3,Sviluppo sostenibile(1) -> Scienze(1) -> Sviluppo sostenibile(1) -> Scienze(1) -> Sviluppo sostenibile(2) -> Scienze(1) 
+T25,G03,58,29%,2,6,L4;L6;M2;M4;T1;T4;T5;G3;G4;G5;G6;V2;V3;V4,Scienze(2) -> Sviluppo sostenibile(1) -> Scienze(5) -> Sviluppo sostenibile(1) -> Scienze(2) -> Sviluppo sostenibile(6) 
+T25,G04,70,47%,2,3,L1;L2;L3;L4;M1;M2;M3;M4;M5;T1;T2;G1;V1;V2;V4;V5,Sviluppo sostenibile(3) -> Scienze(3) -> Sviluppo sostenibile(7) -> Scienze(57)
+T25,G06,68,41%,2,1,L5;L6;M2;T1;T2;T3;T4;T6;G1;G3;G4;G6,Sviluppo sostenibile(8) -> Scienze(60)
+T25,G07,58,48%,2,9,L2;L3;L5;T2;T3;T4;T5;T6;G2;G3;G5;V1;V2;V3,Sviluppo sostenibile(1) -> Scienze(1) -> Sviluppo sostenibile(1) -> Scienze(1) -> Sviluppo sostenibile(2) -> Scienze(1) 
+T25,G08,40,42%,2,9,M2;M3;M4;M5;T2;T3;V3;V5,Sviluppo sostenibile(4) -> Scienze(1) -> Sviluppo sostenibile(1) -> Scienze(1) -> Sviluppo sostenibile(3) -> Scienze(1) 
+T25,G10,45,44%,2,1,L2;L3;M3;M5;T1;T2;T3;T4;T5;G1;G2;G4;V2;V3,Sviluppo sostenibile(5) -> Scienze(40)
+T25,G11,50,42%,2,1,L4;L6;M2;M3;T1;G2;G5;V2;V3;V5,Sviluppo sostenibile(10) -> Scienze(40)
+T25,G12,30,33%,1,0,L4;M1;M3;M4;M5;T3;T4;G1;G5;V2;V3;V4,Scienze(30)
+T25,G13,75,63%,2,38,L1;L2;L3;L4;L5;M1;M3;M4;M5;T1;T2;T3;T5;G2;G3;G4;G5;G6;V4;V5,Scienze(1) -> Matematica(1) -> Scienze(1) -> Matematica(1) -> Scienze(2) -> Matematica(2) -> Scienze(3) -> Matematica(1)
+T26,G02,90,53%,2,1,L1;L2;L3;L4;L5;L6;V1;V2;V3;V4;V5,Servizio stilistico(40) -> Ra lab aperto(50)
+T26,G06,100,65%,2,2,M1;M2;M3;M4;M5;M6;T1;T2;T3;T4;T5;T6;T7;T8;V1;V2;V3;V4;V5,Ra lab aperto(35) -> Servizio stilistico(50) -> Ra lab aperto(15)
+T26,G10,90,89%,2,1,M1;M2;M3;M4;M5;T1;T2;T3;T4;T5,Servizio stilistico(50) -> Ra lab aperto(40)
+T26,G12,30,57%,1,0,L5;G1;G2,Servizio stilistico(30)
+T26,G14,30,100%,1,0,G1;G2;G3;G4;G5,Servizio stilistico(30)

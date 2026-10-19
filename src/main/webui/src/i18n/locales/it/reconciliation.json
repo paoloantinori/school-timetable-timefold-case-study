@@ -1,0 +1,51 @@
+{
+  "navTitle": "Riconciliazione",
+  "title": "Dashboard di Riconciliazione",
+  "subtitle": "Ore assegnate vs ore programmate per docente, materia e classe. Replica il foglio Classi della scuola.",
+  "loading": "Caricamento dati di riconciliazione...",
+  "loadError": "Impossibile caricare i dati di riconciliazione",
+  "noResults": "Nessun corso corrisponde al filtro attuale.",
+  "filterPlaceholder": "Filtra per docente, materia o classe...",
+  "refresh": "Aggiorna",
+  "summary": {
+    "ok": "OK",
+    "mismatch": "Discrepanza",
+    "unscheduled": "Non programmato",
+    "total": "Corsi totali",
+    "pseudoNote": "{{count}} dei conteggi sopra sono differenze attese di Stage/Esame/RA, non problemi reali. Vedi le righe \"attese\" sotto.",
+    "showOnlyIssuesToggle": "Mostra solo i problemi"
+  },
+  "bucketIssues": "{{count}} problemi",
+  "groupBy": {
+    "label": "Raggruppa per:",
+    "teacher": "Docente",
+    "group": "Classe"
+  },
+  "table": {
+    "teacher": "Docente",
+    "subject": "Materia",
+    "group": "Classe",
+    "assigned": "Assegnate",
+    "scheduled": "Programmate",
+    "delta": "Delta",
+    "status": "Stato",
+    "pinnedSuffix": "bloccate"
+  },
+  "status": {
+    "OK": "OK",
+    "MISMATCH": "Discrepanza",
+    "UNSCHEDULED": "Non programmato",
+    "expected": "Atteso",
+    "check": "Verificare"
+  },
+  "pseudoBadge": "(atteso)",
+  "pseudoHint": "Corso contabile sintetico Stage/Esame/RA. Le differenze qui sono attese per progetto, non errori di programmazione.",
+  "pseudoCheckHint": "Corso contabile sintetico Stage/Esame/RA, ma lo scostamento è abbastanza ampio (oltre il 50% delle ore assegnate) da meritare un controllo.",
+  "drillDown": {
+    "loading": "Caricamento lezioni...",
+    "empty": "Nessuna lezione programmata per questo corso.",
+    "noRoom": "nessuna aula",
+    "error": "Impossibile caricare le lezioni per questo corso.",
+    "retry": "Riprova"
+  }
+}

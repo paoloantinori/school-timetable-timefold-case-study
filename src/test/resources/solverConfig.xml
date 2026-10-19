@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver xmlns="https://timefold.ai/xsd/solver">
+
+  <!-- Test solver config - minimal termination for fast smoke tests -->
+  <solutionClass>com.school.planner.domain.SchoolSchedule</solutionClass>
+  <entityClass>com.school.planner.domain.Lesson</entityClass>
+
+  <scoreDirectorFactory>
+    <constraintProviderClass>com.school.planner.solver.SchoolScheduleConstraintProvider</constraintProviderClass>
+  </scoreDirectorFactory>
+
+  <!-- Fast termination for tests -->
+  <termination>
+    <secondsSpentLimit>10</secondsSpentLimit>
+  </termination>
+
+  <!-- Single-phase construction heuristic for tests -->
+  <constructionHeuristic>
+    <queuedEntityPlacer>
+      <entitySelector id="lessonPlacer">
+        <entityClass>com.school.planner.domain.Lesson</entityClass>
+        <cacheType>PHASE</cacheType>
+      </entitySelector>
+      <changeMoveSelector>
+        <entitySelector mimicSelectorRef="lessonPlacer"/>
+        <valueSelector variableName="timeslot"/>
+      </changeMoveSelector>
+      <changeMoveSelector>
+        <entitySelector mimicSelectorRef="lessonPlacer"/>
+        <valueSelector variableName="room"/>
+      </changeMoveSelector>
+    </queuedEntityPlacer>
+  </constructionHeuristic>
+
+  <!-- Simplified local search for tests -->
+  <localSearch>
+    <termination>
+      <unimprovedSecondsSpentLimit>4</unimprovedSecondsSpentLimit>
+    </termination>
+    <unionMoveSelector>
+      <changeMoveSelector>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <valueSelector variableName="timeslot"/>
+      </changeMoveSelector>
+      <changeMoveSelector>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <valueSelector variableName="room"/>
+      </changeMoveSelector>
+      <!-- TASK-377: swap moves are required to untangle latin-square-style
+           conflicts now that H1/H3 fire during timeslot phases; change moves
+           alone strand the toy scenarios in -1hard local optima. -->
+      <swapMoveSelector>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <variableNameIncludes>
+          <variableNameInclude>timeslot</variableNameInclude>
+        </variableNameIncludes>
+      </swapMoveSelector>
+    </unionMoveSelector>
+    <!-- TASK-377: the old acceptedCountLimit=1 forager accepted the first
+         non-tabu move REGARDLESS of score (a near-random walk) — it only ever
+         reached feasibility via same-slot stacking, which H1/H3 now punish.
+         Mirror production's acceptor family (tabu + broad evaluation,
+         prod uses entityTabuSize 7 / acceptedCountLimit 1000) scaled down. -->
+    <acceptor>
+      <entityTabuSize>7</entityTabuSize>
+    </acceptor>
+    <forager>
+      <acceptedCountLimit>500</acceptedCountLimit>
+    </forager>
+  </localSearch>
+</solver>

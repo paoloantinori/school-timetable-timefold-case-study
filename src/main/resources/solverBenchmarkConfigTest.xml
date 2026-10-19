@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plannerBenchmark xmlns="https://timefold.ai/xsd/benchmark">
+  <!--
+    Local Search Algorithm Comparison Benchmark - TEST VERSION
+    Only 3 representative algorithms for quick testing.
+  -->
+
+  <benchmarkDirectory>local/benchmarkReport</benchmarkDirectory>
+
+  <inheritedSolverBenchmark>
+    <solver>
+      <solutionClass>com.school.planner.domain.SchoolSchedule</solutionClass>
+      <entityClass>com.school.planner.domain.Lesson</entityClass>
+      <scoreDirectorFactory>
+        <constraintProviderClass>com.school.planner.solver.SchoolScheduleConstraintProvider</constraintProviderClass>
+        <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+      </scoreDirectorFactory>
+      <termination>
+        <secondsSpentLimit>900</secondsSpentLimit>
+        <unimprovedSecondsSpentLimit>180</unimprovedSecondsSpentLimit>
+      </termination>
+      <constructionHeuristic>
+        <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+      </constructionHeuristic>
+      <!-- Local Search: each solver defines complete localSearch -->
+    </solver>
+    <problemBenchmarks>
+      <solutionFileIOClass>com.school.planner.benchmark.SchoolScheduleSolutionFileIO</solutionFileIOClass>
+      <inputSolutionFile>local/data/schedule-production.json</inputSolutionFile>
+    </problemBenchmarks>
+  </inheritedSolverBenchmark>
+
+  <!-- ========================================================================
+       TEST: 3 Representative Algorithms
+       ======================================================================== -->
+
+  <!-- 1. Tabu Search (baseline recommended) -->
+  <solverBenchmark>
+    <name>Tabu-Entity-Size5</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+      <localSearch>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>0.5</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="room"/>
+          </pillarChangeMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>5</entityTabuSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+  <!-- 2. Simulated Annealing -->
+  <solverBenchmark>
+    <name>SimulatedAnnealing-Balanced</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+      <localSearch>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>0.5</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="room"/>
+          </pillarChangeMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <simulatedAnnealingStartingTemperature>[5000/0]hard/[0/0]soft</simulatedAnnealingStartingTemperature>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+  <!-- 3. Late Acceptance -->
+  <solverBenchmark>
+    <name>LateAcceptance-Size1000</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+      <localSearch>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>0.5</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="room"/>
+          </pillarChangeMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <lateAcceptanceSize>1000</lateAcceptanceSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+</plannerBenchmark>

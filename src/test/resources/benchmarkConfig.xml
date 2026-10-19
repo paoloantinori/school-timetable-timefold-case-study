@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plannerBenchmark xmlns="https://timefold.ai/xsd/benchmark"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="https://timefold.ai/xsd/benchmark https://timefold.ai/xsd/benchmark/benchmark.xsd">
+
+  <!-- Benchmark output directory (relative to working directory) -->
+  <benchmarkDirectory>target/benchmark</benchmarkDirectory>
+
+  <!-- ======================================================================= -->
+  <!-- Common inherited solver configuration -->
+  <!-- ======================================================================= -->
+  <inheritedSolverBenchmark>
+    <solutionClass>com.school.planner.domain.SchoolSchedule</solutionClass>
+    <solver>
+      <scoreDirectorFactory>
+        <constraintProviderClass>com.school.planner.solver.SchoolScheduleConstraintProvider</constraintProviderClass>
+        <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+      </scoreDirectorFactory>
+
+      <!-- Global safety termination (8 hours) -->
+      <termination>
+        <secondsSpentLimit>28800</secondsSpentLimit>
+      </termination>
+    </solver>
+  </inheritedSolverBenchmark>
+
+  <!-- ======================================================================= -->
+  <!-- Baseline Configuration: Current Production -->
+  <!-- ======================================================================= -->
+  <solverBenchmark>
+    <name>Baseline - Production Config</name>
+
+    <solver>
+      <!-- Phase 1: Day-Clustered Construction -->
+      <customPhase>
+        <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+      </customPhase>
+
+      <!-- Phase Transition Marker -->
+      <customPhase>
+        <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+        <customProperties>
+          <property name="phaseNumber" value="2"/>
+          <property name="phaseName" value="2. CH - Fallback Placement"/>
+        </customProperties>
+      </customPhase>
+
+      <!-- Phase 2: Fallback CH -->
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DECREASING_DIFFICULTY</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <!-- Phase Transition Marker -->
+      <customPhase>
+        <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+        <customProperties>
+          <property name="phaseNumber" value="3"/>
+          <property name="phaseName" value="3. LS - Compactness"/>
+        </customProperties>
+      </customPhase>
+
+      <!-- Phase 3: Compactness (5 min) -->
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>300</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+              <filterClass>com.school.planner.solver.UnpinnedLessonFilter</filterClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>5</entityTabuSize>
+          <lateAcceptanceSize>200</lateAcceptanceSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+  <!-- ======================================================================= -->
+  <!-- Fast Configuration: Shorter Phases for CI/Quick Testing -->
+  <!-- ======================================================================= -->
+  <solverBenchmark>
+    <name>Fast - 30s Limit</name>
+
+    <solver>
+      <!-- Shorter termination for quick benchmarking -->
+      <termination>
+        <secondsSpentLimit>30</secondsSpentLimit>
+        <unimprovedSecondsSpentLimit>10</unimprovedSecondsSpentLimit>
+      </termination>
+
+      <!-- Use the same phases as baseline, but with shorter termination -->
+      <customPhase>
+        <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+      </customPhase>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DECREASING_DIFFICULTY</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>30</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>10</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>5</entityTabuSize>
+          <lateAcceptanceSize>100</lateAcceptanceSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+  <!-- ======================================================================= -->
+  <!-- Quality Configuration: Longer Phases for Thorough Testing -->
+  <!-- ======================================================================= -->
+  <solverBenchmark>
+    <name>Quality - 2min Limit</name>
+
+    <solver>
+      <!-- Longer termination for quality benchmarking -->
+      <termination>
+        <secondsSpentLimit>120</secondsSpentLimit>
+        <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
+      </termination>
+
+      <!-- Same phases as baseline, with quality-focused termination -->
+      <customPhase>
+        <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+      </customPhase>
+
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DECREASING_DIFFICULTY</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+
+      <localSearch>
+        <termination>
+          <secondsSpentLimit>120</secondsSpentLimit>
+          <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+              <filterClass>com.school.planner.solver.UnpinnedLessonFilter</filterClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>7</entityTabuSize>
+          <lateAcceptanceSize>300</lateAcceptanceSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+</plannerBenchmark>

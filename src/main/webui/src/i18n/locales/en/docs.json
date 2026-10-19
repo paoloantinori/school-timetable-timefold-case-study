@@ -1,0 +1,489 @@
+{
+  "title": "Schedule Constraints Guide",
+  "subtitle": "Understanding how the automatic scheduler creates your school timetable",
+  "intro": "This document explains the rules that guide the automatic scheduler. The scheduler uses a three-tier priority system: Hard constraints must never be violated, Medium constraints are strongly avoided, and Soft constraints represent preferences that improve the schedule quality when possible.",
+  "exampleLabel": "Example",
+  "originLabel": "Origin",
+  "hardLabel": "Hard",
+  "mediumLabel": "Medium",
+  "softLabel": "Soft",
+  "hardDesc": "Must never happen. These are absolute requirements",
+  "mediumDesc": "Strongly avoided. Broken only when necessary",
+  "softDesc": "Nice to have. Optimized when possible",
+  "hardBadge": "Must Never Happen",
+  "mediumBadge": "Strongly Avoided",
+  "softBadge": "Nice to Have",
+  "hardConstraints": "Hard Constraints",
+  "mediumConstraints": "Medium Constraints",
+  "softConstraints": "Soft Constraints",
+  "complexityLink": "Why is scheduling hard?",
+  "complexityLinkDesc": "Discover the mathematics behind timetable complexity",
+  "constraintCount": "{{count}} constraints",
+  "process": {
+    "title": "The 2026/27 Process",
+    "intro": "How the school's own scheduling workflow for 2026/27 is mirrored inside the app, from the coordinator's paper calendars to the final solved timetable.",
+    "schoolTitle": "How the school builds the timetable",
+    "schoolDescription": "The coordinator first sketches a partial calendar per class in the Calendario scolastico: which days are classroom (Aula), lab (Laboratorio) or internship (Stage), and roughly how many hours each. The lab teachers then fill in their own recurring weekly preferences on top of that skeleton. Only after both passes does the school produce the spalmone, the final hand-adjusted timetable (Orario in righe), which reconciles every assigned hour against what actually got scheduled.",
+    "mirrorTitle": "How the app mirrors it",
+    "mirrorStep1": {
+      "title": "Seed data comes from the school's own files",
+      "description": "Teachers, groups, rooms, courses, closures and hour assignments (incarichi) are loaded straight from the school's own spreadsheets, not re-typed by hand."
+    },
+    "mirrorStep2": {
+      "title": "Import Calendario pins the untouchable hours",
+      "description": "The Calendario import reads the coordinator's pre-set lab/stage day structure and pins those exact hours as immovable (\"intoccabili\") lessons, before the solver ever runs."
+    },
+    "mirrorStep3": {
+      "title": "Per-group calendars mark the non-fillable cells",
+      "description": "Each student group's weekly open/closed pattern (Calendario Gruppi) marks which slots the solver is even allowed to consider, mirroring the blank cells the coordinator deliberately leaves empty."
+    },
+    "mirrorStep4": {
+      "title": "The solver fills the rest",
+      "description": "The five-phase solver places every remaining, unpinned lesson around the pinned structure and the open/closed calendar, respecting the hard, medium and soft constraints below (and the whole cycle is wrapped in a multi-start that retries the construction until it delivers a schedule with no hard violations)."
+    },
+    "mirrorStep5": {
+      "title": "The validation watchdog re-checks every change",
+      "description": "Any edit to a teacher, course, holiday, availability rule or calendar triggers a fresh validation pass a couple of seconds later, flagging anything that just became illegal so a manual fix never silently breaks a rule elsewhere."
+    },
+    "mirrorStep6": {
+      "title": "The reconciliation dashboard mirrors the school's own sheet",
+      "description": "The Reconciliation page reproduces the school's own Classi sheet: assigned hours (Ore Inc.) against scheduled hours (Ore Prg.) for every teacher/subject/class, separating real mismatches from expected ones like Stage or Esame hours that are deliberately left unscheduled."
+    },
+    "manualTitle": "Manual placement and pinning",
+    "manualDescription": "Any hour placed by hand through the Calendario import, the golden import, or a manual pin in the timeline becomes intoccabile. The solver will never move it. Afternoon slots (14:30-16:30) are reserved for stage only; a pinned afternoon lesson from the historical record is allowed to stay, and the solver can place a new one there only as a last resort, at a penalized cost (M28).",
+    "exemptTitle": "Why some rules exempt pinned or pseudo-teacher hours",
+    "exemptDescription": "Several constraints below (M15, H17, M28, M29, M20, M22) apply in full to anything the solver places, but exempt hours that are already pinned so the school's own historical record is never retroactively flagged as broken by a rule it predates. A different set (H7, M21, M24, M25, S12, S13) instead exempts lessons taught by a synthetic \"pseudo-teacher\" (like the Stage or Esame accounting courses), because those hours are bookkeeping, not a real person's or group's workload."
+  },
+  "pipeline": {
+    "title": "Pre-Assignment Pipeline",
+    "legacyNote": "For 2026/27, the Calendario and golden imports (see \"The 2026/27 Process\" above) supply almost all of the pinned lab/stage structure before the solver runs. The CSP-based rotation steps below still exist and can be triggered manually, but with no LabRotation rows seeded this year they run as a no-op.",
+    "step1": {
+      "title": "Set Stage Calendar",
+      "description": "Define which days each student group is away on work internships (alternanza/stage). This blocks those days for fundamental subjects, while professional subjects can still run."
+    },
+    "step2": {
+      "title": "Pin Acconciatura Lab Rotation",
+      "description": "The three external acconciatura teachers have fixed weekly days. Student groups rotate through their labs in trimester periods. These assignments are pinned and never moved."
+    },
+    "step3": {
+      "title": "Place Other Lab Blocks",
+      "description": "Lab blocks for other subjects (mechanics, fashion, IT) are placed following fixed weekly patterns. Each teacher has dedicated lab sessions with their student groups."
+    },
+    "step4": {
+      "title": "Place Professional Subjects on Stage Days",
+      "description": "On days when some students are on stage, professional subjects (like lab work) can run because stage students earn equivalent credits. Fundamental subjects cannot run on these days."
+    },
+    "step5": {
+      "title": "Fill Remaining Hours",
+      "description": "The automatic solver fills all remaining hours, optimizing for the constraints below."
+    }
+  },
+  "h0": {
+    "name": "Unassigned Lesson",
+    "description": "Every lesson must be assigned a timeslot. An unplaced lesson-hour is the most basic failure, and the solver treats it as the most severe violation.",
+    "example": "If a Matematica hour for G07 has no date or slot assigned at all, it is penalized until the solver places it somewhere.",
+    "origin": "Structural constraint, no school document; an unplaced lesson is the most basic failure (foundational to the model)."
+  },
+  "h1": {
+    "name": "Teacher Conflict",
+    "description": "A teacher cannot teach two different classes at the same time. Each teacher can only be in one place at once.",
+    "example": "If Prof. Rossi is teaching Matematica to G03 at 9:00, they cannot also teach G07 at 9:00.",
+    "origin": "Structural constraint, no school document; a teacher cannot be in two rooms at once (physical, foundational)."
+  },
+  "h2": {
+    "name": "Room Conflict",
+    "description": "Each classroom can only hold one class at a time. Two different groups cannot use the same room simultaneously.",
+    "example": "Room A1 cannot have both G01 and G05 scheduled at 10:00.",
+    "origin": "Structural constraint, no school document; one classroom holds one class at a time (physical, foundational)."
+  },
+  "h3": {
+    "name": "Student Group Conflict",
+    "description": "A student group cannot be in two places at once. They cannot have overlapping lessons.",
+    "example": "G03 cannot have both Informatica and Matematica scheduled at 11:00.",
+    "origin": "Structural constraint, no school document; a student group cannot be in two places at once (physical, foundational)."
+  },
+  "h4": {
+    "name": "Stage Blackout",
+    "description": "Fundamental subjects cannot be scheduled on days when students are on work internships. Professional subjects are exempt because students on stage earn equivalent credits. A group can also have a single designated weekday reserved for professional subjects during its stage window, if one is configured (currently unused for 2026/27, since the calendario/golden imports supply this structure instead).",
+    "example": "If G05 has stage on Wednesdays, Matematica cannot be scheduled, but Confezione (professional subject) can be.",
+    "origin": "Structural property of stage (students off-site): fundamental subjects cannot run on stage days. Stage days come from the per-group calendar (seed/calendario_*.csv); introduced TASK-381 (stage on the grid)."
+  },
+  "h5": {
+    "name": "Teacher Unavailability",
+    "description": "Teachers cannot be scheduled during their marked unavailable times (vacation, sick leave, or other commitments).",
+    "example": "If Prof. Bianchi has vacation on Monday, no lessons can be assigned to them on Monday.",
+    "origin": "Structural constraint (a teacher cannot be scheduled in their unavailable slots); availability data comes from the Spalmone constraints workbook, tab \"Vincoli Docenti\" (e.g. row 72: \"T10 | Libero il Govedì  mattina per LES e G14  9,00-17,00\"), seeded as TeacherAvailability VACATION."
+  },
+  "h6": {
+    "name": "School Holiday",
+    "description": "No lessons can be scheduled on school holidays or non-instructional days.",
+    "example": "Lessons cannot be scheduled on Christmas break, Easter, or national holidays.",
+    "origin": "Structural constraint (no lessons on closure days); dates come from the school calendar (DataGenerator.CLOSURES_2026_27: Christmas, Easter, Carnevale, national holidays), seeded as SchoolHoliday."
+  },
+  "h7": {
+    "name": "Max Teacher Daily Hours",
+    "description": "A teacher cannot exceed their own daily hour cap, which is per-teacher (default 6 hours; declared exceptions such as 8). The cap is per person, not per group. It applies to the sum of the day's hours across all groups.",
+    "example": "If a teacher's maximum is 6 hours per day, they cannot be assigned 7 lessons on any single day.",
+    "origin": "\"Non più di 6 ore di lezione al giorno per ogni docente\" (Spalmone constraints workbook, tab \"Vincoli DA ANALIZZARE\", row 108)."
+  },
+  "h11": {
+    "name": "Max Student Group Daily Hours",
+    "description": "Student groups cannot exceed their maximum instructional hours per day. This ensures students are not overloaded.",
+    "example": "If a group's maximum is 6 hours, they cannot have 7 hours of lessons on any day.",
+    "origin": "Structural constraint, no school document; a class does not exceed its daily hour cap (field group.maxHoursPerDay, from the curriculum), foundational."
+  },
+  "h17": {
+    "name": "Vertically Compact (No Gaps)",
+    "description": "Student groups must have contiguous lessons without gaps in their daily schedule, including across the lunch break. Empty slots between lessons are not allowed, except for a historical gap where both surrounding lessons are pinned.",
+    "example": "If G01 has lessons at 9:00 and 11:00, there should also be a lesson at 10:00, not an empty gap.",
+    "origin": "Structural constraint, no school document; a schedule has no internal gaps (vertical compactness). The break-level exemption (a gap is excused only between two pinned lessons) is calibrated on the golden; introduced TASK-227 (promoted from M13)."
+  },
+  "h14": {
+    "name": "Student Group Start Date",
+    "description": "Lessons cannot be scheduled before a student group's official start date. Some groups may start later in the year.",
+    "example": "If G12 starts in February, no lessons can be scheduled for them in January.",
+    "origin": "Structural constraint, no school document; no lessons before a group's official start date (groups that begin later), foundational."
+  },
+  "h15": {
+    "name": "Same-Day Same-Subject Consecutive",
+    "description": "When a student group has multiple hours of the same subject on one day, those hours should be consecutive (back-to-back), not scattered. Demoted from hard to medium (was H15): the golden 2026/27 solution itself splits a same-day same-subject pair 98 times, so the rule is a strong preference, not a feasibility rule. A split is exempt only when both lessons on either side of the gap are pinned (historical/golden imports). The school's own historical record does contain rare splits, but the solver may never create a new one.",
+    "example": "If G07 has 2 hours of Informatica on Tuesday, they should be at 9:00-10:00 and 10:00-11:00, not 9:00 and 14:00. A pinned historical split at 9:00 and 14:00 is not penalized; a solver-placed one is.",
+    "origin": "Golden practice, no school document: the golden itself splits a same-day same-subject pair 98 times, so the rule is a strong preference, not feasibility. Demoted from hard (H15) in TASK-392; break-level exemption calibrated on the golden."
+  },
+  "h16": {
+    "name": "Consecutive Same Subject Same Teacher Same Room",
+    "description": "When the same subject is taught consecutively by the same teacher, both hours must stay in the same room (H16b). Keeping the same teacher across consecutive same-subject hours is the separate soft preference S16.",
+    "example": "If English is at 9:00 and 10:00 for the same group with Prof. Verdi, both hours must be in Room B2.",
+    "origin": "Golden practice, no school document: the golden does not record rooms, so the rule does not defend the hard tier, but \"every class has a room\" (H29) is physically indispensable. Demoted from hard (H16b) in TASK-446/447; the weight is not the lever (flat sweep at ~106 room changes forced by availability)."
+  },
+  "h20": {
+    "name": "Group Calendar Closed Slot",
+    "description": "A lesson cannot be placed in a slot the student group's own calendar marks closed for that weekday. This is a safety net: the solver already avoids closed slots by construction, so this constraint only catches a pinned or legacy lesson that slipped through.",
+    "example": "If G01's calendar marks Friday afternoon closed, no lesson for G01 can land there, pinned or not.",
+    "origin": "School's per-group calendar (GroupCalendarRule: open/closed slots per weekday); \"Copy of Calendario scolastico 2026_2027.xlsx\", group tab, seeded calendar. Safety net (the solver already avoids closed slots by construction); introduced TASK-342."
+  },
+  "h23": {
+    "name": "Quota-Bound Lab Lesson On Zero-Lab-Quota Day",
+    "description": "For G04/G08/G13, a quota-bound lab subject (e.g. Lavorazioni meccaniche) cannot be placed on a day the school's own calendar sheet gives zero lab hours for that group. Safety net: the solver already avoids these days by construction, so this catches a pinned or legacy lesson that slipped through.",
+    "example": "If G08's sheet gives 0 lab hours for a Wednesday, no Lavorazioni meccaniche lesson can land there, unless it is a pinned historical lesson.",
+    "origin": "School's per-group calendar (DailyActivityQuota.labHours for G04/G08/G13); \"Copy of Calendario scolastico 2026_2027.xlsx\", group tab. Safety net; introduced TASK-381 (L1-bis)."
+  },
+  "h24": {
+    "name": "Aula Lesson On Zero-Aula-Quota Day",
+    "description": "For G04/G08/G13, an ordinary (non-lab-quota) lesson cannot be placed on a day the school's own calendar sheet gives zero classroom hours for that group. Same safety-net role as H23, for the other half of the daily quota.",
+    "example": "If G13's sheet gives 0 classroom hours for a Thursday, no Matematica lesson can land there, unless it is a pinned historical lesson.",
+    "origin": "School's per-group calendar (DailyActivityQuota.aulaHours for G04/G08/G13); \"Copy of Calendario scolastico 2026_2027.xlsx\", group tab. Safety net; introduced TASK-381 (L1-bis)."
+  },
+  "h25": {
+    "name": "Stage Lesson Outside Stage Days",
+    "description": "An unpinned Stage lesson for a group with a known stage schedule cannot be placed on a date that isn't one of that group's actual stage days. Safety net: the solver already avoids these days by construction, so this constraint only catches a pinned or legacy lesson that slipped through.",
+    "example": "If G07's stage runs only on specific dates in spring, no unpinned Stage lesson for G07 can land on an ordinary school day, unless it is a pinned historical lesson.",
+    "origin": "School's per-group calendar (DailyActivityQuota.stageHours: the stage dates); \"Copy of Calendario scolastico 2026_2027.xlsx\", group tab. Stage confinement; introduced TASK-384."
+  },
+  "h26": {
+    "name": "Lesson On No-Session Day",
+    "description": "For a group covered by the school's own per-day calendar sheet, a school date with no entry at all means the group is simply not in session that day (almost always a full-day stage or off-site day). No ordinary lesson may be placed there. Safety net: the solver already avoids these days by construction, so this constraint only catches a pinned or legacy lesson that slipped through.",
+    "example": "If G12's sheet has no entry for a Thursday during its stage window, no professionalizzanti lesson can land on that Thursday, unless it is a pinned historical lesson.",
+    "origin": "School's per-group calendar (a school date with no DailyActivityQuota row = group not in session); \"Copy of Calendario scolastico 2026_2027.xlsx\", group tab. Safety net; introduced TASK-408."
+  },
+  "mla": {
+    "name": "Lab Assistant Availability",
+    "description": "Lab assistants should ideally be free when lab sessions run in their assigned room. The solver prefers scheduling the assistant's own lessons at different times from lab sessions in their room.",
+    "example": "If T14 is the lab assistant for R16 (moda), the solver tries to keep her free when fashion lab sessions run, so she can assist.",
+    "origin": "Doppio/assistant: \"T14 | Libera per doppio in 2°(100 ore)  e 3° moda (100 ore) in R16\" and \"T20 | Libero per doppio in 2° (100 ore)  e 3° moda  (85 ore) in R16\" (Spalmone constraints workbook, tab \"Vincoli DA ANALIZZARE\", rows 96-97). The assistant should not conflict with a lab in their room; lives in M-LA at medium tier."
+  },
+  "h21": {
+    "name": "Afternoon Slots Reserved For Stage",
+    "description": "Afternoon slots (14:30-16:30) are preferably reserved for stage. Demoted from hard to a strong medium preference (was H21): the school's own 2026/27 timetable uses 575 real afternoon lessons as capacity relief, so the solver may use afternoons as a last resort.",
+    "example": "A regular lesson at 14:30 costs a medium penalty; it is allowed when morning capacity runs out, as the school itself does.",
+    "origin": "Structural convention (afternoons are reserved for stage), no school document. Demoted from hard (H21) in TASK-379: the golden uses 575 afternoon lessons as capacity relief."
+  },
+  "h22": {
+    "name": "Professionalizzanti At Day Edges",
+    "description": "On restricted days (G12 Wed/Thu), professionalizzanti lessons should form a short run touching the day's edge. Demoted from hard to medium (was H22): the school's own timetable does not follow this shape strictly.",
+    "example": "G12's first or last hour (or first/last two hours) on Wednesday can be professionalizzanti. A single professionalizzanti hour in the middle of the day, or a 3-hour block, is penalized.",
+    "origin": "\"Professionalizzanti solo il giovedì e il venerdì\" (G12; Spalmone constraints workbook, tab \"Vincoli Classi\", row 14). The \"day-edge, up-to-2h-block\" shape is modeled on practice; demoted from hard (H22) in TASK-379 because the golden does not follow it strictly."
+  },
+  "hm2": {
+    "name": "Room Suitability",
+    "description": "Lab courses must be assigned to rooms with matching equipment/tags. A computer class needs a computer lab, not a regular classroom.",
+    "example": "Informatica must be in a room tagged 'informatica'. It cannot be scheduled in a regular classroom or fashion lab.",
+    "origin": "Structural constraint, no school document; a lab course goes in a room with the matching tag (physical). Assumption still to confirm with the school: Disegno meccanico (mechanics) and Disegno edile (IT) are treated as labs. Foundational."
+  },
+  "m3": {
+    "name": "Room Capacity",
+    "description": "Rooms should accommodate the student group size. A class of 25 students should not be in a room with capacity 20.",
+    "example": "If G01 has 22 students, they should not be assigned to Room C1 which only holds 18.",
+    "origin": "Structural constraint, no school document; the room must hold the class (capacity vs size), foundational."
+  },
+  "m5": {
+    "name": "Informatica After Stage",
+    "description": "For MODA and FA groups, Informatica lessons are preferred after their stage period ends. This supports thesis writing (tesina) work.",
+    "example": "If G05's stage ends in April, their remaining Informatica hours should ideally be scheduled in May-June.",
+    "origin": "School practice for thesis work (MODA/FA), no cited school document: Informatica hours preferably after stage. A preference, not a requirement; introduced TASK-015."
+  },
+  "m12": {
+    "name": "Overflow Beyond Target End Date",
+    "description": "Lessons should not be scheduled after the student group's target end date. This encourages efficient scheduling within the school year.",
+    "example": "If G03's target end date is June 15, lessons should not spill into late June or July.",
+    "origin": "School's per-group calendar: the expected end date cumulates the per-date expected hours (DailyActivityQuota) to the course total; \"Copy of Calendario scolastico 2026_2027.xlsx\", group tab. Fact-based since TASK-394; introduced TASK-385."
+  },
+  "m18": {
+    "name": "Day Starts From First Open Slot",
+    "description": "Every group-day's first lesson should sit at the group's first calendar-open slot (widened from short days only to all days, TASK-405: the golden timetable anchors 99.3% of its days at the first slot). The penalty grows with the offset, so a day starting two slots late weighs more than one slot late.",
+    "example": "If G10's Tuesday calendar opens at slot 0, its first Tuesday lesson should start at slot 0; starting at 10:00 (slot 2) costs twice as much as starting at 9:00.",
+    "origin": "Golden practice, no school document: the golden anchors 99.3% of group-days at the first open slot (measured in task405-results). Widened to every day with a per-offset gradient in TASK-405; was gated to short days (task-247/350)."
+  },
+  "m20": {
+    "name": "Daily Fill Against the School Plan",
+    "description": "Each school day should receive the hours the school's calendar plans for that date. The penalty charges the hours missing from the expected plan. The target is reduced by hours already fixed by authoritative inputs and never exceeds the group's assigned hour pool.",
+    "example": "If the plan expects 5 hours for G07 on September 14 and the schedule places 4, that day leaves a 1-hour deficit. For groups with more calendar capacity than assigned hours (e.g. G04: 835 available, 750 assigned), the target stops at the assigned pool.",
+    "origin": "School's per-group calendar (DailyActivityQuota: expected classroom+lab hours per (group, date)); \"Copy of Calendario scolastico 2026_2027.xlsx\", group tab. Target net of authoritative pins since TASK-424; capped at the assigned hour pool since TASK-497; introduced TASK-385."
+  },
+  "m22": {
+    "name": "Calendar Compactness",
+    "description": "The calendar a student group uses, from its first to its last lesson, should contain no empty school days. The minimum day count is computed from the group's declared average aula+lab quota (ratified quota-aware form: when placed hours equal the sheet's total, the minimum is exactly the number of days the school declared).",
+    "example": "If G06's first lesson is September 15 and its last is June 5, every school day in between should have at least one G06 lesson; no unexplained empty Tuesday in the middle.",
+    "origin": "Golden practice, no school document: the school builds one compact block of teaching days (first to last, no empty days in between). Introduced task-273."
+  },
+  "m23": {
+    "name": "Block Lesson Pair Togetherness",
+    "description": "When a multi-hour subject is split into several same-course, same-session lesson-hours (a block modeled as separate rows rather than one entity), all of those hours must land on the same date.",
+    "example": "A 2-hour Disegno edile block split into two lesson rows should both be on the same day, not one on Monday and the other on Thursday.",
+    "origin": "Structural constraint, no school document; a multi-hour block modeled as separate rows must land on the same day (block integrity, e.g. Disegno edile 2h). Introduced TASK-183."
+  },
+  "s1": {
+    "name": "Minimize Teacher Gaps",
+    "description": "Teachers should have contiguous blocks of teaching with minimal idle time between lessons.",
+    "example": "If Prof. Rossi teaches at 9:00 and 11:00, ideally they would also teach at 10:00 rather than having a gap.",
+    "origin": "Structural constraint, no school document; minimizes a teacher's idle gaps between lessons (quality), foundational."
+  },
+  "s3": {
+    "name": "Teacher Preference",
+    "description": "Teachers may indicate preferred time slots. The scheduler tries to honor these preferences when possible.",
+    "example": "If Prof. Bianchi prefers morning classes, they should ideally be scheduled before 13:00.",
+    "origin": "Structural constraint, no school document; honors a teacher's declared preferred slots (input), foundational."
+  },
+  "m21": {
+    "name": "Max 2h Per Subject Per Day",
+    "description": "Students should have variety. No more than 2 hours of the same subject per day, except labs, Informatica, Competenze Digitali and Disegno, which may run in longer blocks (task-365; threshold raised from 1h to 2h in task-381, matching the school's own routine 2h-block practice). Pseudo-teacher lessons (e.g. Stage) are also exempt.",
+    "example": "A schedule with Math at 8:00, 9:00 is not penalized (2h Math, allowed). Math at 8:00, 9:00, 10:00 is penalized (3h Math, 1 excess hour). Disegno at 8:00, 9:00, 10:00 is not penalized (exempt subject).",
+    "origin": "Golden practice, no school document: the school builds 2h blocks, so the threshold is 2h (raised from 1h, TASK-381). Lab/Informatica/Competenze Digitali/Disegno exempt; pseudo-teacher exempt."
+  },
+  "m24": {
+    "name": "At Most One Early-Start Day Per Week",
+    "description": "For teachers with a per-teacher weekly cap on 08:00 starts (currently T11, who may start at 08:00 on at most one day per week), any extra 08:00 start beyond the cap is penalized.",
+    "example": "If T11 starts at 08:00 on both Monday and Wednesday in the same week, one of those two early starts is penalized.",
+    "origin": "\"T11 | 9-14 sempre e un giorno alle 8.00\" (Spalmone constraints workbook, tab \"Vincoli Docenti\", row 49). Per-teacher maxEarlyStartDaysPerWeek (T11=1); grouped by (teacher, ISO week); introduced TASK-368."
+  },
+  "m25": {
+    "name": "Required Free Day Per Week",
+    "description": "For teachers with a per-teacher weekly free-day requirement (currently T05, who needs 2 fully free weekdays), a week that doesn't leave them enough zero-lesson weekdays is penalized.",
+    "example": "If T05 has lessons on 4 of the 5 weekdays in a given week (only 1 free day, not the required 2), that week is penalized.",
+    "origin": "T05: \"VENERDI' | Libero  a casa\" and \"No lezione in uno di questi giorni AL MASSIMO UN'ORA\" (Spalmone constraints workbook, tab \"Vincoli Docenti\", rows 45-46). Per-teacher requiredFreeDaysPerWeek (T05=2); introduced TASK-368."
+  },
+  "s7": {
+    "name": "Reward Consecutive Student Lessons",
+    "description": "Student schedules with consecutive lessons (minimal gaps) are preferred. This improves time efficiency for students.",
+    "example": "A schedule with lessons at 8:00, 9:00, 10:00 is better than lessons at 8:00, 10:00, 13:00.",
+    "origin": "Structural constraint, no school document; rewards consecutive student lessons (quality), foundational."
+  },
+  "s8": {
+    "name": "Penalize Isolated Lessons",
+    "description": "Student lessons that are isolated (with no adjacent lessons on the same day) should be avoided when possible.",
+    "example": "A single lesson at 8:00 with no other lessons that day is less ideal than multiple contiguous lessons.",
+    "origin": "Structural constraint, no school document; penalizes isolated student lessons (quality), foundational."
+  },
+  "s9": {
+    "name": "Dilute Hours Over Year (currently disabled)",
+    "description": "Subject hours should be spread across the school year rather than concentrated. This ensures consistent learning progression. Disabled since task-273 (opposed calendar compactness); see S12 for the related but distinct weekly-continuity reward that is active.",
+    "example": "Having 3 English lessons in one week and none the next is less ideal than 1-2 lessons consistently each week.",
+    "origin": "Structural constraint, no school document; dilute hours over the year (quality). DISABLED since task-273 (it opposes calendar compactness); see S12 for the distinct, active weekly continuity."
+  },
+  "s10": {
+    "name": "Reserve Lab Rooms for Labs",
+    "description": "Regular (non-lab) subjects should preferably not use specialized lab rooms. Labs should be available for subjects that need them.",
+    "example": "Teaching Italian in the computer lab is discouraged if regular classrooms are available.",
+    "origin": "Structural constraint, no school document; discourages ordinary subjects in lab rooms (quality), introduced task-007."
+  },
+  "s11": {
+    "name": "Student Group Room Affinity",
+    "description": "Student groups should preferably stay in the same room throughout the day for non-lab lessons. This minimizes unnecessary movement between classrooms.",
+    "example": "If G01 has 4 non-lab lessons on Monday, keeping all 4 in Room A is better than splitting them between Room A and Room B.",
+    "origin": "Structural constraint, no school document; a class preferably stays in the same room for non-lab lessons (quality), introduced task-008."
+  },
+  "m27": {
+    "name": "Subject Start-Period Preference",
+    "description": "Some subjects should start early in the year, others later. Merceologia and Arredi Tessili should have their first lesson within the first few weeks; Tecnologia Tessile and Storia della moda should not start too early. Other subjects (Figurino, Consulenza d'immagine, Sviluppo Sostenibile) are unconstrained.",
+    "example": "If Merceologia's first lesson for G01 is in week 8, that is penalized (should start by week 3). If Storia della moda's first lesson is in week 1, that is also penalized (should not start before week 4).",
+    "origin": "\"Subito merceologia in 1° e 2°\" and \"3° fa tecnologia e merceologia ultime\" (Spalmone constraints workbook, tab \"Vincoli DA ANALIZZARE\", rows 98 and 101). Window on the first-lesson week for T20 subjects; introduced TASK-369."
+  },
+  "m30": {
+    "name": "Lab Day Quota Fill",
+    "description": "For G04/G08/G13, each day the school's calendar sheet budgets lab hours for should have that many quota-bound lab lessons placed, counting pinned lessons too (this checks the school's own historical accuracy, not just the solver's future placements).",
+    "example": "If the sheet budgets 4 lab hours for G04 on a given day and only 2 are placed (or 0), the shortfall is penalized per missing hour.",
+    "origin": "School's per-group calendar (DailyActivityQuota.labHours for G04/G08/G13); \"Copy of Calendario scolastico 2026_2027.xlsx\", group tab. Counts pinned lessons too (checks the school's own historical practice); introduced TASK-381 (L1-bis)."
+  },
+  "m31": {
+    "name": "Lab Day Single Contiguous Run",
+    "description": "For G04/G08/G13, a day's quota-bound lab lessons should form a single unbroken block, not split into separate runs. A day where every contributing lesson is pinned (historical data) is exempt.",
+    "example": "If G08 has 3 Lavorazioni meccaniche hours on a day at slots 0-1 and then slot 4, that is one split (penalized); slots 0-2 together is a single run (not penalized).",
+    "origin": "School's per-group calendar + the compact-lab-block practice; \"Copy of Calendario scolastico 2026_2027.xlsx\", group tab. Day-level pinned-exempt; introduced TASK-381 (L1-bis)."
+  },
+  "m32": {
+    "name": "Template Deviation",
+    "description": "A weekly template is built before solving, giving each course its recurring (weekday, slot) cells. Moving a lesson off its course's template cell is penalized, with a scarcity-graduated weight: a course with few legal placements is near-immobile, one with many is cheap to move. Only the weekday and slot matter, so shifting a lesson to another week at the same weekday/slot is not a deviation. Pinned and Stage lessons are exempt.",
+    "example": "If a course's template puts it on Monday slot 0, placing that lesson on Tuesday slot 3 is a deviation (penalized); placing it on a different Monday at slot 0 is not.",
+    "origin": "Golden practice, no school document: the per-course weekly template (recurring weekday/slot cell) is derived from the golden/stamp and published pre-solve (WeeklyTemplatePlanner.buildReference). Scarcity-graduated weight; introduced TASK-413."
+  },
+  "m33": {
+    "name": "Surplus Beyond Expected Day Hours",
+    "description": "The mirror image of M20: where M20 charges the hours missing from a student group day, M33 charges the hours parked above what the school's own plan expects for that (group, date). A light penalty, not a ban: the school itself goes above the plan on about 70 days a year, so surplus stays allowed when it serves a purpose. Pinned lessons and G14 are exempt, and days the plan expects nothing from (no-session, closed, stage-only) are out of scope.",
+    "example": "If the sheet expects 6 hours for G03 on a Monday and 8 are placed, the 2 extra hours are penalized; 6 hours (or 5) are not.",
+    "origin": "School's per-group calendar (DailyActivityQuota expected-hours, target net of pins TASK-424); \"Copy of Calendario scolastico 2026_2027.xlsx\", group tab. The golden itself goes above ~70 days/year, so it is a light penalty, not a ban; introduced TASK-423."
+  },
+  "s12": {
+    "name": "Weekly Subject Presence",
+    "description": "For continuity of learning, a subject should ideally have at least one lesson per week while it is actively being taught (excluding stage weeks). Rewards each week a subject is present, encouraging spread over concentration.",
+    "example": "A subject taught 1 hour/week for 10 weeks is rewarded more than the same 10 hours concentrated into 2 weeks.",
+    "origin": "Structural constraint, no school document; weekly continuity (at least one lesson/week while a subject is active, a lower bound, NOT a restoration of S9); introduced TASK-369."
+  },
+  "s13": {
+    "name": "Weekly Stability",
+    "description": "An unpinned lesson is rewarded when its (student group, weekday, slot) cell matches the same cell one week earlier on teacher and subject. Nudges the solver toward human-like weekly regularity without forcing a fixed template; a closed or missing previous week is neutral, never penalized.",
+    "example": "If G03 has Math with Teacher A in Monday slot 2 this week, and had the same Math/Teacher A in Monday slot 2 last week, the solver is rewarded for keeping that pattern.",
+    "origin": "Golden practice, no school document: a MEASURE of weekly recurrence (group/weekday/slot cell matching the previous week on teacher and subject). Template protection is M32; introduced task-375."
+  },
+  "s16": {
+    "name": "Consecutive Same Subject Same Teacher",
+    "description": "Two back-to-back hours of the same subject preferably keep the same teacher. Soft preference (was hard H16a): the school's own 2026/27 timetable deliberately hands RA/Recuperi hours between teachers back-to-back, so a handoff is allowed, just mildly discouraged.",
+    "example": "Recuperi at 10:00 with Prof. T16 followed by Recuperi at 11:00 with Prof. T02 is allowed, but same-teacher continuity scores slightly better.",
+    "origin": "Golden practice, no school document: the golden deliberately hands RA/Recuperi hours between teachers back-to-back (15 handoffs), so a handoff is allowed, just discouraged. Demoted from hard (H16a) in TASK-377."
+  },
+  "s17": {
+    "name": "Reward Same-Subject Block Pair",
+    "description": "Adjacent same-day, same-subject lesson pairs for a student group are rewarded, encouraging the solver to place repeated subject hours as a block rather than scattering them (task-381). Pseudo-teacher lessons (e.g. Stage) are exempt, so a long accounting day doesn't earn spurious rewards. Same teacher is not required (see S16 for that preference).",
+    "example": "Matematica at 9:00 and 10:00 for the same group is rewarded once for that adjacent pair; Matematica at 9:00 and 13:00 (not adjacent) is not rewarded.",
+    "origin": "Golden practice, no school document: the school builds same-day same-subject blocks (rewards the adjacent pair, labs included unlike M21/S16); introduced TASK-381 (L3)."
+  },
+  "h28": {
+    "name": "No teacher return within the day",
+    "description": "Within one day, for the same subject and group, a teacher who hands the block over to a colleague does not come back after them. A-B-A sequences are forbidden. Every handover in the school's own timetable is A then B.",
+    "example": "If G01's Italian passes from T04 to T17 mid-morning, T04 cannot resume later the same day.",
+    "origin": "Golden practice, no school document: the golden never shows A..B..A sequences within a (group, subject, day). Crystallizes the invariant at delta zero (the run is already at 0); introduced TASK-448."
+  },
+  "h29": {
+    "name": "Assigned lesson must have a room",
+    "description": "Every lesson placed in a timeslot must also have a room. Without this constraint the solver prefers to leave the room empty, because the room constraints go silent when the room is missing and assigning one can only add cost.",
+    "example": "A Confezione lesson fixed on Tuesday at 10:00 with no sewing lab assigned. The timetable is not usable until it has a room.",
+    "origin": "Structural constraint, no school document; every placed lesson must have a room (a timetable without a room is unusable). Promoted to hard (was M36) in TASK-447 to close the empty-the-schedule arbitrage."
+  },
+  "hcopresence": {
+    "name": "Guest Co-presence Cap",
+    "description": "A guest teacher may share a host's room only up to the depth the school's own golden timetable practices for that (co-presence tag, weekday, slot) cell. A hard count-based backstop paired with the room-conflict exemption that lets a golden-practiced guest pair share a room.",
+    "example": "If the golden places at most 2 guest lessons in R16 on Thursday slot 0, a third guest lesson landing there is penalized.",
+    "origin": "Golden practice, no school document: the cap on a guest sharing a host's room is the depth the golden itself practices for that cell (loadGoldenCoPresenceDepth). Golden read on the production path, censused in TASK-452 #7; introduced TASK-464."
+  },
+  "m34": {
+    "name": "Weekly Subject Hours Above Golden Cadence",
+    "description": "A subject's hours in one week should not exceed the highest weekly count the school's own golden timetable ever places for that (group, subject). A self-gating cap: pairs absent from the golden are inert. Penalizes burst concentration beyond what the school itself does.",
+    "example": "If the golden places at most 4 hours of Matematica in any week for G03, a 6-hour Matematica week is penalized for the 2 excess hours.",
+    "origin": "Golden practice, no school document: the weekly cap per (group, subject) is the golden's own weekly maximum (claudedocs/spalmone-2026-27/data/golden-cadence-reference.json). Self-gating; introduced TASK-425."
+  },
+  "m35": {
+    "name": "Weekly Subject Spread Below Golden Cadence",
+    "description": "A subject should be present in at least as many active weeks as the school's own golden timetable spreads it, for each (group, subject). Penalizes missing active weeks vs the golden's spread. Self-gating: pairs absent from the golden are inert.",
+    "example": "If the golden spreads Lingua Italiana for G06 over 28 active weeks, a run that concentrates it into 22 weeks is penalized for the 6 missing weeks.",
+    "origin": "Golden practice, no school document: penalizes missing active weeks vs the golden's active_weeks per (group, subject) (golden-cadence-reference.json). Self-gating; introduced TASK-425."
+  },
+  "mlf": {
+    "name": "Non-lab Lesson in a Tagged Room",
+    "description": "A non-lab lesson should preferably not sit in a specialized (tagged) lab room: labs stay the last resort for ordinary lessons. Paired with the rule that a room with capacity zero or less (today R18) is never assignable.",
+    "example": "A Matematica lesson in the R16 lab costs a medium penalty when a regular classroom is available; it is never sent to R18.",
+    "origin": "Structural room-fallback constraint, no school document; a room with capacity<=0 is not assignable (today R18, cap 0). Question 21 (referente, 29/07); introduced TASK-456, ratified by maintainer 2026-07-29."
+  },
+  "mtc": {
+    "name": "Lab Tag Capacity (prototype, off by default)",
+    "description": "Penalizes a lab tag's demand beyond the aggregate room capacity available for that (tag, start-date-time) cell. Scarcity-aware, medium tier (the golden itself accepts ~44 such violations). Prototype, off by default (flag planner.tag-capacity.enabled).",
+    "example": "If 5 acconciatura lessons need R16 at Thursday slot 0 but the assignable R16 rooms hold 3, the 2 excess are penalized.",
+    "origin": "Structural tag-scarcity constraint, no school document; the demand for a tag's lessons beyond the aggregate capacity of assignable rooms per (tag, startDateTime) cell. Prototype flag planner.tag-capacity.enabled DEFAULT OFF; introduced TASK-455."
+  },
+  "mtr": {
+    "name": "Theory Subject Repeated Same Day (prototype, off by default)",
+    "description": "Two adjacent hours of the same theory subject should not be placed back-to-back; labs (including Disegno and Informatica) may have longer adjacent runs. Theory threshold-1, distinct from M21's threshold-2 cap. Prototype, off by default (flag planner.constraints.theory-adjacent.enabled).",
+    "example": "Lingua Italiana at 9:00 and 10:00 for the same group is penalized; Disegno at 9:00 and 10:00 is not.",
+    "origin": "\"Non ci devono essere 2 ore vicine della stessa materia teorica\" and \"I laboratori (compreso disegno o informatica) possono avere più ore vicine\" (Spalmone constraints workbook, tab \"Vincoli DA ANALIZZARE\", rows 104-105). Theory threshold-1 (M21-style at threshold 2); prototype flag planner.constraints.theory-adjacent.enabled DEFAULT OFF; introduced TASK-468."
+  },
+  "mcps": {
+    "name": "Curriculum Post-Stage 6h (ratified, on by default)",
+    "description": "After a final-year cohort's stage ends, its curriculum subjects (G10 Comportamento Sociale, G08 Competenze di cittadinanza + Educazione Civica, G11 Personalizzazione, teacher T11) should fill around 6 hours per day. Asymmetric: a deficit costs full weight, an excess costs only a token. Ratified, on by default since 2026-08-01 (opt out with flag planner.constraints.curriculum-poststage.enabled=false).",
+    "example": "If G10's stage ends 2027-04-23 and only 3 curriculum hours are placed on a later day, the 3-hour deficit vs the 6h target is penalized at full weight.",
+    "origin": "\"CON II FC E III OIT E III FA 6 ore dopo stage per curriculum (ANCHE 2 CONSECUTIVVE)\" (Spalmone constraints workbook, tab \"Vincoli Docenti\", row 50). Asymmetric 6h target on the final cohorts (G10 / G08 / G11, T11); ratified flag planner.constraints.curriculum-poststage.enabled DEFAULT ON since 2026-08-01; introduced TASK-469."
+  },
+  "m38": {
+    "name": "Pair-Cell Deviation (ratified, weight 1)",
+    "description": "A lesson belonging to a (teacher, group) pair with a recognizable weekly shape prefers to sit in the (day, hour) cell that pair practices, rather than elsewhere. Ratified at weight 1 (a light tax that buys no matches): the constraint is on but stays inert until the pair-cell builder wins its own gate, and the banner declares the builder state.",
+    "example": "If the T10/G04 pair practices Thursday 8:00-9:00, one of its lessons placed Tuesday 2:00 PM pays the deviation.",
+    "origin": "Golden practice (TASK-576 F7-C): about 73% of lessons of shaped pairs sit in the pair's cell; ratified at weight 1 on Sept 2 after the sweep showed match rate does not depend on the weight."
+  },
+  "mbf": {
+    "name": "Lab-Teacher Day Contiguity (ratified, weight 20)",
+    "description": "On a day where a group has lab hours with two or more distinct real teachers, each teacher's hours should form one contiguous block, not alternate (the lab belongs to the teacher, not the subject). Single-teacher days are excluded (school practice: G13's monographic T10 days). Outside the lab perimeter the constraint does not apply: the golden itself spreads Figurino in 1-hour slots.",
+    "example": "If G13 has 3 T10 hours and 3 T16 hours in a day, T10 8-11 then T16 11-14 is the wanted shape; T10, T16, T10, T16 pays for the gaps.",
+    "origin": "Human planner step 3 (the lab is per-teacher, not per-subject) plus golden measurement; ratified Sept 18 (TASK blockform-623) with the bench showing local search CREATES fragmentation and the constraint cuts it from 71 to 11 days."
+  },
+  "h30": {
+    "name": "Sicurezza Before Stage",
+    "description": "All of a group's Sicurezza (safety) lessons must be scheduled before that group's stage (internship) period starts. Groups without a stage period are unaffected.",
+    "example": "If G07's stage starts March 23, all of their Sicurezza lessons must be dated before that, not during or after the stage.",
+    "origin": "\"SICUREZZA | Ore con le 3° (+ 2° OIT) prima di Stage | 2 gg di sicurezza  4 ore con le 1°\" (Spalmone constraints workbook, tab \"Vincoli Docenti\", row 42). Sicurezza lessons precede the group's stage; introduced TASK-369."
+  },
+  "h31": {
+    "name": "Day Starts at First Open Slot",
+    "description": "A group's first lesson of the day must sit at the first slot its calendar leaves open that day. The school never leaves a class waiting an hour before starting. Days holding authoritative pinned hours are exempt. Promoted from its medium form (M18) via the near-miss protocol: the golden anchors 99.9% of its days at 8:00 and the few exceptions are all the first school day.",
+    "example": "If G01's calendar opens Wednesday at 8:00, G01's first Wednesday lesson must be the 8:00 hour, not 9:00.",
+    "origin": "Golden practice, no school document: 1943 of 1960 days start at the opening hour (all 13 exceptions are the first school day). Promoted from M18 by TASK-529 after maintainer's inspection surfaced late days hidden by the aggregate average."
+  },
+  "h32": {
+    "name": "Day Fill Meets the Declared Quota",
+    "description": "The ordinary (non-internship) hours placed in a day must reach the aula+lab quota the school's calendar sheet declares for that date. Zero tolerance, because the golden converges exactly to the quota. Scope: grid dates only; G04 and G08 follow their total-hours pool cap instead (pool-cap form), G14 is excluded, G09 has a 1-hour tolerance. A deterministic repair pass (QuotaFillRepair) works alongside this constraint.",
+    "example": "The sheet declares 6 hours for G12 on Friday: the run must place exactly 6 ordinary hours that Friday, not 4.",
+    "origin": "Per-group calendar origin (DailyActivityQuota, TASK-385 and TASK-532): the school's per-date plan is the target, and the golden itself meets it exactly."
+  },
+  "h33": {
+    "name": "Per-Group Daily Hour Floor",
+    "description": "No ordinary day of a group may fall below an hour floor derived mathematically from the group's total hours and session days, with the golden entering only as an existence cap (where even the golden succumbs, the floor lowers): 4 hours for 12 groups, 2 where the golden itself keeps short days (G08, G09), 3 for G14.",
+    "example": "A 2-hour day for G03 violates the 4-hour floor; the same day for G08 is legal because the golden itself keeps 2-hour days.",
+    "origin": "Mathematically derived structural constraint (DayFloorDeriver, TASK-536), from maintainer's inspection: 2-3 hour days of G04 were unacceptable and invisible to the aggregate metric."
+  },
+  "h34": {
+    "name": "Empty Declared Day",
+    "description": "A day the calendar sheet declares with aula+lab hours cannot stay completely empty: an empty declared day costs a flat penalty, and as soon as one lesson lands the deficit depth moves to the fill constraint (H32). It is H32's hard companion: without it, a fully empty day would be invisible to the hour count (which only sees days with lessons) and local search would trade it away.",
+    "example": "June 9, 2027 carries a 4-hour quota row for G06: leaving it at zero lessons costs, regardless of how many hours are missing.",
+    "origin": "Per-group calendar origin (H32's companion, TASK-557): the counting hole was found analyzing why a declared empty day only cost at medium tier."
+  },
+  "h4_3": {
+    "name": "Single-day professional subjects during stage",
+    "description": "H4's sibling in the stage family: a stage-quota group's professional subjects must all sit on a single day during the stage period, instead of a distributed block. Latent on the 2026/27 seed (zero matches): the rule is registered but the calendar practice never exercises it.",
+    "example": "During the stage period, the group's professional-subject hours concentrate on one weekday instead of several.",
+    "origin": "Structural property declared with the stage model (TASK-381, H4 sibling); latent on the 2026/27 seed (0 measured matches)."
+  },
+  "m20_2": {
+    "name": "Empty expected day",
+    "description": "The day-fill family's tail: a day the school's plan expects (a quota row with aula+lab hours) but on which no lesson is placed pays the deficit at full depth. It shares M20's cost curve and the pin-netted target (TASK-424).",
+    "example": "The plan expects 6 hours for G04 on Wednesday and the run places 0: M20.2 charges the whole day's deficit.",
+    "origin": "Per-group calendar origin (DailyActivityQuota, TASK-385): the school's plan is the target; M20's empty-day sibling."
+  },
+  "m30_1": {
+    "name": "Lab-day fill",
+    "description": "For groups with an aula/lab split (FC calendar rows), the lab day must fill the planned lab hours for that date. Pinned lessons count too: the lab quota is the school's plan, not a suggestion.",
+    "example": "G04 has 2 planned lab hours on Tuesday: the run must place them, on top of the day's aula hours.",
+    "origin": "FC calendar origin (calendario_fc.csv, TASK-381 L1-bis): the per-date lab quota is a plan fact."
+  },
+  "m30_2": {
+    "name": "Lab window coverage",
+    "description": "M30.1's complement on the total: the group's placed lab hours must reach the plan's lab total. Guarantees that per-day filling (M30.1) does not hollow out other dates.",
+    "example": "G08's yearly lab total from the calendar is 106 hours: the run must place them all within the horizon.",
+    "origin": "FC calendar origin (calendario_fc.csv, TASK-381 L1-bis): the lab total is the plan's sum over dates."
+  }
+}

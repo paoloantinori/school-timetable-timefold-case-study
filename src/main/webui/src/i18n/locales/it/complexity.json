@@ -1,0 +1,82 @@
+{
+  "title": "Perche la Programmazione e Difficile",
+  "subtitle": "La matematica dietro l'orario scolastico",
+  "navTitle": "Complessita",
+  "intro": "Creare un orario scolastico sembra semplice, ma e in realta uno dei problemi computazionalmente piu difficili della matematica.",
+  "metrics": {
+    "title": "Il Vostro Problema a Colpo d'Occhio",
+    "lessons": "Lezioni da programmare",
+    "timeslots": "Fasce orarie disponibili",
+    "rooms": "Aule",
+    "teachers": "Insegnanti",
+    "studentGroups": "Gruppi studenti",
+    "constraints": "Regole di programmazione"
+  },
+  "searchSpace": {
+    "title": "Lo Spazio di Ricerca",
+    "explanation": "Ogni lezione necessita di una fascia oraria e di un'aula. Questo crea un numero astronomico di possibili combinazioni:",
+    "formula": "lezioni × fasce orarie × aule = possibilita",
+    "result": "Orari possibili totali",
+    "note": "Questo e un calcolo semplificato. La programmazione reale ha dipendenze che la rendono ancora piu difficile."
+  },
+  "comparisons": {
+    "title": "Mettiamolo in Prospettiva",
+    "atoms": {
+      "title": "Atomi nell'Universo",
+      "value": "10^82",
+      "comparison": "Il nostro spazio di ricerca e piu grande del numero di atomi nell'universo osservabile."
+    },
+    "chess": {
+      "title": "Partite a Scacchi Giocate",
+      "value": "~10^10",
+      "comparison": "Piu possibilita di ogni partita a scacchi mai giocata, messe insieme."
+    },
+    "sudoku": {
+      "title": "Puzzle Sudoku",
+      "value": "~10^21",
+      "comparison": "Equivalente a miliardi di miliardi di puzzle Sudoku."
+    },
+    "bruteForce": {
+      "title": "Tempo Brute Force",
+      "value": "Piu dell'eta dell'universo",
+      "comparison": "Anche controllando un miliardo di orari al secondo, ci vorrebbe piu dell'eta dell'universo."
+    }
+  },
+  "whySolver": {
+    "title": "Perche Usare un Solver?",
+    "explanation": "Invece di provare ogni combinazione, cosa impossibile, il solver usa:",
+    "techniques": {
+      "constructionHeuristic": {
+        "name": "Euristica di Costruzione",
+        "description": "Costruisce una buona soluzione iniziale usando strategie di posizionamento"
+      },
+      "localSearch": {
+        "name": "Ricerca Locale",
+        "description": "Migliora iterativamente la soluzione facendo modifiche mirate"
+      },
+      "constraintPropagation": {
+        "name": "Propagazione dei Vincoli",
+        "description": "Elimina le scelte impossibili in anticipo per ridurre lo spazio di ricerca"
+      }
+    },
+    "result": "Il solver trova una buona soluzione in minuti, non millenni."
+  },
+  "constraints": {
+    "title": "Le Regole Rendono Tutto Piu Difficile",
+    "explanation": "Ogni vincolo riduce le soluzioni valide, rendendo il problema ancora piu vincolato:",
+    "hardConstraints": "Vincoli hard",
+    "mediumConstraints": "Vincoli medium",
+    "softConstraints": "Vincoli soft",
+    "mustSatisfy": "da soddisfare",
+    "shouldAvoid": "fortemente evitati",
+    "niceToHave": "ottimizzati quando possibile"
+  },
+  "animation": {
+    "title": "Guarda lo Spazio di Ricerca Crescere",
+    "description": "Aggiungendo piu lezioni, le possibilita esplodono esponenzialmente:"
+  },
+  "footer": {
+    "appreciation": "La prossima volta che vedete il vostro orario, ricordate che e il risultato di algoritmi che affrontano uno dei problemi piu difficili dell'informatica.",
+    "learnMore": "Scopri di piu sui vincoli"
+  }
+}

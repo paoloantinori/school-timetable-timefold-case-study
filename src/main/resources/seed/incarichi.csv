@@ -1,0 +1,304 @@
+teacher,subject,group,hours
+T04,Lingua italiana,G03,80.0
+T04,Lingua italiana,G07,80.0
+T04,Lingua italiana,G11,60.0
+T04,Lingua italiana,G02,80.0
+T04,Lingua italiana,G06,80.0
+T04,Lingua italiana,G10,50.0
+T04,Lingua italiana,G12,55.0
+T03,Tecnologia,G13,42.0
+T03,Orientamento,G07,20.0
+T03,Orientamento,G11,20.0
+T03,Laboratorio Termoidraulico,G03,135.0
+T03,Sicurezza,G03,8.0
+T03,Sicurezza,G07,12.0
+T03,Sicurezza,G04,8.0
+T03,Sicurezza,G08,12.0
+T03,Sicurezza,G02,8.0
+T03,Sicurezza,G10,12.0
+T03,Sicurezza,G01,8.0
+T03,Sicurezza,G09,12.0
+T03,Sicurezza,G13,16.0
+T03,Taglio Metalli,G04,20.0
+T03,Taglio Metalli,G08,40.0
+T05,Progettazione Termoidraulica,G03,89.0
+T05,Progettazione Termoidraulica,G07,66.0
+T05,Progettazione Termoidraulica,G11,91.0
+T05,Metrologia e Tecnologia dei materiali,G13,50.0
+T05,Elettrotecnica,G03,40.0
+T05,Elettrotecnica,G07,10.0
+T05,Elettrotecnica,G11,20.0
+T05,Preparazione all'alternanza,G07,5.0
+T05,Preparazione all'alternanza,G11,5.0
+T05,Matematica,G04,70.0
+T05,Matematica,G08,50.0
+T06,Informatica,G03,50.0
+T06,Informatica,G07,40.0
+T06,Informatica,G11,30.0
+T06,Informatica,G04,40.0
+T06,Informatica,G08,20.0
+T06,Informatica,G02,40.0
+T06,Informatica,G06,40.0
+T06,Informatica,G10,20.0
+T06,Informatica,G12,40.0
+T06,Informatica,G01,50.0
+T06,Informatica,G05,50.0
+T06,Informatica,G09,30.0
+T06,Competenze Digitali,G13,55.0
+T06,Gestione aziendale,G03,30.0
+T06,Gestione aziendale,G07,20.0
+T06,Gestione aziendale,G11,26.0
+T06,Competenze Digitali,G14,20.0
+T11,Personalizzazione,G03,60.0
+T11,Personalizzazione,G07,60.0
+T11,Personalizzazione,G11,60.0
+T11,Personalizzazione,G13,60.0
+T11,Educazione civica,G04,30.0
+T11,Educazione civica,G08,20.0
+T11,Comportamento sociale,G02,30.0
+T11,Comportamento sociale,G06,30.0
+T11,Comportamento sociale,G10,20.0
+T11,Orientamento,G12,25.0
+T11,Competenze di cittadinanza,G04,20.0
+T11,Competenze di cittadinanza,G08,10.0
+T12,Disegno Edile ed Impiantistico,G07,60.0
+T12,Disegno Edile ed Impiantistico,G11,65.0
+T21,Lingua Inglese,G03,60.0
+T21,Lingua Inglese,G07,60.0
+T21,Lingua Inglese,G11,40.0
+T21,Lingua Inglese,G04,60.0
+T21,Lingua Inglese,G08,40.0
+T21,Lingua Inglese,G02,70.0
+T21,Lingua Inglese,G06,60.0
+T21,Lingua Inglese,G10,40.0
+T21,Lingua Inglese,G12,40.0
+T21,Lingua Inglese,G01,70.0
+T21,Lingua Inglese,G05,60.0
+T21,Lingua Inglese,G09,40.0
+T21,Lingua Inglese,G13,20.0
+T09,Analisi del capello e del cuoio capelluto,G02,50.0
+T09,Analisi del capello e del cuoio capelluto,G06,50.0
+T09,Analisi del capello e del cuoio capelluto,G10,40.0
+T09,Analisi del capello e del cuoio capelluto,G12,40.0
+T09,Igiene e sicurezza,G02,30.0
+T09,Igiene e sicurezza,G06,30.0
+T09,Igiene e sicurezza,G10,10.0
+T09,Igiene e sicurezza,G12,25.0
+T09,Scienze,G12,30.0
+T09,Scienze,G01,50.0
+T09,Scienze,G05,50.0
+T09,Scienze,G09,35.0
+T09,Cosmetologia,G02,50.0
+T09,Cosmetologia,G06,50.0
+T09,Cosmetologia,G10,15.0
+T13,Orientamento,G13,20.0
+T13,Comportamento Sociale,G12,45.0
+T13,Comportamento Sociale,G01,20.0
+T13,Comportamento Sociale,G05,30.0
+T13,Comportamento Sociale,G09,20.0
+T13,Comportamento Sociale,G14,20.0
+T13,Educazione Civica,G01,30.0
+T13,Educazione Civica,G05,30.0
+T13,Educazione Civica,G09,30.0
+T13,Relazione con il cliente,G02,55.0
+T13,Relazione con il cliente,G06,55.0
+T13,Relazione con il cliente,G10,40.0
+T13,Relazione con il cliente,G12,45.0
+T14,Lingua Italiana,G04,90.0
+T14,Lingua Italiana,G08,60.0
+T14,Lingua Italiana,G01,90.0
+T14,Lingua Italiana,G05,80.0
+T14,Lingua Italiana,G09,56.0
+T14,Recuperi ed Approfondimenti,G09,9.0
+T14,Orientamento,G14,15.0
+T22,Laboratorio Termoidraulico,G03,100.0
+T22,Laboratorio Termoidraulico,G07,24.0
+T22,Laboratorio Termoidraulico,G11,54.0
+T15,Lavorazioni meccaniche,G04,152.0
+T15,Lavorazioni meccaniche,G08,110.0
+T15,Controllo numerico,G08,64.0
+T15,Lavorazioni meccaniche,G13,30.0
+T15,Tecniche di saldatura,G13,40.0
+T15,Cad,G13,30.0
+T15,Cad,G04,20.0
+T15,Recuperi ed Approfondimenti,G04,50.0
+T15,Cad,G08,30.0
+T02,Comunicazione,G13,70.0
+T02,Orientamento,G03,20.0
+T02,Orientamento,G02,10.0
+T02,Orientamento,G06,10.0
+T02,Orientamento,G10,10.0
+T02,Orientamento,G01,20.0
+T02,Orientamento,G05,20.0
+T02,Orientamento,G09,10.0
+T02,Storia,G03,30.0
+T02,Storia,G07,30.0
+T02,Storia,G11,20.0
+T02,Storia,G02,50.0
+T02,Storia,G06,50.0
+T02,Storia,G10,30.0
+T02,Storia,G12,30.0
+T02,Storia,G01,20.0
+T02,Storia,G05,20.0
+T02,Storia,G09,10.0
+T02,Recuperi ed Approfondimenti,G01,25.0
+T02,Recuperi ed Approfondimenti,G05,25.0
+T02,Recuperi ed Approfondimenti,G09,20.0
+T18,Lavaggio,G02,50.0
+T18,Lavaggio,G06,55.0
+T18,Lavaggio,G10,55.0
+T18,Gestione aziendale,G02,30.0
+T18,Gestione aziendale,G06,35.0
+T18,Gestione aziendale,G10,35.0
+T18,Gestione aziendale,G12,54.0
+T18,Approfondimenti tecnica operativa,G02,36.0
+T18,Approfondimenti tecnica operativa,G06,30.0
+T18,Preparazione all'alternanza,G12,5.0
+T23,Economia e Diritto del lavoro,G03,20.0
+T23,Economia e Diritto del lavoro,G07,20.0
+T23,Economia e Diritto del lavoro,G11,20.0
+T23,Economia e Diritto del lavoro,G04,20.0
+T23,Economia e Diritto del lavoro,G08,10.0
+T23,Economia e Diritto del lavoro,G12,30.0
+T23,Economia e Diritto del lavoro,G01,30.0
+T23,Economia e Diritto del lavoro,G05,30.0
+T23,Economia e Diritto del lavoro,G09,20.0
+T23,Educazione Civica,G03,30.0
+T23,Educazione Civica,G07,30.0
+T23,Educazione Civica,G11,30.0
+T23,Educazione Civica,G02,40.0
+T23,Educazione Civica,G06,40.0
+T23,Educazione Civica,G10,30.0
+T23,Orientamento,G04,10.0
+T23,Orientamento,G08,10.0
+T23,Storia,G04,20.0
+T23,Storia,G08,20.0
+T23,Economia e Diritto del lavoro,G13,60.0
+T26,Servizio stilistico,G02,40.0
+T26,Servizio stilistico,G06,50.0
+T26,Servizio stilistico,G10,50.0
+T26,Servizio stilistico,G12,30.0
+T26,Servizio stilistico,G14,30.0
+T26,Ra lab aperto,G02,50.0
+T26,Ra lab aperto,G06,50.0
+T26,Ra lab aperto,G10,40.0
+T01,Servizio tecnico e stilistico,G02,60.0
+T01,Servizio tecnico e stilistico,G06,60.0
+T01,Servizio tecnico e stilistico,G10,65.0
+T01,Servizio tecnico e stilistico,G12,46.0
+T20,Merceologia,G01,30.0
+T20,Merceologia,G05,22.0
+T20,Merceologia,G09,15.0
+T20,Tecnologia tessile,G01,31.0
+T20,Tecnologia tessile,G05,30.0
+T20,Tecnologia tessile,G09,15.0
+T20,Figurino,G01,45.0
+T20,Figurino,G05,50.0
+T20,Figurino,G09,35.0
+T20,Arredi Tessili,G01,10.0
+T20,Arredi Tessili,G05,13.0
+T20,Arredi Tessili,G09,10.0
+T20,Consulenza d'immagine,G02,35.0
+T20,Consulenza d'immagine,G06,30.0
+T20,Consulenza d'immagine,G10,23.0
+T20,Consulenza d'immagine,G12,30.0
+T20,Sviluppo Sostenibile,G01,10.0
+T20,Sviluppo Sostenibile,G05,10.0
+T20,Sviluppo Sostenibile,G09,10.0
+T20,Storia della moda,G01,25.0
+T20,Storia della moda,G05,25.0
+T20,Storia della moda,G09,20.0
+T16,Confezione,G01,169.0
+T16,Confezione,G05,166.0
+T16,Confezione,G09,105.0
+T16,Confezione,G14,30.0
+T16,Recuperi ed Approfondimenti,G01,10.0
+T16,Recuperi ed Approfondimenti,G05,15.0
+T17,Modello (Moulage),G01,128.0
+T17,Modello (Moulage),G05,150.0
+T17,Modello (Moulage),G09,80.0
+T17,Recuperi ed Approfondimenti,G01,15.0
+T17,Recuperi ed Approfondimenti,G05,10.0
+T17,Recuperi ed Approfondimenti,G09,10.0
+T25,Scienze,G03,50.0
+T25,Scienze,G07,50.0
+T25,Scienze,G11,40.0
+T25,Scienze,G04,60.0
+T25,Scienze,G08,30.0
+T25,Scienze,G02,62.0
+T25,Scienze,G06,60.0
+T25,Scienze,G10,40.0
+T25,Scienze,G12,30.0
+T25,Scienze,G13,45.0
+T25,Matematica,G13,30.0
+T25,Sviluppo sostenibile,G03,8.0
+T25,Sviluppo sostenibile,G07,8.0
+T25,Sviluppo sostenibile,G11,10.0
+T25,Sviluppo sostenibile,G04,10.0
+T25,Sviluppo sostenibile,G08,10.0
+T25,Sviluppo sostenibile,G02,8.0
+T25,Sviluppo sostenibile,G06,8.0
+T25,Sviluppo sostenibile,G10,5.0
+T08,Matematica,G03,80.0
+T08,Matematica,G07,80.0
+T08,Matematica,G11,60.0
+T08,Matematica,G02,70.0
+T08,Matematica,G06,70.0
+T08,Matematica,G10,40.0
+T08,Matematica,G12,30.0
+T08,Matematica,G01,80.0
+T08,Matematica,G05,80.0
+T08,Matematica,G09,50.0
+T07,Tecnologia e creatività,G01,24.0
+T07,Tecnologia e creatività,G05,24.0
+T07,Tecnologia e creatività,G09,24.0
+T10,Lavorazioni meccaniche,G13,110.0
+T10,Tecnologia Meccanica,G04,20.0
+T10,Tecnologia Meccanica,G08,40.0
+T10,Preparazione all'alternanza,G13,5.0
+T10,Disegno,G08,50.0
+T24,Disegno,G03,55.0
+T24,Disegno,G04,50.0
+T24,Normativa,G03,45.0
+T24,Normativa,G07,20.0
+T24,Normativa,G11,20.0
+T19,Barberia,G02,36.0
+T19,Barberia,G06,47.0
+T19,Barberia,G12,45.0
+T03,Recuperi ed Approfondimenti,G08,1.0
+T05,Recuperi ed Approfondimenti,G08,3.0
+T06,Recuperi ed Approfondimenti,G08,2.0
+T10,Recuperi ed Approfondimenti,G08,5.0
+T11,Recuperi ed Approfondimenti,G08,1.0
+T14,Recuperi ed Approfondimenti,G08,2.0
+T15,Recuperi ed Approfondimenti,G08,6.0
+T21,Recuperi ed Approfondimenti,G08,2.0
+T23,Recuperi ed Approfondimenti,G08,19.0
+Stage,Stage,G07,295.0
+Stage,Stage,G11,295.0
+Stage,Stage,G04,240.0
+Stage,Stage,G08,300.0
+Stage,Stage,G10,300.0
+Stage,Stage,G12,295.0
+Stage,Stage,G09,300.0
+Stage,Stage,G13,295.0
+Esame,Esame,G11,24.0
+Esame,Esame,G08,24.0
+Esame,Esame,G10,20.0
+Esame,Esame,G12,20.0
+Esame,Esame,G09,24.0
+Esame,Esame,G13,12.0
+Totale ore corso,None,G03,990.0
+Totale ore corso,None,G07,990.0
+Totale ore corso,None,G11,990.0
+Totale ore corso,None,G04,990.0
+Totale ore corso,None,G08,990.0
+Totale ore corso,None,G02,990.0
+Totale ore corso,None,G06,990.0
+Totale ore corso,None,G10,990.0
+Totale ore corso,None,G12,1000.0
+Totale ore corso,None,G01,990.0
+Totale ore corso,None,G05,990.0
+Totale ore corso,None,G09,990.0
+Totale ore corso,None,G13,990.0
+Totale ore corso,None,G14,120.0

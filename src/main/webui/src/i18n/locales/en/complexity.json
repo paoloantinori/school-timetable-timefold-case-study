@@ -1,0 +1,89 @@
+{
+  "title": "Why Scheduling is Hard",
+  "subtitle": "The mathematics behind your school timetable",
+  "navTitle": "Complexity",
+  "intro": "Creating a school timetable looks simple, but it's actually one of the most computationally difficult problems in mathematics.",
+
+  "metrics": {
+    "title": "Your Problem at a Glance",
+    "lessons": "Lessons to schedule",
+    "timeslots": "Available time slots",
+    "rooms": "Classrooms",
+    "teachers": "Teachers",
+    "studentGroups": "Student groups",
+    "constraints": "Scheduling rules"
+  },
+
+  "searchSpace": {
+    "title": "The Search Space",
+    "explanation": "Each lesson needs a time slot and a room. This creates an astronomical number of possible combinations:",
+    "formula": "lessons × timeslots × rooms = possibilities",
+    "result": "Total possible schedules",
+    "note": "This is a simplified calculation. Real scheduling has dependencies that make it even harder."
+  },
+
+  "comparisons": {
+    "title": "Putting It in Perspective",
+    "atoms": {
+      "title": "Atoms in the Universe",
+      "value": "10^82",
+      "comparison": "Our search space is larger than the number of atoms in the observable universe."
+    },
+    "chess": {
+      "title": "Chess Games Ever Played",
+      "value": "~10^10",
+      "comparison": "More possibilities than every chess game ever played, combined."
+    },
+    "sudoku": {
+      "title": "Sudoku Puzzles",
+      "value": "~10^21",
+      "comparison": "Equivalent to billions of billions of Sudoku puzzles."
+    },
+    "bruteForce": {
+      "title": "Brute Force Time",
+      "value": "Longer than the universe age",
+      "comparison": "Even checking one billion schedules per second would take longer than the age of the universe."
+    }
+  },
+
+  "whySolver": {
+    "title": "Why Use a Solver?",
+    "explanation": "Instead of trying every combination, which is impossible, the solver uses:",
+    "techniques": {
+      "constructionHeuristic": {
+        "name": "Construction Heuristic",
+        "description": "Builds a good initial solution using placement strategies"
+      },
+      "localSearch": {
+        "name": "Local Search",
+        "description": "Iteratively improves the solution by making targeted changes"
+      },
+      "constraintPropagation": {
+        "name": "Constraint Propagation",
+        "description": "Eliminates impossible choices early to reduce the search space"
+      }
+    },
+    "result": "The solver finds a good solution in minutes, not millennia."
+  },
+
+  "constraints": {
+    "title": "The Rules Make It Harder",
+    "explanation": "Each constraint reduces the valid solutions, making the problem even more constrained:",
+    "hardConstraints": "Hard constraints",
+    "mediumConstraints": "Medium constraints",
+    "softConstraints": "Soft constraints",
+    "mustSatisfy": "must be satisfied",
+    "shouldAvoid": "strongly avoided",
+    "niceToHave": "optimized when possible"
+  },
+
+  "animation": {
+    "title": "Watch the Search Space Grow",
+    "description": "As we add more lessons, the possibilities explode exponentially:"
+  },
+
+  "footer": {
+    "appreciation": "Next time you see your schedule, remember it is the result of algorithms tackling one of computing's hardest problems.",
+    "learnMore": "Learn more about the constraints"
+  }
+}

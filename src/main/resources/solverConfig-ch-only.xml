@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver xmlns="https://timefold.ai/xsd/solver">
+
+  <!-- CH-only config for measuring DayClusteredConstructionPhase output in isolation.
+       No LS phases — solver terminates after fallback CH completes. -->
+
+  <scoreDirectorFactory>
+    <constraintProviderClass>com.school.planner.solver.SchoolScheduleConstraintProvider</constraintProviderClass>
+    <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+  </scoreDirectorFactory>
+
+  <!-- Safety net: 10 min max (CH should finish in ~2 min) -->
+  <termination>
+    <secondsSpentLimit>600</secondsSpentLimit>
+  </termination>
+
+  <!-- Phase 1: Day-Clustered Lesson Placement (custom CH) -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+  </customPhase>
+
+  <!-- Disable default CH fallback (no <constructionHeuristic> = UNINITIALIZED) -->
+
+  <!-- Phase transition marker: Phase 1 → Phase 2 (fallback disabled for testing) -->
+  <!--
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="2"/>
+      <property name="phaseName" value="2. CH - Fallback Placement"/>
+    </customProperties>
+  </customPhase>
+
+  <constructionHeuristic>
+    <queuedEntityPlacer>
+      <entitySelector id="fallbackPlacer">
+        <entityClass>com.school.planner.domain.Lesson</entityClass>
+        <cacheType>PHASE</cacheType>
+        <sorterManner>DESCENDING</sorterManner>
+      </entitySelector>
+      <changeMoveSelector>
+        <entitySelector mimicSelectorRef="fallbackPlacer"/>
+        <valueSelector variableName="timeslot"/>
+      </changeMoveSelector>
+      <changeMoveSelector>
+        <entitySelector mimicSelectorRef="fallbackPlacer"/>
+        <valueSelector variableName="room"/>
+      </changeMoveSelector>
+    </queuedEntityPlacer>
+  </constructionHeuristic>
+  -->
+
+</solver>

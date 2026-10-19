@@ -1,0 +1,12 @@
+SET
+G06|T01|Servizio tecnico e stilistico|x10
+G06|T01|Servizio tecnico e stilistico|x10
+G06|T01|Servizio tecnico e stilistico|x10
+G06|T01|Servizio tecnico e stilistico|x10
+G06|T01|Servizio tecnico e stilistico|x10
+G06|T01|Servizio tecnico e stilistico|x10
+G06|T01|Servizio tecnico e stilistico|x10
+G06|T01|Servizio tecnico e stilistico|x10
+G06|T01|Servizio tecnico e stilistico|x10
+G06|T01|Servizio tecnico e stilistico|x10
+G01|T08|Matematica|x1

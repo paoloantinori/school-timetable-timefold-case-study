@@ -1,0 +1,61 @@
+{
+  "title": "Fasi del Solver",
+  "navTitle": "Fasi",
+  "subtitle": "La pipeline a 5 fasi che trasforma un orario vuoto in una pianificazione ottimizzata",
+  "intro": "Il solver Timefold utilizza una pipeline multifase: due fasi di Euristica Costruttiva che posizionano le entità in una soluzione iniziale, seguite da fasi di Ricerca Locale che raffinano progressivamente i timeslot, poi una fase deterministica di Compattazione che richiude eventuali buchi nei giorni degli studenti riaperti dalla ricerca. Una fase dedicata di Euristica Costruttiva assegna poi le aule, seguita da una fase finale di Ricerca Locale che raffina quelle assegnazioni. Ogni fase ha un obiettivo distinto, un insieme di mosse e una strategia di terminazione rispecchiando il modo in cui un programmatore umano affronterebbe il problema.",
+  "overview": {
+    "title": "Panoramica della Pipeline",
+    "globalStop": "Limite di sicurezza globale: 8 ore massime",
+    "preAssignment": "Storicamente, questa riga fissava circa 1.100 blocchi di rotazione laboratorio prima dell'avvio del solver; per il 2026/27 questo ruolo è svolto dagli import Calendario/golden (vedi \"Il Processo 2026/27\" nella Guida ai Vincoli)",
+    "pinsNote": "Le fasi di Euristica Costruttiva collocano solo le lezioni non ancora fissate (pinned): gli import Calendario e golden fissano in anticipo la struttura pre-impostata dalla scuola, ancora prima che il solver parta, quindi le Fasi 1/2 riempiono tutto il resto attorno a quelle ore fisse. Il vecchio passo di pre-assegnazione CSP esiste ancora e può essere avviato manualmente, ma per il 2026/27, non essendo seminate righe LabRotation, è di fatto un no-op.",
+    "chLabel": "Euristica Costruttiva",
+    "lsLabel": "Ricerca Locale",
+    "chDescription": "Costruisce una soluzione iniziale posizionando ogni entità",
+    "lsDescription": "Migliora iterativamente la soluzione usando metaeuristiche"
+  },
+  "sections": {
+    "construction": "Fasi di Euristica Costruttiva",
+    "localSearch": "Fasi di Ricerca Locale",
+    "constructionDesc": "Costruiscono una soluzione iniziale (fattibile ma non ottimizzata) posizionando ogni entità in un timeslot. Le aule non vengono ancora assegnate alle Lezioni (rinviato alla Fase 4).",
+    "localSearchDesc": "Migliorano iterativamente la soluzione utilizzando diversi tipi di mosse e strategie metaeuristiche. La Fase 2 ottimizza solo i timeslot (le aule sono null) tramite Ricerca Locale; una fase deterministica di Repair + Compattazione (3) richiude poi eventuali buchi nei giorni degli studenti riaperti dalla Fase 2. La Fase 4 assegna le aule per la prima volta (Euristica Costruttiva). La Fase 5 raffina quelle assegnazioni con la Ricerca Locale. La vecchia Fase 3 di Ricerca Locale (RuinRecreate) è stata rimossa (TASK-420) dopo averla misurata inerte su sei run consecutivi."
+  },
+  "moves": {
+    "change": "Cambio",
+    "swap": "Scambio",
+    "pillar": "Pilastro",
+    "cartesian": "Cartesiano"
+  },
+  "labels": {
+    "type": "Tipo",
+    "goal": "Obiettivo",
+    "moves": "Mosse Disponibili",
+    "metaheuristic": "Metaeuristica",
+    "termination": "Terminazione",
+    "typicalDuration": "Durata Tipica",
+    "weight": "peso",
+    "entity": "Entità",
+    "variable": "Variabile",
+    "entityTabu": "Entity Tabu",
+    "lateAcceptance": "Late Acceptance",
+    "simulatedAnnealing": "Simulated Annealing",
+    "forager": "Forager",
+    "acceptFirst": "greedy (accetta il primo)",
+    "evaluateN": "valuta {{count}} candidati",
+    "unimproved": "{{minutes}} min senza miglioramento",
+    "hardCap": "{{hours}}h limite massimo",
+    "construction": "Costruzione",
+    "localSearch": "Ricerca Locale",
+    "both": "Entrambi"
+  },
+  "footer": {
+    "configFile": "Configurazione: src/main/resources/solverConfig.xml",
+    "learnMore": "Visualizza tutti i vincoli"
+  },
+  "stagedCycleDoc": {
+    "title": "Cosa lancia davvero il pulsante Risolvi: il ciclo staged",
+    "stages": "PRE-ASSIGN (pre-assegnazione garantita) → A-CONSTRUCTION (costruzione col template settimanale) → PROMOTION (i punti del template diventano fissi) → B-TIMESLOT (ricerca locale sui timeslot, con demozioni selettive) → RELEASE (rilascio dei pin temporanei) → REPAIR (riparazioni deterministiche: buchi, ancore, surplus, completamento esatto) → B-ROOM (assegnazione e rifinitura delle aule)",
+    "multiStart": "Tutto il ciclo è avvolto in un multi-start: fino a 5 tentativi (il primo deterministico, i successivi con costruzione randomizzata), con scelta del migliore su hard/medium e arresto al primo tentativo senza violazioni hard. Durante il solve la barra arancione mostra la fase corrente e il conteggio \"Tentativo X di Y\".",
+    "caveat": "Nota: mentre il ciclo gira, lo stato del solver resta \"Non in risoluzione\" per costruzione (il ciclo non passa dal gestore standard). Il segnale utile è la fase staged nel banner, non lo stato.",
+    "phasesBelow": "Le 5 fasi documentate qui sotto sono il contenuto di UN tentativo."
+  }
+}

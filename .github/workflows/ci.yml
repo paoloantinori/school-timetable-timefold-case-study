@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build (backend + frontend)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Set up Node 20 (Quinoa frontend build)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: src/main/webui/package-lock.json
+
+      - name: Package (Quinoa builds the React app into the JAR)
+        run: mvn -B -ntp clean package -DskipTests -Dnet.bytebuddy.experimental=true
+
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: planner-runner
+          path: target/quarkus-app/quarkus-run.jar
+          retention-days: 5
+
+  test:
+    name: Test suite (H2, no external DB)
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Set up Node 20 (Quinoa build runs in the test lifecycle too)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: src/main/webui/package-lock.json
+
+      # Same invocation as the project's ./scripts/core/test.sh: H2 in-memory,
+      # no PostgreSQL needed. Heap capped at 3g to fit runner memory.
+      - name: Run tests
+        run: mvn -B -ntp test -Dsurefire.heap=3g -Dnet.bytebuddy.experimental=true
+
+      - name: Upload test reports on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: target/surefire-reports/
+          retention-days: 5

@@ -1,0 +1,151 @@
+{
+  "_readme": "La serie dei residui hard con famiglie per run. 628-r1..r8: il banco race-only (ciclo plain, SENZA terna delivery). integrato-iN: le consegne live col wrapper completo (terna inclusa). Fonti: VERDICT 628 (integrato-1/ls-variance-bench), commit 38669df3 (integrato-1), score/analysis dei capture. Aggiornare a ogni nuovo ciclo: le voci qui alimentano family_matrix_viz.py.",
+  "runs": [
+    {
+      "name": "628-r1",
+      "families": {
+        "H32": 2,
+        "H34": 1,
+        "H7": 1
+      },
+      "hard": -4
+    },
+    {
+      "name": "628-r2",
+      "families": {
+        "H17": 2,
+        "H34": 1,
+        "H7": 1
+      },
+      "hard": -4
+    },
+    {
+      "name": "628-r3",
+      "families": {
+        "H0": 2,
+        "H17": 3,
+        "H32": 3
+      },
+      "hard": -11
+    },
+    {
+      "name": "628-r4",
+      "families": {
+        "H32": 1
+      },
+      "hard": -1
+    },
+    {
+      "name": "628-r5",
+      "families": {
+        "H17": 3
+      },
+      "hard": -4
+    },
+    {
+      "name": "628-r6",
+      "families": {
+        "H0": 1,
+        "H17": 6,
+        "H32": 3
+      },
+      "hard": -12
+    },
+    {
+      "name": "628-r7",
+      "families": {
+        "H17": 5
+      },
+      "hard": -5
+    },
+    {
+      "name": "628-r8",
+      "families": {
+        "H0": 1,
+        "H17": 4,
+        "H32": 3
+      },
+      "hard": -10
+    },
+    {
+      "name": "integrato-1",
+      "families": {
+        "H17": 2,
+        "H7": 1,
+        "H28": 1
+      },
+      "hard": -4,
+      "delivered": true
+    },
+    {
+      "name": "integrato-2",
+      "families": {},
+      "hard": 0,
+      "delivered": true
+    },
+    {
+      "name": "integrato-3",
+      "families": {},
+      "hard": 0,
+      "delivered": true
+    },
+    {
+      "name": "integrato-4",
+      "families": {},
+      "hard": 0,
+      "delivered": true
+    },
+    {
+      "name": "integrato-5",
+      "families": {
+        "H7": 1
+      },
+      "hard": -1,
+      "delivered": true
+    },
+    {
+      "name": "integrato-6",
+      "families": {
+        "H34": 1
+      },
+      "hard": -1,
+      "delivered": true
+    },
+    {
+      "name": "628i-r1",
+      "families": {
+        "H34": 1
+      },
+      "hard": -1,
+      "pre_trio": -1,
+      "note": "stessa cella strutturale G06 06-09, terna no-op (arbitrato v2: NO SOLUTION)"
+    },
+    {
+      "name": "628i-r2",
+      "families": {
+        "H32": 1,
+        "H34": 1,
+        "H7": 1
+      },
+      "hard": -3,
+      "pre_trio": -13,
+      "note": "race -13 (H0 2, H17 4): la terna cura -10; celle del residuo da censire col patch CELL del bench"
+    },
+    {
+      "name": "ab636-off",
+      "families": {
+        "H7": 2
+      },
+      "hard": -2,
+      "delivered": true,
+      "note": "braccio controllo A/B 636, tentativo 2; celle H7 T21 27/01 + T23 02/12 (COMPOSITE_MISSING: 3373 swap legali, h7swap/LS li chiudono: banchi 638)"
+    },
+    {
+      "name": "ab636-on",
+      "families": {},
+      "hard": 0,
+      "delivered": true,
+      "note": "braccio ON cadence-pace A/B 636: 0-hard AL TENTATIVO 1, ricorrenza 70,5, sanity migliore (rossi G09 scomparsi), 5/5 criteri PASS"
+    }
+  ]
+}

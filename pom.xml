@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.school</groupId>
+    <artifactId>planner</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <quarkus.platform.version>3.40.1</quarkus.platform.version>
+        <timefold-solver.version>2.7.0</timefold-solver.version>
+        <quarkus-quinoa.version>2.8.3</quarkus-quinoa.version>
+        <!-- TASK-543: vuota di default; il profilo byteman la riempie con l'agente.
+             Un'unica sorgente di verita' per l'argLine surefire (nessuna copia nel profilo). -->
+        <byteman.agent.argLine></byteman.agent.argLine>
+        <!-- Heap dei fork di test surefire. Default pieno (la suite reale-seed lo
+             vuole); override con -Dsurefire.heap=3g quando il box e' affollato e
+             la suite fork OOM-rebbe il kernel (incidente 30/08 notte: swap pieno). -->
+        <surefire.heap>16g</surefire.heap>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.quarkus.platform</groupId>
+                <artifactId>quarkus-bom</artifactId>
+                <version>${quarkus.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>ai.timefold.solver</groupId>
+                <artifactId>timefold-solver-bom</artifactId>
+                <version>${timefold-solver.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- Quarkus REST -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-rest-jackson</artifactId>
+        </dependency>
+
+        <!-- TASK-659 (c): server-side PDF of the print sheet; the HTML view (b) and
+             the PDF share ONE server-rendered template, no layout duplication.
+             io.github.openhtmltopdf is the live fork (com.openhtmltopdf is the dead
+             2021 upstream, last 1.0.10; the fork carries the same API forward). -->
+        <dependency>
+            <groupId>io.github.openhtmltopdf</groupId>
+            <artifactId>openhtmltopdf-pdfbox</artifactId>
+            <version>1.1.87</version>
+        </dependency>
+
+        <!-- Persistence -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-hibernate-orm-panache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jdbc-postgresql</artifactId>
+        </dependency>
+
+        <!-- Timefold Solver -->
+        <dependency>
+            <groupId>ai.timefold.solver</groupId>
+            <artifactId>timefold-solver-quarkus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ai.timefold.solver</groupId>
+            <artifactId>timefold-solver-quarkus-jackson</artifactId>
+        </dependency>
+
+        <!-- Quinoa (React frontend) -->
+        <dependency>
+            <groupId>io.quarkiverse.quinoa</groupId>
+            <artifactId>quarkus-quinoa</artifactId>
+            <version>${quarkus-quinoa.version}</version>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- timefold-solver-test removed in 2.0: ConstraintVerifier moved to timefold-solver-core -->
+        <!-- timefold-solver-core needed at compile scope (used by main source code).
+             ConstraintVerifier is now at ai.timefold.solver.core.api.score.stream.test -->
+        <dependency>
+            <groupId>ai.timefold.solver</groupId>
+            <artifactId>timefold-solver-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ai.timefold.solver</groupId>
+            <artifactId>timefold-solver-benchmark</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <!-- timefold-solver-jackson pulls Jackson 3.x (tools.jackson); the benchmark
+                     SolutionFileIO serializes via Jackson 2.x (com.fasterxml, on the classpath via
+                     quarkus-rest-jackson), so it is excluded to keep a single Jackson major
+                     version on the test classpath. timefold-solver-jaxb is NOT excluded: the
+                     benchmark report writer (BenchmarkResultIO -> GenericJaxbIO) needs its JAXB
+                     adapters and context wiring, and excluding it makes JAXB context creation
+                     throw InternalError. -->
+                <exclusion>
+                    <groupId>ai.timefold.solver</groupId>
+                    <artifactId>timefold-solver-jackson</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jdbc-h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-client</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson2-provider</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <!-- TASK-543: race-injection tests. Attivo solo su richiesta:
+             ./scripts/core/test.sh -mva "-Pbyteman" -c BytemanRaceInjectionTest
+             Il profilo setta byteman.agent.argLine (l'agente Byteman 4.0.27, verificato su
+             JDK 21) e byteman.agent=true: i test marcati @EnabledIfSystemProperty girano.
+             La configurazione surefire base e' UNICA (la property e' vuota di default), quindi
+             senza profilo la suite e' identica a prima. -->
+        <profile>
+            <id>byteman</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.byteman</groupId>
+                    <artifactId>byteman</artifactId>
+                    <version>4.0.27</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <properties>
+                <byteman.agent.argLine>-javaagent:${org.jboss.byteman:byteman:jar}=script:${project.build.testOutputDirectory}/byteman/race-force.btm</byteman.agent.argLine>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>byteman-agent-path</id>
+                                <goals><goal>properties</goal></goals>
+                                <phase>process-test-classes</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <byteman.agent>true</byteman.agent>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.quarkus.platform</groupId>
+                <artifactId>quarkus-maven-plugin</artifactId>
+                <version>${quarkus.platform.version}</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>generate-code</goal>
+                            <goal>generate-code-tests</goal>
+                            <goal>native-image-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jvmArgs>-Dnet.bytebuddy.experimental=true</jvmArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>${maven.compiler.release}</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+                <configuration>
+                    <!-- 16GB heap required for Quarkus tests with large candidate sets
+                         (e.g., RotationCandidateGeneratorTest with 1.9M candidates);
+                         property-ized (surefire.heap) so a crowded box can shrink it
+                         without editing the pom: -Dsurefire.heap=3g -->
+                    <argLine>@{argLine} -Xmx${surefire.heap} ${byteman.agent.argLine}</argLine>
+                    <systemPropertyVariables>
+                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                        <net.bytebuddy.experimental>true</net.bytebuddy.experimental>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.5.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- Benchmark ITs are never auto-run by `mvn verify`/failsafe: they need a live
+                         app and are run on demand. Explicit `verify.sh -c SchoolScheduleBenchmarkIT`
+                         sets -Dit.test, which overrides these excludes, so ad-hoc invocation still
+                         works. -->
+                    <excludes>
+                        <exclude>**/benchmark/**</exclude>
+                    </excludes>
+                    <argLine>@{argLine} -Xmx${surefire.heap}</argLine>
+                    <systemPropertyVariables>
+                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                        <net.bytebuddy.experimental>true</net.bytebuddy.experimental>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

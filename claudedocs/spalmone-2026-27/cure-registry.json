@@ -1,0 +1,65 @@
+{
+  "_readme": "Registro delle cure per famiglia di residuo hard. Ogni voce: causa nota, task, stato, e la lezione portante. Lo script residual-decomposition.py lo consulta per il verdetto 'vale-la-pena'. Aggiornarlo a ogni cura ratificata.",
+  "families": {
+    "H7": {
+      "cause": "Docente oltre cap giornaliero. Cure in servizio: h7cap v4 (shape-aware, donatore) e h7d3 (catena). Chiude dove esistono donatori o catene; il caso donor-less quota-tight e' coperto da h7d3 nella prova su base rifinita.",
+      "task": "TASK-629+620+621ext+632",
+      "status": "CURATA-RATIFICATA",
+      "lesson": "Il collo era la qualita' delle stanze della base, non la grammatura: verificare la base prima di dichiarare strutturale."
+    },
+    "H34": {
+      "cause": "Giorno dichiarato vuoto. Radice tipica: corso template-less (weekly target ~0) le cui ore spalma la coda round-robin; o input fantasma (golden non pratica il giorno).",
+      "task": "TASK-636 (pacing dense-first) + famiglia 550 (input) + workbook (calendario lab dichiarato)",
+      "status": "IN-COSTRUZIONE",
+      "lesson": "Il riempimento parziale e' VELENO (accende H32 a -3): la cura e' il pieno alla quota o niente. Serve surplus netto di ore: verifireferente prima di cercare mosse."
+    },
+    "H32": {
+      "cause": "Giorno sotto quota. Companion di H34 quando il giorno ha lezioni.",
+      "task": "QuotaFillRepair + EDF[delivery] ratificati",
+      "status": "CURATA-RATIFICATA (chiude dove la geografia quota lo permette)",
+      "lesson": "Tolleranza zero perche' il golden converge esattamente alla quota."
+    },
+    "H17": {
+      "cause": "Buco interno nel giorno. Classi: (a) teacher-locked curabile (HRF rotation/x-swap/import ratificati), (b) VRP-bloccata da finestra docente (es. G13/T10 giovedi': la costruzione composeva bene, l'erosione LS frantuma: TASK-631), (c) strutturale da input.",
+      "task": "TASK-613/619/621 (ratificati) + TASK-631 (erosione, aperto)",
+      "status": "PARZIALE: le classi (a) chiudono, la (b) richiede il listener 631",
+      "lesson": "La LS non puo' creare H17 visibile: il buco nasce sotto esenzione break-level o da pass a pari netto. Il censimento per-fase (phase-transition dump) discrimina."
+    },
+    "H0": {
+      "cause": "Lezione non collocata.",
+      "task": "CSF + ExactFinisher ratificati",
+      "status": "CURATA-RATIFICATA",
+      "lesson": "La classe COMPOSITE_MISSING (nessuna mossa singola migliorativa) era la radice: il relay composito la chiude."
+    },
+    "H25": {
+      "cause": "Stage fuori giorni-stage. Attenzione: quasi sempre REPLAY-ARTIFACT (export pre-cura contro quote post-cura: verifica l'hash seed col catalogo).",
+      "task": "TASK-550 (input) + catalogo 634 (guardia)",
+      "status": "CLASSE-FANTASMA (verificare sempre la freschezza seed prima di inseguirla)",
+      "lesson": "Le 4 celle di m39-off erano artefatto: la guardia del catalogo le marca STALE-SEED."
+    },
+    "H28": {
+      "cause": "Ritorno docente A..B..A nella stessa materia-giorno.",
+      "task": "classificata (integrato-1), gate not-grow nei belt ratificati",
+      "status": "CLASSIFICATA",
+      "lesson": "Il golden non la pratica mai: cristanlizzata dove misurata a zero."
+    },
+    "H31": {
+      "cause": "Giorno che non parte dal primo slot aperto.",
+      "task": "Ratificata + cure net-zero nelle belt (629 v4 firstHourExport)",
+      "status": "CURATA-RATIFICATA",
+      "lesson": "L'oracolo NET-hard tiene i pari: una mossa che scambia H7 con H31 a pari SPEDISCE la violazione."
+    },
+    "H30": {
+      "cause": "Sicurezza oltre stage-start.",
+      "task": "TASK-633",
+      "status": "CURATA-RATIFICATA (assicurazione muta: zero istanze storiche)",
+      "lesson": "Trovata da review, non da consegna: la classe net-zero va cacciata anche nel codice."
+    },
+    "H33": {
+      "cause": "Giorno con lezioni sotto il pavimento per-gruppo (DayFloorDeriver); i giorni VUOTI sono di H34, i sotto-quota di H32 (che esclude G14/1-G08).",
+      "task": "TASK-577 braccio EDF-H33 RATIFICATO DEFAULT ON (04/10) + emendamenti TASK-678 (floor-form, room-aware, range gate, both edges)",
+      "status": "RATIFICATA DEFAULT ON (maintainer, 04/10 'accetta e deploya', post-emendamenti 678; A/B pre-flip saltato su ordine esplicito, trade M20 da leggere alla prossima campagna)",
+      "lesson": "Sugli stati consegnati il braccio era doppio-morto pre-678 (gate quota + stanza trascinata). Le celle window-locked (venerdi G14 slots 0-2 con slot 0 teacher-locked da giorni saturi) sono strutturali: il braccio le enumera e correttamente non le tocca."
+    }
+  }
+}

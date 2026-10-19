@@ -1,0 +1,43 @@
+teacher,dayOfWeek,minSlot,maxSlot,type,effectiveFrom,effectiveTo,note
+T04,MONDAY,6,7,VACATION,,,TASK-368 docx revision - 8:00-14:00 Mon-Thu; afternoon unavailable
+T04,TUESDAY,6,7,VACATION,,,TASK-368 docx revision - 8:00-14:00 Mon-Thu; afternoon unavailable
+T04,WEDNESDAY,6,7,VACATION,,,TASK-368 docx revision - 8:00-14:00 Mon-Thu; afternoon unavailable
+T04,THURSDAY,6,7,VACATION,,,TASK-368 docx revision - 8:00-14:00 Mon-Thu; afternoon unavailable
+T04,FRIDAY,0,7,VACATION,,,Venerdi libero a casa - full day unavailable
+T05,MONDAY,6,7,VACATION,,,TASK-368 docx revision - 8:00-14:00 Mon-Thu uniformly; afternoon unavailable those days
+T05,TUESDAY,6,7,VACATION,,,TASK-368 docx revision - 8:00-14:00 Mon-Thu uniformly; afternoon unavailable those days (drops the old Tue-afternoon-available asymmetry)
+T05,WEDNESDAY,6,7,VACATION,,,TASK-368 docx revision - 8:00-14:00 Mon-Thu uniformly; afternoon unavailable those days
+T05,THURSDAY,6,7,VACATION,,,TASK-368 docx revision - 8:00-14:00 Mon-Thu uniformly; afternoon unavailable those days
+T05,FRIDAY,0,7,VACATION,,,Venerdi libero a casa - full day unavailable
+T11,MONDAY,6,7,VACATION,,,TASK-368 docx revision - 9-14 baseline unavailable after 14:00; slot 0 unblocked and capped weekly by M24 (one 8am day/week)
+T11,TUESDAY,6,7,VACATION,,,TASK-368 docx revision - 9-14 baseline unavailable after 14:00; slot 0 unblocked and capped weekly by M24 (one 8am day/week)
+T11,WEDNESDAY,6,7,VACATION,,,TASK-368 docx revision - 9-14 baseline unavailable after 14:00; slot 0 unblocked and capped weekly by M24 (one 8am day/week)
+T11,THURSDAY,6,7,VACATION,,,TASK-368 docx revision - 9-14 baseline unavailable after 14:00; slot 0 unblocked and capped weekly by M24 (one 8am day/week)
+T11,FRIDAY,6,7,VACATION,,,TASK-368 docx revision - 9-14 baseline unavailable after 14:00; slot 0 unblocked and capped weekly by M24 (one 8am day/week)
+T10,THURSDAY,0,3,VACATION,,,derived-from-golden 2026-07-17 - da confermare al rientro di referente - see availability-not-yet-modeled.md Q11
+T12,MONDAY,2,7,VACATION,2026-09-14,2026-09-14,Dated absence - visita medica - narrowed 0-7 to 2-7 (TASK-374) see availability-not-yet-modeled.md Q13
+T12,MONDAY,2,7,VACATION,2026-11-16,2026-11-16,Dated absence - visita medica - narrowed 0-7 to 2-7 (TASK-374) see availability-not-yet-modeled.md Q13
+T12,MONDAY,2,7,VACATION,2026-11-23,2026-11-23,Dated absence - visita medica - narrowed 0-7 to 2-7 (TASK-374) see availability-not-yet-modeled.md Q13
+T12,MONDAY,0,1,VACATION,,,derived-from-golden 2026-07-17 - da confermare al rientro di referente - see availability-not-yet-modeled.md Q13
+T12,TUESDAY,0,1,VACATION,,,derived-from-golden 2026-07-17 - da confermare al rientro di referente - see availability-not-yet-modeled.md Q13
+T16,TUESDAY,0,2,VACATION,,,derived-from-golden 2026-07-17 - da confermare al rientro di referente - see availability-not-yet-modeled.md Q12
+T24,TUESDAY,0,5,PREFERENCE,,,Equipe Tuesday morning - weak preference transcription
+T01,MONDAY,0,7,VACATION,,,Q22 golden-derived (assunzione maintainer 2026-07-24): 231/231h di giovedi nel golden; giorni a zero ore bloccati in attesa conferma scuola
+T01,TUESDAY,0,7,VACATION,,,Q22 golden-derived: vedi riga MONDAY
+T01,WEDNESDAY,0,7,VACATION,,,Q22 golden-derived: vedi riga MONDAY
+T01,FRIDAY,0,7,VACATION,,,Q22 golden-derived: vedi riga MONDAY
+T07,MONDAY,0,7,VACATION,,,Q22 golden-derived: 72/72h di mercoledi nel golden
+T07,TUESDAY,0,7,VACATION,,,Q22 golden-derived: vedi riga MONDAY
+T07,THURSDAY,0,7,VACATION,,,Q22 golden-derived: vedi riga MONDAY
+T07,FRIDAY,0,7,VACATION,,,Q22 golden-derived: vedi riga MONDAY
+T19,WEDNESDAY,0,7,VACATION,,,Q22 golden-derived: 128/128h lun+mar nel golden
+T19,THURSDAY,0,7,VACATION,,,Q22 golden-derived: vedi riga WEDNESDAY
+T19,FRIDAY,0,7,VACATION,,,Q22 golden-derived: vedi riga WEDNESDAY
+T24,WEDNESDAY,0,7,VACATION,,,Q22 golden-derived: 190/190h lun+mar nel golden (oltre la PREFERENCE equipe gia' presente)
+T24,THURSDAY,0,7,VACATION,,,Q22 golden-derived: vedi riga WEDNESDAY
+T24,FRIDAY,0,7,VACATION,,,Q22 golden-derived: vedi riga WEDNESDAY
+T22,WEDNESDAY,0,7,VACATION,,,Q22 golden-derived: 0h mer e ven nel golden (105 lun / 4 mar / 69 gio)
+T22,FRIDAY,0,7,VACATION,,,Q22 golden-derived: vedi riga WEDNESDAY
+T12,WEDNESDAY,0,7,VACATION,,,Q22 golden-derived: 0h mer e gio nel golden (24 lun / 97 mar / 4 ven)
+T12,THURSDAY,0,7,VACATION,,,Q22 golden-derived: vedi riga WEDNESDAY
+T17,MONDAY,0,7,VACATION,,,Q22 golden-derived: 0h di lunedi nel golden (393h su mar-ven)

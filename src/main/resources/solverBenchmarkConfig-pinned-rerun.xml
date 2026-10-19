@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plannerBenchmark xmlns="https://timefold.ai/xsd/benchmark">
+  <!--
+    Local Search Algorithm Comparison Benchmark
+
+    Comprehensive comparison of Timefold local search algorithms based on
+    exhaustive research from Timefold documentation (2026-03-18).
+
+    Research report: claudedocs/research_local_search_and_school_timetabling_20260318.md
+
+    Algorithms tested:
+    1. Tabu Search (Entity Tabu) - baseline recommended
+    2. Tabu Search with Strategic Oscillation (3 variants)
+    3. Tabu Search (Property/Value Tabu)
+    4. Tabu Search (Composite Tabu)
+    5. Simulated Annealing (temperature variations)
+    6. SA + Tabu Hybrid
+    7. Late Acceptance (size variations)
+    8. Late Acceptance + Tabu Hybrid
+    9. Great Deluge (increment variations)
+    10. Step Counting Hill Climbing
+    11. Diversified Late Acceptance (preview feature)
+    12. Variable Neighborhood Descent
+
+    Excluded: Pure Hill Climbing (DISCOURAGED - gets stuck in local optima)
+  -->
+
+  <benchmarkDirectory>local/benchmarkReport</benchmarkDirectory>
+
+  <!-- ========================================================================
+       INHERITED CONFIGURATION
+       Common settings shared across all solver benchmarks
+       ======================================================================== -->
+  <inheritedSolverBenchmark>
+    <solver>
+      <solutionClass>com.school.planner.domain.SchoolSchedule</solutionClass>
+      <entityClass>com.school.planner.domain.Lesson</entityClass>
+      <scoreDirectorFactory>
+        <constraintProviderClass>com.school.planner.solver.SchoolScheduleConstraintProvider</constraintProviderClass>
+        <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+      </scoreDirectorFactory>
+      <!-- Termination for both CH and LS phases -->
+      <!-- Doubled from 900/180 (task-273): M22 hard + M20 quota increase
+           require more optimization time per config. -->
+      <termination>
+        <secondsSpentLimit>1800</secondsSpentLimit>
+        <unimprovedSecondsSpentLimit>600</unimprovedSecondsSpentLimit>
+      </termination>
+      <!-- Construction Heuristic: common initialization for all solvers -->
+      <constructionHeuristic>
+        <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+      </constructionHeuristic>
+      <!-- Local Search: each solver defines complete localSearch with move selectors + acceptor/forager -->
+    </solver>
+    <problemBenchmarks>
+      <solutionFileIOClass>com.school.planner.benchmark.SchoolScheduleSolutionFileIO</solutionFileIOClass>
+      <inputSolutionFile>local/data/schedule-production-pinned.json</inputSolutionFile>
+    </problemBenchmarks>
+  </inheritedSolverBenchmark>
+
+  <!-- ========================================================================
+       BASELINE: Tabu Search (Entity Tabu) - RECOMMENDED
+       Move selectors are inherited from inheritedSolverBenchmark
+       ======================================================================== -->
+
+  <!-- Tabu #1: Entity tabu size 5 -->
+  <solverBenchmark>
+    <name>VariableNeighborhoodDescent</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+      <localSearch>
+        <forager>
+          <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+</plannerBenchmark>

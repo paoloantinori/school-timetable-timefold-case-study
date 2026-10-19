@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plannerBenchmark xmlns="https://timefold.ai/xsd/benchmark">
+  <!--
+    A/B Test: DayClusteredConstructionPhase (Phase 1) vs Standard CH only.
+
+    Hypothesis: The custom 775-line DayClusteredConstructionPhase adds complexity
+    and causes overflow (M12 violations) but may not improve final LS scores
+    compared to standard FIRST_FIT_DECREASING CH with VRP filtering.
+
+    Config A: Phase 1 ON  (DayClusteredConstructionPhase + Fallback CH + LS)
+    Config B: Phase 1 OFF (Standard FIRST_FIT_DECREASING CH + LS only)
+
+    Expected runtime: ~30 min (2 configs x ~6 min CH + ~9 min LS each)
+  -->
+
+  <benchmarkDirectory>local/benchmarkReport-phase1-test</benchmarkDirectory>
+
+  <inheritedSolverBenchmark>
+    <solver>
+      <solutionClass>com.school.planner.domain.SchoolSchedule</solutionClass>
+      <entityClass>com.school.planner.domain.Lesson</entityClass>
+      <scoreDirectorFactory>
+        <constraintProviderClass>com.school.planner.solver.SchoolScheduleConstraintProvider</constraintProviderClass>
+        <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+      </scoreDirectorFactory>
+      <termination>
+        <secondsSpentLimit>900</secondsSpentLimit>
+        <unimprovedSecondsSpentLimit>300</unimprovedSecondsSpentLimit>
+      </termination>
+    </solver>
+    <problemBenchmarks>
+      <solutionFileIOClass>com.school.planner.benchmark.SchoolScheduleSolutionFileIO</solutionFileIOClass>
+      <inputSolutionFile>local/data/schedule-production.json</inputSolutionFile>
+    </problemBenchmarks>
+  </inheritedSolverBenchmark>
+
+  <!-- ========================================================================
+       Config A: Phase 1 ON (current production config)
+       DayClusteredConstructionPhase → Fallback CH → LS Compactness → LS Room
+       ======================================================================== -->
+  <solverBenchmark>
+    <name>A-Phase1-ON</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+      <!-- Phase 1: Custom DayClusteredConstructionPhase -->
+      <customPhase>
+        <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+      </customPhase>
+      <!-- Phase 2: Fallback CH for any unplaced lessons -->
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>PHASE</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+      <!-- Phase 3: LS Compactness -->
+      <localSearch>
+        <termination>
+          <unimprovedSecondsSpentLimit>300</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>5</entityTabuSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+  <!-- ========================================================================
+       Config B: Phase 1 OFF (standard CH only, no custom phase)
+       FIRST_FIT_DECREASING CH → LS Compactness → LS Room
+       ======================================================================== -->
+  <solverBenchmark>
+    <name>B-Phase1-OFF</name>
+    <solver>
+      <environmentMode>NON_REPRODUCIBLE</environmentMode>
+      <!-- NO Phase 1: Go straight to standard CH -->
+      <constructionHeuristic>
+        <queuedEntityPlacer>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+            <cacheType>SOLVER</cacheType>
+            <sorterManner>DESCENDING</sorterManner>
+          </entitySelector>
+          <changeMoveSelector>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+        </queuedEntityPlacer>
+      </constructionHeuristic>
+      <!-- LS Compactness (same as Config A) -->
+      <localSearch>
+        <termination>
+          <unimprovedSecondsSpentLimit>300</unimprovedSecondsSpentLimit>
+        </termination>
+        <unionMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="timeslot"/>
+          </changeMoveSelector>
+          <pillarChangeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <valueSelector variableName="timeslot"/>
+          </pillarChangeMoveSelector>
+          <pillarSwapMoveSelector>
+            <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+            <pillarSelector>
+              <entitySelector>
+                <entityClass>com.school.planner.domain.Lesson</entityClass>
+              </entitySelector>
+            </pillarSelector>
+            <variableNameIncludes>
+              <variableNameInclude>timeslot</variableNameInclude>
+            </variableNameIncludes>
+          </pillarSwapMoveSelector>
+          <changeMoveSelector>
+            <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+            <entitySelector>
+              <entityClass>com.school.planner.domain.Lesson</entityClass>
+            </entitySelector>
+            <valueSelector variableName="room"/>
+          </changeMoveSelector>
+        </unionMoveSelector>
+        <acceptor>
+          <entityTabuSize>5</entityTabuSize>
+        </acceptor>
+        <forager>
+          <acceptedCountLimit>1000</acceptedCountLimit>
+        </forager>
+      </localSearch>
+    </solver>
+  </solverBenchmark>
+
+</plannerBenchmark>

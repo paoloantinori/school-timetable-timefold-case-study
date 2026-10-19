@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver xmlns="https://timefold.ai/xsd/solver">
+  <!--
+    Fast Benchmark Configuration
+    ============================
+    Purpose: Quick CI validation (30s runs)
+    Strategy: Day-clustered CH only (no local search)
+    Use Case: PR checks, smoke tests
+  -->
+
+  <solutionClass>com.school.planner.domain.SchoolSchedule</solutionClass>
+
+  <scoreDirectorFactory>
+    <constraintProviderClass>com.school.planner.solver.SchoolScheduleConstraintProvider</constraintProviderClass>
+    <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+  </scoreDirectorFactory>
+
+  <termination>
+    <!-- 30-second limit for fast benchmarks -->
+    <secondsSpentLimit>30</secondsSpentLimit>
+  </termination>
+
+  <!-- Phase 1: Day-Clustered Construction Heuristic (CH) only -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+  </customPhase>
+
+  <!-- Event-based phase transition marker -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="2"/>
+      <property name="phaseName" value="2. CH - Fallback Placement"/>
+    </customProperties>
+  </customPhase>
+
+  <!-- Phase 2: Fallback CH for any unplaced lessons -->
+  <constructionHeuristic>
+    <queuedEntityPlacer>
+      <entitySelector>
+        <entityClass>com.school.planner.domain.Lesson</entityClass>
+        <cacheType>PHASE</cacheType>
+        <sorterManner>DESCENDING</sorterManner>
+      </entitySelector>
+      <changeMoveSelector>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <valueSelector variableName="timeslot"/>
+      </changeMoveSelector>
+    </queuedEntityPlacer>
+  </constructionHeuristic>
+
+  <!-- No local search phases for fast mode -->
+  <!-- This provides a pure CH baseline for comparison -->
+
+</solver>

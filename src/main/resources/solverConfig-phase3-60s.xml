@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver xmlns="https://timefold.ai/xsd/solver">
+  <solutionClass>com.school.planner.domain.SchoolSchedule</solutionClass>
+  <entityClass>com.school.planner.domain.Lesson</entityClass>
+  <scoreDirectorFactory>
+    <constraintProviderClass>com.school.planner.solver.SchoolScheduleConstraintProvider</constraintProviderClass>
+    <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+  </scoreDirectorFactory>
+  <termination>
+    <secondsSpentLimit>28800</secondsSpentLimit>
+  </termination>
+
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+  </customPhase>
+
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="2"/>
+      <property name="phaseName" value="2. CH - Fallback Placement"/>
+    </customProperties>
+  </customPhase>
+
+  <constructionHeuristic>
+    <queuedEntityPlacer>
+      <entitySelector>
+        <entityClass>com.school.planner.domain.Lesson</entityClass>
+        <cacheType>PHASE</cacheType>
+        <sorterManner>DESCENDING</sorterManner>
+      </entitySelector>
+      <changeMoveSelector>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <valueSelector variableName="timeslot"/>
+      </changeMoveSelector>
+    </queuedEntityPlacer>
+  </constructionHeuristic>
+
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="3"/>
+      <property name="phaseName" value="3. LS - Compactness (60s unimproved)"/>
+    </customProperties>
+  </customPhase>
+
+  <localSearch>
+    <termination>
+      <secondsSpentLimit>600</secondsSpentLimit>
+      <unimprovedSecondsSpentLimit>60</unimprovedSecondsSpentLimit>
+    </termination>
+    <unionMoveSelector>
+      <changeMoveSelector>
+        <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <valueSelector variableName="timeslot"/>
+      </changeMoveSelector>
+      <pillarChangeMoveSelector>
+        <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+        <pillarSelector>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+          </entitySelector>
+        </pillarSelector>
+        <valueSelector variableName="timeslot"/>
+      </pillarChangeMoveSelector>
+      <pillarSwapMoveSelector>
+        <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+        <pillarSelector>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+          </entitySelector>
+        </pillarSelector>
+        <variableNameIncludes>
+          <variableNameInclude>timeslot</variableNameInclude>
+        </variableNameIncludes>
+      </pillarSwapMoveSelector>
+    </unionMoveSelector>
+    <acceptor>
+      <entityTabuSize>5</entityTabuSize>
+      <lateAcceptanceSize>200</lateAcceptanceSize>
+    </acceptor>
+    <forager>
+      <acceptedCountLimit>1</acceptedCountLimit>
+    </forager>
+  </localSearch>
+
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="4"/>
+      <property name="phaseName" value="4. CH - Room Assignment"/>
+    </customProperties>
+  </customPhase>
+
+  <constructionHeuristic>
+    <queuedEntityPlacer>
+      <entitySelector id="roomAssigner">
+        <entityClass>com.school.planner.domain.Lesson</entityClass>
+        <cacheType>PHASE</cacheType>
+        <sorterManner>DESCENDING</sorterManner>
+      </entitySelector>
+      <changeMoveSelector>
+        <entitySelector mimicSelectorRef="roomAssigner"/>
+        <valueSelector variableName="room"/>
+      </changeMoveSelector>
+    </queuedEntityPlacer>
+  </constructionHeuristic>
+
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="5"/>
+      <property name="phaseName" value="5. LS - Room Refinement"/>
+    </customProperties>
+  </customPhase>
+
+  <localSearch>
+    <termination>
+      <secondsSpentLimit>600</secondsSpentLimit>
+      <unimprovedSecondsSpentLimit>120</unimprovedSecondsSpentLimit>
+    </termination>
+    <unionMoveSelector>
+      <changeMoveSelector>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <valueSelector variableName="room"/>
+      </changeMoveSelector>
+    </unionMoveSelector>
+    <acceptor>
+      <entityTabuSize>7</entityTabuSize>
+    </acceptor>
+    <forager>
+      <acceptedCountLimit>1000</acceptedCountLimit>
+    </forager>
+  </localSearch>
+</solver>

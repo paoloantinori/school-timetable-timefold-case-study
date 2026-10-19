@@ -1,0 +1,58 @@
+{
+  "navTitle": "Reconciliation",
+  "title": "Reconciliation Dashboard",
+  "subtitle": "Assigned vs scheduled hours per teacher, subject and group. Replicates the school's own Classi sheet.",
+  "loading": "Loading reconciliation data...",
+  "loadError": "Failed to load reconciliation data",
+  "noResults": "No courses match the current filter.",
+  "filterPlaceholder": "Filter by teacher, subject, or group...",
+  "refresh": "Refresh",
+
+  "summary": {
+    "ok": "OK",
+    "mismatch": "Mismatch",
+    "unscheduled": "Unscheduled",
+    "total": "Total courses",
+    "pseudoNote": "{{count}} of the counts above are expected Stage/Esame/RA deltas, not real issues. See the \"expected\" rows below.",
+    "showOnlyIssuesToggle": "Show only issues"
+  },
+
+  "bucketIssues": "{{count}} issues",
+
+  "groupBy": {
+    "label": "Group by:",
+    "teacher": "Teacher",
+    "group": "Group"
+  },
+
+  "table": {
+    "teacher": "Teacher",
+    "subject": "Subject",
+    "group": "Group",
+    "assigned": "Assigned",
+    "scheduled": "Scheduled",
+    "delta": "Delta",
+    "status": "Status",
+    "pinnedSuffix": "pinned"
+  },
+
+  "status": {
+    "OK": "OK",
+    "MISMATCH": "Mismatch",
+    "UNSCHEDULED": "Unscheduled",
+    "expected": "Expected",
+    "check": "Check"
+  },
+
+  "pseudoBadge": "(expected)",
+  "pseudoHint": "Synthetic Stage/Esame/RA accounting course. Deltas here are expected by design, not scheduling bugs.",
+  "pseudoCheckHint": "Synthetic Stage/Esame/RA accounting course, but the shortfall is large enough (over 50% of assigned hours) to be worth a second look.",
+
+  "drillDown": {
+    "loading": "Loading lessons...",
+    "empty": "No scheduled lessons for this course.",
+    "noRoom": "no room",
+    "error": "Failed to load lessons for this course.",
+    "retry": "Retry"
+  }
+}

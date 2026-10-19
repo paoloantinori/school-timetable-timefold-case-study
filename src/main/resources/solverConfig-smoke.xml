@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==========================================================================
+     STALE FILE (banner added by TASK-431, 2026-07-27).
+     This is the pre-TASK-420 6-phase pipeline: it still carries the CH fallback
+     phase removed by TASK-378 and the LS RuinRecreate phase removed by TASK-420,
+     so it no longer mirrors src/main/resources/solverConfig.xml.
+     NOT used by production: application.properties selects solverConfig.xml
+     (quarkus.timefold.solver.solver-config-xml), and nothing in the test suite
+     or in scripts/ references this file.
+     A staged solve would refuse it outright (no CompactionPhase declared).
+     Kept for historical reference only.
+     ========================================================================== -->
+<!-- SMOKE TEST CONFIG: Same as solverConfig.xml but with aggressively short timeouts.
+     Purpose: Verify Phase 4 (RuinRecreate) initializes and produces moves without waiting
+     for the full production run. Usage: SOLVER_CONFIG=src/main/resources/solverConfig-smoke.xml ./planner.sh run -->
+<solver xmlns="https://timefold.ai/xsd/solver">
+
+  <scoreDirectorFactory>
+    <constraintProviderClass>com.school.planner.solver.SchoolScheduleConstraintProvider</constraintProviderClass>
+    <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+  </scoreDirectorFactory>
+
+  <!-- Global hard stop: 5 minutes (smoke test) -->
+  <termination>
+    <secondsSpentLimit>300</secondsSpentLimit>
+  </termination>
+
+  <!-- Phase 1: Day-Clustered Lesson Placement (custom CH) -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+  </customPhase>
+
+  <!-- Phase 1 → Phase 2 -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="2"/>
+      <property name="phaseName" value="2. CH - Fallback Placement"/>
+    </customProperties>
+  </customPhase>
+
+  <!-- Phase 2: Fallback CH -->
+  <constructionHeuristic>
+    <queuedEntityPlacer>
+      <entitySelector id="fallbackPlacer">
+        <entityClass>com.school.planner.domain.Lesson</entityClass>
+        <cacheType>PHASE</cacheType>
+        <sorterManner>DESCENDING</sorterManner>
+      </entitySelector>
+      <changeMoveSelector>
+        <entitySelector mimicSelectorRef="fallbackPlacer"/>
+        <valueSelector variableName="timeslot"/>
+      </changeMoveSelector>
+      <changeMoveSelector>
+        <entitySelector mimicSelectorRef="fallbackPlacer"/>
+        <valueSelector variableName="room"/>
+      </changeMoveSelector>
+    </queuedEntityPlacer>
+  </constructionHeuristic>
+
+  <!-- Phase 2 → Phase 3 -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="3"/>
+      <property name="phaseName" value="3. LS - Compactness"/>
+    </customProperties>
+  </customPhase>
+
+  <!-- Phase 3: LS Compactness — 30s unimproved (smoke) -->
+  <localSearch>
+    <termination>
+      <secondsSpentLimit>60</secondsSpentLimit>
+      <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
+    </termination>
+    <unionMoveSelector>
+      <filterClass>com.school.planner.solver.CompositeMoveFilter</filterClass>
+      <changeMoveSelector>
+        <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <valueSelector variableName="timeslot"/>
+      </changeMoveSelector>
+      <swapMoveSelector>
+        <fixedProbabilityWeight>3.0</fixedProbabilityWeight>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <secondaryEntitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </secondaryEntitySelector>
+        <variableNameIncludes>
+          <variableNameInclude>timeslot</variableNameInclude>
+        </variableNameIncludes>
+      </swapMoveSelector>
+      <pillarChangeMoveSelector>
+        <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+        <pillarSelector>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+          </entitySelector>
+        </pillarSelector>
+        <valueSelector variableName="timeslot"/>
+      </pillarChangeMoveSelector>
+      <pillarSwapMoveSelector>
+        <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+        <pillarSelector>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+          </entitySelector>
+        </pillarSelector>
+        <variableNameIncludes>
+          <variableNameInclude>timeslot</variableNameInclude>
+        </variableNameIncludes>
+      </pillarSwapMoveSelector>
+    </unionMoveSelector>
+    <acceptor>
+      <entityTabuSize>7</entityTabuSize>
+    </acceptor>
+    <forager>
+      <acceptedCountLimit>1000</acceptedCountLimit>
+    </forager>
+  </localSearch>
+
+  <!-- Phase 3 → Phase 4 -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="4"/>
+      <property name="phaseName" value="4. LS - Advanced (RuinRecreate)"/>
+    </customProperties>
+  </customPhase>
+
+  <!-- Phase 4: LS Advanced RuinRecreate — 30s unimproved (smoke) -->
+  <localSearch>
+    <termination>
+      <secondsSpentLimit>60</secondsSpentLimit>
+      <unimprovedSecondsSpentLimit>30</unimprovedSecondsSpentLimit>
+    </termination>
+    <unionMoveSelector>
+      <filterClass>com.school.planner.solver.CompositeMoveFilter</filterClass>
+      <ruinRecreateMoveSelector>
+        <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+        <minimumRuinedCount>2</minimumRuinedCount>
+        <maximumRuinedCount>5</maximumRuinedCount>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+          <cacheType>STEP</cacheType>
+          <selectionOrder>SORTED</selectionOrder>
+        </entitySelector>
+        <variableName>timeslot</variableName>
+      </ruinRecreateMoveSelector>
+      <changeMoveSelector>
+        <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <valueSelector variableName="timeslot"/>
+      </changeMoveSelector>
+      <swapMoveSelector>
+        <fixedProbabilityWeight>3.0</fixedProbabilityWeight>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <secondaryEntitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </secondaryEntitySelector>
+        <variableNameIncludes>
+          <variableNameInclude>timeslot</variableNameInclude>
+        </variableNameIncludes>
+      </swapMoveSelector>
+    </unionMoveSelector>
+    <acceptor>
+      <entityTabuSize>7</entityTabuSize>
+    </acceptor>
+    <forager>
+      <acceptedCountLimit>1000</acceptedCountLimit>
+    </forager>
+  </localSearch>
+
+  <!-- Phase 4 → Phase 5 -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="5"/>
+      <property name="phaseName" value="5. CH - Room Assignment"/>
+    </customProperties>
+  </customPhase>
+
+  <!-- Phase 5: Room Assignment CH -->
+  <constructionHeuristic>
+    <queuedEntityPlacer>
+      <entitySelector id="roomAssigner">
+        <entityClass>com.school.planner.domain.Lesson</entityClass>
+        <cacheType>PHASE</cacheType>
+        <sorterManner>DESCENDING</sorterManner>
+      </entitySelector>
+      <changeMoveSelector>
+        <entitySelector mimicSelectorRef="roomAssigner"/>
+        <valueSelector variableName="room"/>
+      </changeMoveSelector>
+    </queuedEntityPlacer>
+  </constructionHeuristic>
+
+  <!-- Phase 5 → Phase 6 -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="6"/>
+      <property name="phaseName" value="6. LS - Room Refinement"/>
+    </customProperties>
+  </customPhase>
+
+  <!-- Phase 6: Room Refinement LS — 10s (smoke) -->
+  <localSearch>
+    <termination>
+      <secondsSpentLimit>30</secondsSpentLimit>
+      <unimprovedSecondsSpentLimit>10</unimprovedSecondsSpentLimit>
+    </termination>
+    <unionMoveSelector>
+      <changeMoveSelector>
+        <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <valueSelector variableName="room"/>
+      </changeMoveSelector>
+      <swapMoveSelector>
+        <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <secondaryEntitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </secondaryEntitySelector>
+        <variableNameIncludes>
+          <variableNameInclude>room</variableNameInclude>
+        </variableNameIncludes>
+      </swapMoveSelector>
+    </unionMoveSelector>
+    <acceptor>
+      <entityTabuSize>7</entityTabuSize>
+    </acceptor>
+    <forager>
+      <acceptedCountLimit>1000</acceptedCountLimit>
+    </forager>
+  </localSearch>
+</solver>

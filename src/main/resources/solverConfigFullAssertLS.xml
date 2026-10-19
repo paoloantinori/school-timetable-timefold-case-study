@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  DIAGNOSTIC VARIANT (opt-in, NEVER the default): identical to solverConfig.xml
+  except environmentMode=FULL_ASSERT on the localSearch phases ONLY (Timefold 2.7
+  per-phase environment mode, #2595). Purpose: hunt incremental-score divergence
+  (the move-undo/score-restore class) paying the strong assertions only where
+  moves actually mutate the solution, not in the construction/deterministic
+  phases that dominate wall time. NOT for performance runs (FULL_ASSERT
+  re-scores after every move) and NOT with the MT-LS decider (its apply
+  architecture bypasses the per-move assert loop): use it on the plain
+  POST /api/schedule/solve path.
+
+  Activate without rebuild (planner.sh SOLVER_CONFIG pass-through):
+    SOLVER_CONFIG=solverConfigFullAssertLS.xml ./planner.sh ...
+  or directly: -Dquarkus.timefold.solver.solver-config-xml=solverConfigFullAssertLS.xml
+-->
+<solver xmlns="https://timefold.ai/xsd/solver">
+
+  <!-- Explicit constraint provider (required when multiple providers exist on classpath) -->
+  <scoreDirectorFactory>
+    <constraintProviderClass>com.school.planner.solver.SchoolScheduleConstraintProvider</constraintProviderClass>
+    <!-- InitializingScoreTrend: ONLY_DOWN because all constraints are penalize() calls.
+         Only M5 (reward Informatica after stage) uses reward(), but it's medium-weight
+         and doesn't affect the hard score trend. This enables CH shortcuts for 40%+ speedup. -->
+    <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+  </scoreDirectorFactory>
+
+  <!-- Global hard stop: 8 hours (safety net for unattended runs).
+       Long enough for overnight optimization; typically terminates earlier via unimproved limits. -->
+  <termination>
+    <secondsSpentLimit>28800</secondsSpentLimit>
+  </termination>
+
+  <!-- Phase 1: Day-Clustered Lesson Placement (custom CH).
+       Fully initializes EVERY unpinned lesson (round-robin day clustering +
+       a least-conflict force-place pass for leftovers + room assignment).
+       The old phase-2 fallback CH was DELETED (TASK-378): Timefold's
+       QueuedEntityPlacer re-placed every entity - including fully
+       initialized ones, filterClass notwithstanding - destroying this
+       phase's near-clean result (-9,635 hard -> -1,090,000, runs 4-6). -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.DayClusteredConstructionPhase</customPhaseCommandClass>
+  </customPhase>
+
+  <!-- Event-based phase transition marker: Phase 1 → Phase 2 -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="2"/>
+      <property name="phaseName" value="2. LS - Compactness"/>
+    </customProperties>
+  </customPhase>
+
+  <!-- Phase 2: COMPACTNESS FOCUS — timeslot-only moves for horizontal/vertical compactness.
+       Goal: minimize gaps (S1/H17), reward same-subject blocks (S17), daily quota fill (M20).
+       Lab lessons are pre-pinned by pre-assignment, so no LabBlock selectors needed.
+
+       PILLAR MOVES EXPERIMENT: Added pillarChange and pillarSwap selectors to preserve
+       consecutive student patterns (S7) while resolving teacher conflicts (H1).
+       Pillar moves shift ALL lessons at a timeslot together, maintaining lesson groupings. -->
+  <localSearch>
+    <!-- Diagnostic variant (FULL_ASSERT only in LS): strong assertions run
+         per-move in THIS phase only; the phases above stay in the solver default
+         mode, so the CH and the deterministic passes pay nothing. -->
+    <environmentMode>FULL_ASSERT</environmentMode>
+        <termination>
+      <!-- Three COMPLEMENTARY terminations, not a workaround stack (TASK-381 L3):
+           - diminishedReturns: RELATIVE plateau detection (recent improvement
+             rate vs the phase's initial rate). In run 12 phase 2 improved
+             throughout its full hour (-17,665 -> -3,017 hard), so it
+             legitimately never fired - the full budget was productive work.
+             On a RE-SOLVE of an already-converged schedule the initial-rate
+             baseline is near zero, so a relative test degenerates and cannot
+             be relied on to fire.
+           - unimprovedSecondsSpentLimit: ABSOLUTE no-improvement cutoff -
+             covers exactly the degenerate-baseline case above (10 min with
+             zero improvement ends the phase regardless of ratios).
+           - secondsSpentLimit: hard wall-clock cap. -->
+      <diminishedReturns>
+        <slidingWindowDuration>PT2M</slidingWindowDuration>
+        <minimumImprovementRatio>0.1</minimumImprovementRatio>
+      </diminishedReturns>
+      <secondsSpentLimit>3600</secondsSpentLimit>
+      <unimprovedSecondsSpentLimit>600</unimprovedSecondsSpentLimit>
+    </termination>
+    <unionMoveSelector>
+      <!-- Filter out auto-generated CompositeMove(room, timeslot) which wastes ~8% of eval budget
+           with zero improvements (confirmed by move stats benchmark 2026-03-24). -->
+      <filterClass>com.school.planner.solver.CompositeMoveFilter</filterClass>
+      <!-- Timeslot changes: 5x weight — primary lever for compactness (S5 gap minimization)
+           NOTE: UnpinnedLessonFilter removed during LS tuning - allow moves on pinned lessons -->
+      <changeMoveSelector>
+        <fixedProbabilityWeight>5.0</fixedProbabilityWeight>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <valueSelector variableName="timeslot"/>
+      </changeMoveSelector>
+
+      <!-- Swap two lessons' timeslots directly (A↔B) — fixes conflicts by exchange, not displacement -->
+      <swapMoveSelector>
+        <fixedProbabilityWeight>3.0</fixedProbabilityWeight>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <secondaryEntitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </secondaryEntitySelector>
+        <variableNameIncludes>
+          <variableNameInclude>timeslot</variableNameInclude>
+        </variableNameIncludes>
+      </swapMoveSelector>
+
+      <!-- EXPERIMENTAL: Pillar moves for preserving consecutive patterns (S7) -->
+      <!-- pillarChange: Moves all lessons at source timeslot to destination timeslot together -->
+      <pillarChangeMoveSelector>
+        <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+        <pillarSelector>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+          </entitySelector>
+        </pillarSelector>
+        <valueSelector variableName="timeslot"/>
+      </pillarChangeMoveSelector>
+
+      <!-- EXPERIMENTAL: Pillar swap for exchanging entire timeslot schedules -->
+      <pillarSwapMoveSelector>
+        <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+        <pillarSelector>
+          <entitySelector>
+            <entityClass>com.school.planner.domain.Lesson</entityClass>
+          </entitySelector>
+        </pillarSelector>
+        <variableNameIncludes>
+          <variableNameInclude>timeslot</variableNameInclude>
+        </variableNameIncludes>
+      </pillarSwapMoveSelector>
+
+      <!-- TASK-576 F8: the pair-block shift - shifts a (teacher, group) pair's whole
+           block on one date by one slot offset, landing it back on the pair's form
+           cells. Coarse move keyed on the domain (the E-series proved the pair form is
+           not defensible by constraint; this gives the LS a form-carrying option).
+           Per-date hour counts are unchanged by construction (H32/H33-safe) and the
+           shift is exactly the H17 channel closure when the slide opened one.
+           Inert by three gates: planner.ls.pair-move.enabled (DEFAULT OFF, read live
+           in the factory), no published pair form (builder off), or no candidate
+           found in the draw budget. -->
+      <moveIteratorFactory>
+        <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+        <moveIteratorFactoryClass>com.school.planner.solver.moves.PairBlockShiftMoveIteratorFactory</moveIteratorFactoryClass>
+      </moveIteratorFactory>
+
+      <!-- TASK-589: the gated harvest moves as an LS stream (surplus over-quota
+           hours -> empty declared cells' first-open landing). The enumeration is
+           SHARED with the deterministic pass (HarvestNeighborhood: fonte unica);
+           acceptance is the LS's own score (medium included). Inert when
+           planner.ls.harvest-stream.enabled is off (empty list, flag read live). -->
+      <moveListFactory>
+        <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+        <moveListFactoryClass>com.school.planner.solver.neighborhood.HarvestMoveListFactory</moveListFactoryClass>
+      </moveListFactory>
+    </unionMoveSelector>
+    <acceptor>
+      <!-- Tabu Search: entityTabuSize=7 (recommended for ~10K entities by Timefold docs
+           and winner of March 23, 2026 benchmark). Short-term memory prevents cycling
+           back to recently explored solutions. -->
+      <entityTabuSize>7</entityTabuSize>
+    </acceptor>
+    <forager>
+      <!-- acceptedCountLimit=1000: Evaluate many moves per step to escape local optima.
+           With Tabu, this lets the solver consider non-tabu downhill moves broadly. -->
+      <acceptedCountLimit>1000</acceptedCountLimit>
+    </forager>
+  </localSearch>
+
+  <!-- Event-based phase transition marker: Phase 2 → Phase 3 (repair + compaction) -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="3"/>
+      <property name="phaseName" value="3. Compaction"/>
+    </customProperties>
+  </customPhase>
+
+  <!-- Phase 3: REPAIR + FINAL COMPACTION (TASK-393/401): clear the box and re-close
+       avoidable H17 student-day gaps the local search left behind. Nothing after this
+       moves timeslots (phases 4/5 are room-only), so it is the last chance to pack
+       days tight. Deterministic, improve-or-noop, conflict-free; reuses the same
+       StudentDayCompaction as the construction tail. A cheap no-op if the local
+       search re-opened nothing.
+
+       TASK-420 (2026-07-27): the RuinRecreate local search that used to run between
+       phase 2 and this phase was REMOVED. It was inert in 6 consecutive measurements
+       (val413 r1/r2, val408 r1/r2 with the score unchanged to the 4th digit, and
+       val403-early r1/r2, which started HARD-CLEAN after an early repair and still
+       gained nothing) while costing 120-160s per run. Its stated purpose (coordinated
+       multi-entity fixes) is served in practice by this deterministic repair phase,
+       which is what actually collapsed the residual hard in every one of those runs. -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.CompactionPhase</customPhaseCommandClass>
+  </customPhase>
+
+  <!-- Event-based phase transition marker: Phase 3 → Phase 4 -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="4"/>
+      <property name="phaseName" value="4. CH - Room Assignment"/>
+    </customProperties>
+  </customPhase>
+
+  <!-- Phase 4: ROOM ASSIGNMENT, the initial room assignment after timeslot optimization.
+       Goal: Assign rooms to all Lessons after timeslot optimization is complete.
+       Uses CH for greedy assignment, followed by LS refinement. -->
+  <constructionHeuristic>
+    <queuedEntityPlacer>
+      <entitySelector id="roomAssigner">
+        <entityClass>com.school.planner.domain.Lesson</entityClass>
+        <cacheType>PHASE</cacheType>
+        <!-- DESCENDING: Most constrained lessons first -->
+        <sorterManner>DESCENDING</sorterManner>
+      </entitySelector>
+      <changeMoveSelector>
+        <entitySelector mimicSelectorRef="roomAssigner"/>
+        <valueSelector variableName="room"/>
+      </changeMoveSelector>
+    </queuedEntityPlacer>
+  </constructionHeuristic>
+
+  <!-- Event-based phase transition marker: Phase 4 → Phase 5 -->
+  <customPhase>
+    <customPhaseCommandClass>com.school.planner.solver.PhaseTransitionMarker</customPhaseCommandClass>
+    <customProperties>
+      <property name="phaseNumber" value="5"/>
+      <property name="phaseName" value="5. LS - Room Refinement"/>
+    </customProperties>
+  </customPhase>
+
+  <!-- Phase 5: Room Refinement, the polish after the initial assignment -->
+  <localSearch>
+    <!-- Diagnostic variant (FULL_ASSERT only in LS): strong assertions run
+         per-move in THIS phase only; the phases above stay in the solver default
+         mode, so the CH and the deterministic passes pay nothing. -->
+    <environmentMode>FULL_ASSERT</environmentMode>
+    <termination>
+      <!-- Phase 5: diminished returns for room refinement plateau detection -->
+      <diminishedReturns>
+        <slidingWindowDuration>PT1M</slidingWindowDuration>
+        <minimumImprovementRatio>0.05</minimumImprovementRatio>
+      </diminishedReturns>
+      <secondsSpentLimit>600</secondsSpentLimit>
+    </termination>
+    <unionMoveSelector>
+      <changeMoveSelector>
+        <fixedProbabilityWeight>2.0</fixedProbabilityWeight>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <valueSelector variableName="room"/>
+      </changeMoveSelector>
+
+      <!-- Swap two lessons' rooms directly (A↔B) — resolves room conflicts by exchange -->
+      <swapMoveSelector>
+        <fixedProbabilityWeight>1.0</fixedProbabilityWeight>
+        <entitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </entitySelector>
+        <secondaryEntitySelector>
+          <entityClass>com.school.planner.domain.Lesson</entityClass>
+        </secondaryEntitySelector>
+        <variableNameIncludes>
+          <variableNameInclude>room</variableNameInclude>
+        </variableNameIncludes>
+      </swapMoveSelector>
+    </unionMoveSelector>
+    <acceptor>
+      <!-- Tabu Search: same as phase 2, entityTabuSize=7 -->
+      <entityTabuSize>7</entityTabuSize>
+    </acceptor>
+    <forager>
+      <!-- acceptedCountLimit=1000: same as phase 2 -->
+      <acceptedCountLimit>1000</acceptedCountLimit>
+    </forager>
+  </localSearch>
+</solver>
